@@ -12,6 +12,7 @@ SettingsPage {
         dialog: page.dialog
         label: "Selection highlight"
         description: "Outline borders the selected, hovered, and current windows alike. Lift raises only the window Enter opens, with a glow, and marks the current window with a dot."
+            + (view.controller.look === "grid" ? "" : " Applies to the Grid look only.")
 
         SettingChoices {
             id: selectionStyleChoices

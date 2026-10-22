@@ -13,6 +13,7 @@ SettingsPage {
         dialog: page.dialog
         label: "Window labels"
         description: "Choose how the app, title, and workspace label sit around each preview."
+            + (view.controller.look === "grid" ? "" : " Applies to the Grid look only.")
 
         SettingChoices {
             id: windowFooterChoices
