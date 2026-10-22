@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Effects
-import QtQuick.Layouts
 import "CarouselLayout.js" as CarouselLayout
 import "WindowModel.js" as WindowModel
 import qs.Commons as Commons
@@ -120,50 +119,16 @@ Look {
     }
 
     // The front window's name, under the arc.
-    ColumnLayout {
+    LookCaption {
         anchors.horizontalCenter: parent.horizontalCenter
         y: look.height * 0.84
         width: Math.min(look.width - Commons.Style.space(96), Commons.Style.space(1100))
-        spacing: Commons.Style.spacing.sm
-        visible: look.centreWindow !== null && !look.overview.previewToplevel
+        overview: look.overview
+        toplevel: look.overview.previewToplevel ? null : look.centreWindow
+        detail: look.centreWindow
+            ? (WindowModel.appIdFor(look.centreWindow) || "Application") + "   ·   Workspace "
+                + look.overview.workspaceName(look.centreWindow) + "   ·   " + (look.centreIndex + 1) + " / " + look.toplevels.length
+            : ""
         opacity: Math.max(0, 1 - Math.abs(look.position - look.centreIndex) * 2)
-
-        RowLayout {
-            Layout.alignment: Qt.AlignHCenter
-            Layout.maximumWidth: parent.width
-            spacing: Commons.Style.spacing.lg
-
-            Image {
-                Layout.preferredWidth: Commons.Style.space(36)
-                Layout.preferredHeight: Commons.Style.space(36)
-                source: look.centreWindow ? look.overview.iconFor(look.centreWindow) : ""
-                fillMode: Image.PreserveAspectFit
-                asynchronous: true
-            }
-
-            Text {
-                Layout.maximumWidth: parent.parent.width - Commons.Style.space(60)
-                text: look.centreWindow ? String(look.centreWindow.title || WindowModel.appIdFor(look.centreWindow) || "Untitled window") : ""
-                textFormat: Text.PlainText
-                elide: Text.ElideRight
-                color: Commons.Color.menu.text
-                font.family: Commons.Style.font.menuFamily
-                font.pixelSize: Commons.Style.font.displayLarge
-                font.bold: true
-            }
-        }
-
-        Text {
-            Layout.alignment: Qt.AlignHCenter
-            text: look.centreWindow
-                ? (WindowModel.appIdFor(look.centreWindow) || "Application") + "   ·   Workspace "
-                    + look.overview.workspaceName(look.centreWindow) + "   ·   " + (look.centreIndex + 1) + " / " + look.toplevels.length
-                : ""
-            textFormat: Text.PlainText
-            color: Commons.Color.menu.text
-            opacity: 0.6
-            font.family: Commons.Style.font.menuFamily
-            font.pixelSize: Commons.Style.font.heading
-        }
     }
 }
