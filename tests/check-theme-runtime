@@ -6,7 +6,8 @@ test_dir=$(mktemp -d)
 trap 'rm -rf "$test_dir"' EXIT
 ln -s /usr/share/omarchy/shell/Commons "$test_dir/Commons"
 ln -s /usr/share/omarchy/shell/Ui "$test_dir/Ui"
-cp WindowCard.qml WindowThumbnail.qml WindowBorders.qml SettingsView.qml SettingSlider.qml SettingChoices.qml DisplayModeChoices.qml SettingsCategoryButton.qml SettingsDivider.qml SettingRow.qml SettingsPage.qml SettingToggle.qml DialogButton.qml LookPage.qml AppearancePage.qml WindowsPage.qml WindowLabelsPage.qml WorkspacesPage.qml HotCornerPage.qml MotionPage.qml JuicePage.qml JuicePunch.qml PointerTilt.qml FooterHideConfirmation.qml ThemedControl.qml ThemeDivider.qml Look.qml GridLook.qml CarouselLook.qml CarouselCard.qml CardPointer.qml StrataLook.qml StrataCard.qml GlassHudLook.qml GlassHudCard.qml HudRing.qml LookCaption.qml WindowModel.js SettingsSchema.js GridLayout.js CarouselLayout.js StrataLayout.js "$test_dir/"
+cp WindowCard.qml WindowThumbnail.qml WindowBorders.qml SettingsView.qml SettingSlider.qml SettingChoices.qml DisplayModeChoices.qml SettingsCategoryButton.qml SettingsDivider.qml SettingRow.qml SettingsPage.qml SettingToggle.qml DialogButton.qml LookPage.qml AppearancePage.qml WindowsPage.qml WindowLabelsPage.qml WorkspacesPage.qml HotCornerPage.qml MotionPage.qml JuicePage.qml JuicePunch.qml PointerTilt.qml FooterHideConfirmation.qml ThemedControl.qml ThemeDivider.qml Look.qml GridLook.qml CarouselLook.qml CarouselCard.qml CardPointer.qml StrataLook.qml StrataCard.qml GlassHudLook.qml GlassHudCard.qml HudRing.qml CrtLook.qml CrtRow.qml CrtLayout.js LookCaption.qml WindowModel.js SettingsSchema.js GridLayout.js CarouselLayout.js StrataLayout.js "$test_dir/"
+cp -r assets "$test_dir/"
 cp tests/theme/shell.qml "$test_dir/shell.qml"
 
 output_dir=${1:-}
@@ -21,6 +22,6 @@ QT_QPA_PLATFORM=offscreen EXPOSE_THEME_OUTPUT_DIR="$output_dir" \
   }
 cat "$test_dir/output"
 rg -q 'PASS: real shell theme tokens' "$test_dir/output"
-if rg -q 'FAIL:|TypeError|ReferenceError|Unable to assign|Binding loop|Failed to load configuration' "$test_dir/output"; then
+if rg -q 'FAIL:|TypeError|ReferenceError|Unable to assign|Binding loop|Failed to load configuration|Cannot open' "$test_dir/output"; then
   exit 1
 fi
