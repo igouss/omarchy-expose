@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import "GridLayout.js" as GridLayout
 import qs.Commons as Commons
 ShellRoot {
     id: test
@@ -65,6 +66,16 @@ ShellRoot {
         function previewRectFor(model, rect) { return rect; }
         function workspaceName(model) { return "1"; }
         function iconFor(model) { return ""; }
+        property int modelRevision: 0
+        property real motionProgress: 1
+        property real motionTarget: 1
+        function computeWindowLayout(toplevels, width, height, gap, padding, footerHeight, hint) {
+            return GridLayout.computeLayout(toplevels.map(top => 1.8), width, height, gap, padding, footerHeight, hint);
+        }
+        function formatWorkspaceLabel(name) { return String(name); }
+        function moveDirectional(dx, dy, layout) {}
+        function activate(top) {}
+        function requestClose(top) {}
     }
     Window {
         id: window
@@ -94,6 +105,24 @@ ShellRoot {
                 hostWindow: QtObject {
                     property bool acceptsKeyboard: false
                 }
+            }
+            Loader {
+                id: gridLook
+                width: 1240; height: 900
+                active: test.phase >= 29
+                sourceComponent: GridLook { overview: controller; screenWindow: lookScreen }
+            }
+            Loader {
+                id: carouselLook
+                width: 1240; height: 900
+                active: test.phase >= 29
+                sourceComponent: CarouselLook { overview: controller; screenWindow: lookScreen }
+            }
+            Loader {
+                id: strataLook
+                width: 1240; height: 900
+                active: test.phase >= 29
+                sourceComponent: StrataLook { overview: controller; screenWindow: lookScreen }
             }
             WindowCard {
                 id: card
@@ -156,6 +185,33 @@ ShellRoot {
             controller.separateTiming = true;
         }
         settings.focusFirstSettingsControl();
+    }
+    // Every look loads with three windows on two workspaces and reports one
+    // rect per window; binding errors fail the run through its output check.
+    function checkLooks() {
+        controller.selection = lookWindows[1];
+        controller.opened = true;
+        var looks = [gridLook, carouselLook, strataLook];
+        for (var i = 0; i < looks.length; i++) {
+            require(looks[i].item !== null, "look " + i + " loads");
+            require(looks[i].item.windowLayout.length === lookWindows.length, "look " + i + " lays out every window");
+        }
+        controller.opened = false;
+        controller.selection = null;
+    }
+    readonly property var lookWindows: [
+        { title: "One", lastIpcObject: { class: "a", at: [-1200, 0], size: [1200, 1440] }, workspace: { id: 1, name: "1" }, monitor: { x: 0, y: 0, width: 2560, height: 1440, scale: 1, lastIpcObject: { transform: 0 } } },
+        { title: "Two", lastIpcObject: { class: "b", at: [0, 0], size: [1280, 1440] }, workspace: { id: 1, name: "1" }, monitor: { x: 0, y: 0, width: 2560, height: 1440, scale: 1, lastIpcObject: { transform: 0 } } },
+        { title: "Three", lastIpcObject: { class: "c", at: [0, 0], size: [2560, 1440] }, workspace: { id: 2, name: "2" }, monitor: { x: 0, y: 0, width: 2560, height: 1440, scale: 1, lastIpcObject: { transform: 0 } } }
+    ]
+    QtObject {
+        id: lookScreen
+        readonly property var screenToplevels: test.lookWindows
+        readonly property var cardToplevels: test.lookWindows
+        readonly property bool acceptsKeyboard: true
+        readonly property int width: 1240
+        readonly property int height: 900
+        readonly property var screen: null
     }
     function finish() {
         console.log("PASS: real shell theme tokens, views, compositor window borders, gradients, per-side widths, alpha, zero borders, live reload, settings layout and focus navigation");
@@ -243,6 +299,9 @@ ShellRoot {
                 }
                 test.phase++;
             } else if (test.phase === 29) {
+                checkLooks();
+                test.phase++;
+            } else if (test.phase === 30) {
                 finish();
             }
         }
