@@ -8,8 +8,7 @@ OverviewLifecycle {
     id: root
 
     onHotCornerScreensChanged: root.scheduleHotCornerRearm()
-    onKeyboardFocusRequested: root.focusKeyboardWindow()
-    onSettingsFocusRequested: root.focusSettingsCategory()
+    onFocusRequested: root.focusKeyboardSurface()
     onSurfaceReleased: root.scheduleHotCornerRearm()
 
     readonly property var overviewKeyboardTargets: surfaceInstances.instances.length
@@ -61,24 +60,18 @@ OverviewLifecycle {
         }
     }
 
-    function focusKeyboardWindow() {
-        for (let i = 0; i < surfaceInstances.instances.length; i++) {
-            let surface = surfaceInstances.instances[i];
-            if (surface && surface.acceptsKeyboard) {
-                surface.keyboardItem.forceActiveFocus();
-                return;
-            }
-        }
+    function keyboardSurface() {
+        return surfaceInstances.instances.find(surface => surface && surface.acceptsKeyboard) || null;
     }
 
-    function focusSettingsCategory() {
-        for (let i = 0; i < surfaceInstances.instances.length; i++) {
-            let surface = surfaceInstances.instances[i];
-            if (surface && surface.acceptsKeyboard) {
-                surface.focusSettingsCategory();
-                return;
-            }
-        }
+    function focusKeyboardSurface() {
+        var surface = root.keyboardSurface();
+        if (!surface)
+            return;
+        if (root.settingsOpen)
+            surface.focusSettings();
+        else
+            surface.keyboardItem.forceActiveFocus();
     }
 
     function focusSettingsItem(item) {
@@ -102,18 +95,15 @@ OverviewLifecycle {
         var forward = isTab
             ? event.key !== Qt.Key_Backtab && !(event.modifiers & Qt.ShiftModifier)
             : event.key === Qt.Key_Down || event.key === Qt.Key_Right;
-        for (let index = 0; index < surfaceInstances.instances.length; index++) {
-            let surface = surfaceInstances.instances[index];
-            if (!surface || !surface.acceptsKeyboard)
-                continue;
-            if (root.footerHideConfirmationOpen)
-                surface.moveFooterConfirmationFocus(forward, isTab);
-            else
-                surface.moveSettingsFocus(forward, isTab);
-            event.accepted = true;
-            return true;
-        }
-        return false;
+        var surface = root.keyboardSurface();
+        if (!surface)
+            return false;
+        if (root.footerHideConfirmationOpen)
+            surface.moveFooterConfirmationFocus(forward, isTab);
+        else
+            surface.moveSettingsFocus(forward, isTab);
+        event.accepted = true;
+        return true;
     }
 
     function handleSettingsTab(event) {
@@ -422,6 +412,13 @@ OverviewLifecycle {
             function focusSettingsCategory() {
                 var settings = keyCatcher.settingsLayer.item;
                 if (settings)
+                    settings.focusSettingsCategory(); // qmllint disable missing-property
+            }
+
+            // Keeps focus already on a visible settings control; otherwise the category.
+            function focusSettings() {
+                var settings = keyCatcher.settingsLayer.item;
+                if (settings && !settings.holdsFocus()) // qmllint disable missing-property
                     settings.focusSettingsCategory(); // qmllint disable missing-property
             }
 

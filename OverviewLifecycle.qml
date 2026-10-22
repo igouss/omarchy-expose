@@ -8,8 +8,10 @@ OverviewLayout {
     id: root
 
     // The entry layer owns the surfaces and the hot corner, and answers these.
-    signal keyboardFocusRequested()
-    signal settingsFocusRequested()
+    // Asks for keyboard focus wherever it belongs now: the settings when they
+    // are open, the window grid otherwise. One request, so a late one from the
+    // open sequence cannot pull focus out of settings.
+    signal focusRequested()
     signal surfaceReleased()
 
     onEffectiveBackgroundBlurChanged: {
@@ -42,7 +44,7 @@ OverviewLayout {
             root.opened = true;
             root.animateMotionTo(1);
             root.refreshHyprlandState();
-            Qt.callLater(root.keyboardFocusRequested);
+            Qt.callLater(root.focusRequested);
             return;
         }
         if (root.openingPending)
@@ -137,7 +139,7 @@ OverviewLayout {
             root.openingPending = false;
             root.opened = true;
             root.animateMotionTo(1);
-            root.keyboardFocusRequested();
+            root.focusRequested();
         });
     }
 
@@ -178,7 +180,7 @@ OverviewLayout {
         root.motionProgress = root.motionTarget;
         if (root.motionTarget > 0) {
             root.scheduleBackgroundBlurUpdate();
-            Qt.callLater(root.keyboardFocusRequested);
+            Qt.callLater(root.focusRequested);
             return;
         }
         backgroundBlurUpdate.stop();
@@ -223,10 +225,7 @@ OverviewLayout {
         root.clearSettingsPreviews();
         root.settingsCategoryIndex = 0;
         root.settingsOpen = true;
-        Qt.callLater(function () {
-            if (root.settingsOpen)
-                root.settingsFocusRequested();
-        });
+        Qt.callLater(root.focusRequested);
     }
 
     function closeSettings() {
@@ -237,7 +236,7 @@ OverviewLayout {
         if (restoreKeyboardFocus)
             Qt.callLater(function () {
                 if (root.opened)
-                    root.keyboardFocusRequested();
+                    root.focusRequested();
             });
     }
 

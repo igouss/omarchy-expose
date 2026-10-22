@@ -21,6 +21,13 @@ directions. It runs as part of `./validate`.
 `tst_screen_layout.qml` covers outermost-display selection with mixed logical
 sizes, negative coordinates, stacked displays, layout changes, and removal.
 
+`./tests/live/check-settings-focus` drives the running shell with a uinput
+keyboard (sudo, python-evdev) after the working tree is installed into the plugin
+directory and the shell restarted. It checks that Settings opened over IPC while
+the overview is closed start with focus on the category list, and that the Motion
+page's Animate preview leaves focus on its button. It restores every setting it
+changes and never sends Escape.
+
 For live multi-display checks, use a second physical or headless Hyprland output:
 
 - Open on either display: both backdrops should blur/dim, with only one grid.
