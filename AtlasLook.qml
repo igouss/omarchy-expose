@@ -33,9 +33,14 @@ Look {
         return snapshot;
     }
 
-    readonly property int selectedIndex: atlas.toplevels.indexOf(overview.selection)
-    readonly property var centreWindow: selectedIndex >= 0 ? atlas.toplevels[selectedIndex] : null
-    readonly property int centreRegion: selectedIndex >= 0 ? atlas.planeOf[selectedIndex] : -1
+    // The selection's slot, region, and window from one read of the snapshot.
+    readonly property var centre: {
+        const snapshot = look.atlas;
+        const slot = snapshot.toplevels.indexOf(look.overview.selection);
+        return { slot: slot, region: slot >= 0 ? snapshot.planeOf[slot] : -1, window: slot >= 0 ? snapshot.toplevels[slot] : null };
+    }
+    readonly property var centreWindow: centre.window
+    readonly property int centreRegion: centre.region
 
     // The map fills the area above the caption.
     readonly property real mapHeight: height * 0.8
@@ -325,7 +330,7 @@ Look {
                 required property int index
                 readonly property var at: minimap.place(modelData)
                 x: at.x; y: at.y; width: at.width; height: at.height
-                color: index === look.selectedIndex ? Commons.Color.accent : Qt.alpha(Commons.Color.foreground, 0.3)
+                color: index === look.centre.slot ? Commons.Color.accent : Qt.alpha(Commons.Color.foreground, 0.3)
             }
         }
 

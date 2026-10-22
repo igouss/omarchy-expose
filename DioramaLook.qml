@@ -39,9 +39,14 @@ Look {
         return { scale: fitted.scale, x: fitted.x + look.width * 0.05, y: fitted.y + look.height * 0.02 };
     }
 
-    readonly property int selectedIndex: strata.toplevels.indexOf(overview.selection)
-    readonly property int centrePlane: selectedIndex >= 0 ? strata.planeOf[selectedIndex] : -1
-    readonly property var centreWindow: selectedIndex >= 0 ? strata.toplevels[selectedIndex] : null
+    // The selection's slab and window from one read of the snapshot.
+    readonly property var centre: {
+        const snapshot = look.strata;
+        const slot = snapshot.toplevels.indexOf(look.overview.selection);
+        return { plane: slot >= 0 ? snapshot.planeOf[slot] : -1, window: slot >= 0 ? snapshot.toplevels[slot] : null };
+    }
+    readonly property int centrePlane: centre.plane
+    readonly property var centreWindow: centre.window
 
     // 0 to 1 as the model builds on open: slabs settle and blocks grow.
     property real build: 1

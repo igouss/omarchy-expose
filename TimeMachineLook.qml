@@ -21,9 +21,14 @@ Look {
             ranks: TimeLayout.ranks(look.toplevels.map(top => WindowModel.focusHistoryFor(top)))
         };
     }
-    readonly property int selectedIndex: timeline.toplevels.indexOf(overview.selection)
-    readonly property int selectedRank: selectedIndex >= 0 ? timeline.ranks[selectedIndex] : 0
-    readonly property var centreWindow: selectedIndex >= 0 ? timeline.toplevels[selectedIndex] : null
+    // The selection's rank and window from one read of the snapshot.
+    readonly property var centre: {
+        const snapshot = look.timeline;
+        const slot = snapshot.toplevels.indexOf(look.overview.selection);
+        return { rank: slot >= 0 ? snapshot.ranks[slot] : 0, window: slot >= 0 ? snapshot.toplevels[slot] : null };
+    }
+    readonly property int selectedRank: centre.rank
+    readonly property var centreWindow: centre.window
     readonly property int starCount: 72
     readonly property real starSpan: 8
 
