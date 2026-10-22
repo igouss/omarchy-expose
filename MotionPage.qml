@@ -5,7 +5,7 @@ import QtQuick.Layouts
 SettingsPage {
     id: page
     readonly property var focusControls: [motionAnimateButton, animationStyleChoices, animationSameSpeedToggle, slideDirectionChoices, slideDirectionInChoices, slideDirectionOutChoices, animationSpeedSlider, animationInSlider, animationOutSlider]
-    categoryIndex: 5
+    categoryIndex: 6
     title: "Opening and closing"
 
     DialogButton {

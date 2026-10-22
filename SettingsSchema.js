@@ -5,7 +5,16 @@
 // A spec with `options` is an enum, one with `min`/`max` an integer, and one
 // with only `fallback` a boolean. Composite settings (animation timing, slide
 // direction) keep their own handling in the controller.
+// Settings pages in order; number keys 1..N jump to them.
+var categories = ["Look", "Appearance", "Windows", "Window labels", "Workspaces", "Hot corner", "Motion"];
+
 var specs = {
+    look: {
+        fallback: "grid",
+        options: [
+            { label: "Grid", description: "Live previews packed into balanced rows", value: "grid" }
+        ]
+    },
     previewPlacement: {
         fallback: "in-place",
         options: [
@@ -130,6 +139,8 @@ function normalize(name, value, current) {
 }
 
 function expectedOneOf(list) {
+    if (list.length === 1)
+        return "expected " + list[0];
     var head = list.slice(0, -1).join(", ");
     return "expected " + head + (list.length > 2 ? ", or " : " or ") + list[list.length - 1];
 }

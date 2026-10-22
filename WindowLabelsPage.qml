@@ -6,7 +6,7 @@ import qs.Commons as Commons
 SettingsPage {
     id: page
     readonly property var focusControls: [windowFooterChoices, workspaceLabelStyleChoices]
-    categoryIndex: 2
+    categoryIndex: 3
     title: "Titles and workspace names"
 
     SettingRow {

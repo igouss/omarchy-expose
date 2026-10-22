@@ -5,7 +5,7 @@ import QtQuick.Layouts
 SettingsPage {
     id: page
     readonly property var focusControls: [hotCornerToggle, hotCornerPositionChoices, hotCornerAllDisplaysToggle, hotCornerDelaySlider]
-    categoryIndex: 4
+    categoryIndex: 5
     title: "Activate from a corner"
 
     SettingRow {

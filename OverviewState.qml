@@ -40,6 +40,7 @@ Item {
         }
         onFileChanged: Qt.callLater(pluginSettingsFile.reload)
     }
+    readonly property string look: SettingsSchema.read(root.pluginEntry, "look")
     readonly property string previewPlacement: SettingsSchema.read(root.pluginEntry, "previewPlacement")
     readonly property string windowFooterStyle: SettingsSchema.read(root.pluginEntry, "windowFooterStyle")
     property var originToplevel: null

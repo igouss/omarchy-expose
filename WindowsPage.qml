@@ -5,7 +5,7 @@ import QtQuick.Layouts
 SettingsPage {
     id: page
     readonly property var focusControls: [selectionStyleChoices, previewPlacementChoices, movePointerToggle]
-    categoryIndex: 1
+    categoryIndex: 2
     title: "Quick Look and activation"
 
     SettingRow {

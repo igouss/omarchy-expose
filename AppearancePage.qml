@@ -6,7 +6,7 @@ SettingsPage {
     id: page
     readonly property var focusControls: [backgroundBlurSlider, backgroundDimSlider, bottomTextToggle]
     readonly property alias bottomTextToggleItem: bottomTextToggle
-    categoryIndex: 0
+    categoryIndex: 1
     title: "Backdrop and bottom text"
 
     SettingRow {

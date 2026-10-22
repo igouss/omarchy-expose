@@ -45,6 +45,12 @@ TestCase {
         compare(Schema.normalize("showFooter", true, false), true);
     }
 
+    function test_expectedOneOfReadsNaturallyForOneTwoAndMany() {
+        compare(Schema.expectedOneOf(["grid"]), "expected grid");
+        compare(Schema.expectedOneOf(["on", "off"]), "expected on or off");
+        compare(Schema.expectedOneOf(["a", "b", "c"]), "expected a, b, or c");
+    }
+
     function test_ipcErrorsNameTheOptions() {
         compare(Schema.parseIpc("previewPlacement", "x").error, "expected in-place or centered");
         compare(Schema.parseIpc("windowFooterStyle", "x").error, "expected floating, integrated, overlay, or centered");

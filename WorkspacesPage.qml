@@ -5,7 +5,7 @@ import QtQuick.Layouts
 SettingsPage {
     id: page
     readonly property var focusControls: [initialWorkspaceScopeChoices, displayModeChoicesControl]
-    categoryIndex: 3
+    categoryIndex: 4
     title: "Which windows you see"
 
     SettingRow {

@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import "SettingsSchema.js" as SettingsSchema
 import qs.Commons as Commons
 import qs.Ui as Ui
 
@@ -28,7 +29,7 @@ Item {
         if (overview.settingsOpen
                 && !overview.footerHideConfirmationOpen
                 && event.key >= Qt.Key_1
-                && event.key <= Qt.Key_6) {
+                && event.key < Qt.Key_1 + SettingsSchema.categories.length) {
             overview.settingsCategoryIndex = event.key - Qt.Key_1;
             Qt.callLater(screenWindow.focusSettingsCategory);
             event.accepted = true;
@@ -139,7 +140,7 @@ Item {
             Loader {
                 id: lookLoader
                 anchors.fill: parent
-                sourceComponent: overviewArea.looks.grid
+                sourceComponent: overviewArea.looks[overview.look] || overviewArea.looks.grid
             }
 
             Text {

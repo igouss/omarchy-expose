@@ -44,6 +44,7 @@ Item {
                 return "expected open, close, or toggle";
             return mode;
         }
+        function look(name: string): string { return overview.setSettingFromIpc("look", name); }
         function previewPlacement(mode: string): string { return overview.setSettingFromIpc("previewPlacement", mode); }
         function windowFooterStyle(style: string): string { return overview.setSettingFromIpc("windowFooterStyle", style); }
         function selectionStyle(style: string): string { return overview.setSettingFromIpc("selectionStyle", style); }

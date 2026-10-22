@@ -1,4 +1,5 @@
 import QtQuick
+import "SettingsSchema.js" as SettingsSchema
 import QtQuick.Layouts
 import qs.Commons as Commons
 import qs.Ui as Ui
@@ -8,7 +9,7 @@ Item {
 
     required property var controller
     required property var hostWindow
-    readonly property var categories: ["Appearance", "Windows", "Window labels", "Workspaces", "Hot corner", "Motion"]
+    readonly property var categories: SettingsSchema.categories
     readonly property int navigationColumns: settingsDialog.narrow ? (settingsDialog.width < Commons.Style.space(540) ? 2 : 3) : 1
     readonly property int navigationRows: Math.ceil(categories.length / navigationColumns)
     readonly property var slideDirectionOptions: [
@@ -42,6 +43,7 @@ Item {
     function settingsFocusItems() {
         var categoryButton = settingsCategoryRepeater.itemAt(settingsView.controller.settingsCategoryIndex);
         var controls = [
+            lookPage.focusControls,
             appearancePage.focusControls,
             windowsPage.focusControls,
             windowLabelsPage.focusControls,
@@ -149,7 +151,7 @@ Item {
 
                     Text {
                         visible: !settingsDialog.narrow
-                        text: "1–6 section   ↑↓ move   ←→ adjust   Esc close"
+                        text: "1–" + settingsView.categories.length + " section   ↑↓ move   ←→ adjust   Esc close"
                         textFormat: Text.PlainText
                         color: Commons.Color.menu.text
                         opacity: 0.5
@@ -224,6 +226,12 @@ Item {
                     Layout.fillHeight: true
                     clip: true
 
+                    LookPage {
+                        id: lookPage
+                        view: settingsView
+                        dialog: settingsDialog
+                    }
+
                     AppearancePage {
                         id: appearancePage
                         view: settingsView
@@ -287,7 +295,7 @@ Item {
 
                     Text {
                         visible: !settingsDialog.narrow
-                        text: "1–6 category   Tab controls"
+                        text: "1–" + settingsView.categories.length + " category   Tab controls"
                         textFormat: Text.PlainText
                         color: Commons.Color.menu.text
                         opacity: 0.45
