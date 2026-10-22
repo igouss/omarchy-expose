@@ -196,6 +196,8 @@ OverviewLayout {
     }
 
     function finishDismiss() {
+        if (root.pendingActivation)
+            root.dispatchPendingActivation();
         var notifyShell = root.dismissNotifyShell;
         root.dismissNotifyShell = false;
         if (notifyShell && root.shell && typeof root.shell.hide === "function")

@@ -188,6 +188,8 @@ Item {
     property var hoveredToplevel: null
     property var previewToplevel: null
     property var previewExitToplevel: null
+    // Window to focus once the overlay releases the keyboard.
+    property var pendingActivation: null
     property bool previewSlowMotion: false
     property bool previewNavigationSlowMotion: false
     property bool openingPending: false

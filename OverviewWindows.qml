@@ -85,15 +85,23 @@ OverviewSettingsApi {
     function activate(top) {
         if (!top)
             return;
-        var helper = root.pluginDir + "/activate-window";
-        Quickshell.execDetached([
-            helper,
-            WindowModel.addressFor(top),
-            WindowModel.appIdFor(top),
-            String(top.title || ""),
-            root.moveCursorToWindow ? "true" : "false"
-        ]);
+        root.pendingActivation = top;
         root.dismiss();
+    }
+
+    // Runs once the overlay surface is gone: Hyprland returns focus to the
+    // previous window when an exclusive-keyboard layer unmaps, which would
+    // override a focus requested earlier.
+    function dispatchPendingActivation() {
+        var address = WindowModel.addressFor(root.pendingActivation);
+        root.pendingActivation = null;
+        if (!address)
+            return;
+        var focus = "hl.dispatch(hl.dsp.focus({ window = 'address:" + address + "' }))";
+        Hyprland.dispatch(root.moveCursorToWindow
+            ? "(function() " + focus + " end)"
+            : "(function() local p = hl.get_cursor_pos(); " + focus
+                + "; hl.dispatch(hl.dsp.cursor.move({ x = p.x, y = p.y })) end)");
     }
 
     function requestClose(top) {
