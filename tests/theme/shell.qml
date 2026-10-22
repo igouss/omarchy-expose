@@ -136,6 +136,12 @@ ShellRoot {
                 active: test.phase >= 29
                 sourceComponent: CrtLook { overview: controller; screenWindow: lookScreen }
             }
+            Loader {
+                id: timeLook
+                width: 1240; height: 900
+                active: test.phase >= 29
+                sourceComponent: TimeMachineLook { overview: controller; screenWindow: lookScreen }
+            }
             WindowCard {
                 id: card
                 modelData: ({title: "Window preview", lastIpcObject: {class: "example"}, workspace: {id:1,name:"1"}})
@@ -203,7 +209,7 @@ ShellRoot {
     function checkLooks() {
         controller.selection = lookWindows[1];
         controller.opened = true;
-        var looks = [gridLook, carouselLook, strataLook, hudLook, crtLook];
+        var looks = [gridLook, carouselLook, strataLook, hudLook, crtLook, timeLook];
         for (var i = 0; i < looks.length; i++) {
             require(looks[i].item !== null, "look " + i + " loads");
             require(looks[i].item.windowLayout.length === lookWindows.length, "look " + i + " lays out every window");

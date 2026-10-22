@@ -125,6 +125,15 @@ TestCase {
         compare(WindowModel.frameFor(null), null);
     }
 
+    function test_focusHistoryIsTheRecencyOrUnknown() {
+        compare(WindowModel.focusHistoryFor(createToplevel({ lastIpcObject: { focusHistoryID: 0 } })), 0);
+        compare(WindowModel.focusHistoryFor(createToplevel({ lastIpcObject: { focusHistoryID: 4 } })), 4);
+        compare(WindowModel.focusHistoryFor(createToplevel({ lastIpcObject: { focusHistoryID: -1 } })), -1);
+        compare(WindowModel.focusHistoryFor(createToplevel({ lastIpcObject: { focusHistoryID: null } })), -1);
+        compare(WindowModel.focusHistoryFor(createToplevel({ lastIpcObject: {} })), -1);
+        compare(WindowModel.focusHistoryFor(null), -1);
+    }
+
     function test_viewportIsTheMonitorsLogicalRect() {
         compare(WindowModel.viewportFor(createToplevel({ monitor: { x: 2560, y: 0, width: 3840, height: 2160, scale: 1.5, lastIpcObject: { transform: 0 } } })),
             { x: 2560, y: 0, width: 2560, height: 1440 });

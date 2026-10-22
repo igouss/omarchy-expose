@@ -110,6 +110,13 @@ function viewportFor(toplevel) {
         : { x: x, y: y, width: width, height: height };
 }
 
+// The window's place in Hyprland's focus history, 0 for the most recently
+// focused; -1 when unknown.
+function focusHistoryFor(toplevel) {
+    var id = ipcFor(toplevel).focusHistoryID;
+    return typeof id === "number" && id >= 0 ? id : -1;
+}
+
 function searchTextFor(toplevel) {
     var ipc = ipcFor(toplevel);
     return (appIdFor(toplevel) + " " + String(ipc.class || "") + " "
