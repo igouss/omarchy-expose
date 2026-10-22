@@ -7,7 +7,7 @@ macOS-style Exposé for Omarchy: one key or a hot corner shows every open window
 ## Highlights
 
 - **Live previews.** Cards are real screencopy views, so videos keep playing and terminals keep scrolling. The Omarchy desktop behind the grid stays live too.
-- **Looks.** Grid packs every preview into balanced rows; Carousel puts the selected window front and centre with the rest turned away in perspective on a reflective floor, spinning on a spring as you move (Left/Right, the scroll wheel, or a click on a side card). Strata lays every workspace back as a glass floor, stacked in perspective, with each window where it really is (a scrolling layout's off-screen windows sit beside the monitor's outline); Up/Down climb between floors.
+- **Looks.** Grid packs every preview into balanced rows; Carousel puts the selected window front and centre with the rest turned away in perspective on a reflective floor, spinning on a spring as you move (Left/Right, the scroll wheel, or a click on a side card). Strata lays every workspace back as a glass floor, stacked in perspective, with each window where it really is (a scrolling layout's off-screen windows sit beside the monitor's outline); Up/Down climb between floors. Glass HUD sets frosted glass panes on the grid's rows, each title in large type, with one gradient ring sweeping around the selection that slides from pane to pane.
 - **Quick Look.** Space enlarges any preview and restores it again. Shift+Space does it in slow motion, like the classic macOS Easter egg.
 - **Search.** Just start typing to filter windows by title or application.
 - **Workspace scope.** Press Tab to switch between every window and windows on the current workspace, and pick which of the two the overview opens with. Per-monitor mode evaluates the current workspace of the selected display.
@@ -98,7 +98,7 @@ Hot corners default to the outermost display: left corners use the leftmost disp
 
 Open **Settings** from the footer while the overview is open. It is fully keyboard driven: 1-8 jump to a section, Up/Down move between controls, Left/Right adjust sliders and choices, Space or Enter flip toggles and press buttons, Escape closes. Changes apply immediately. Settings are grouped into **Look**, **Appearance**, **Windows**, **Window labels**, **Workspaces**, **Hot corner**, **Motion**, and **Juice**, with explanatory text beneath each control:
 
-- Look: Grid (default), Carousel, or Strata. Window labels and selection highlight shape the grid only; their settings say so while another look is active
+- Look: Grid (default), Carousel, Strata, or Glass HUD. Window labels and selection highlight shape the grid only; their settings say so while another look is active
 - Juice, each effect its own switch (all on by default): springy motion (moves overshoot and settle; carousel cards stretch as they travel, the grid's lifted card pops) and edge bump (an arrow with no window that way shakes the selection; the carousel rubber-bands), and activation punch (the opened window flashes, jumps toward you and throws sparks; the overview closes about 0.2 s later, instantly with punch off), and selection pulse (the selection's glow breathes; carousel and the grid's Lift highlight), and pointer tilt (the card under the pointer leans toward it in 3D; in the carousel only the front card)
 - Opening animation: Original (default), Fade, Zoom, or Slide
 - Animation duration saved per mode, linked for in/out by default or expandable to separate timings
@@ -131,7 +131,7 @@ omarchy-shell expose backgroundDim 6             # 0-90
 omarchy-shell expose previewPlacement in-place   # in-place | centered
 omarchy-shell expose windowFooterStyle floating  # floating | integrated | overlay | centered
 omarchy-shell expose selectionStyle outline      # outline | lift
-omarchy-shell expose look strata                 # grid, carousel, or strata
+omarchy-shell expose look strata                 # grid, carousel, strata, or hud
 omarchy-shell expose juice spring off            # spring, edgeBump, punch, pulse, or tilt; on or off
 omarchy-shell expose multiMonitorMode mirrored   # mirrored | per-monitor
 omarchy-shell expose hotCorner on                # on | off
