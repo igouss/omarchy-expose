@@ -49,6 +49,12 @@ Item {
         var style = String((root.pluginEntry && root.pluginEntry.windowFooterStyle) || "floating");
         return root.windowFooterStyles.indexOf(style) !== -1 ? style : "floating";
     }
+    property var originToplevel: null
+    readonly property var selectionStyles: ["outline", "lift"]
+    readonly property string selectionStyle: {
+        var style = String((root.pluginEntry && root.pluginEntry.selectionStyle) || "outline");
+        return root.selectionStyles.indexOf(style) !== -1 ? style : "outline";
+    }
     readonly property var animationStyles: ["original", "fade", "zoom", "slide"]
     readonly property string animationStyle: {
         var style = String((root.pluginEntry && root.pluginEntry.animationStyle) || "original");

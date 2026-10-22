@@ -33,8 +33,20 @@ Ui.BorderSurface {
     readonly property string applicationName: WindowModel.appIdFor(modelData) || "Application"
     readonly property string workspaceName: card.controller.workspaceName(modelData)
     readonly property string iconSource: card.controller.iconFor(modelData)
-    readonly property var outlineSpec: hovered || selected || focusedWindow
-        ? controller.windowBorders.activeSpec : controller.windowBorders.inactiveSpec
+    // Lift marks only the selection, which is what Enter opens; the window you
+    // came from gets a dot instead of sharing the active border.
+    readonly property bool liftSelection: card.controller.selectionStyle === "lift"
+    readonly property bool lifted: liftSelection && selected && !previewed
+    readonly property bool outlined: liftSelection ? selected : (hovered || selected || focusedWindow)
+    readonly property var outlineSpec: outlined
+        ? (liftSelection ? liftRingSpec : controller.windowBorders.activeSpec)
+        : controller.windowBorders.inactiveSpec
+    readonly property var liftRingSpec: {
+        var active = controller.windowBorders.activeSpec;
+        var ring = Border.flat(active.color, Math.max(3, controller.windowBorders.snapshot.width + 1));
+        ring.gradient = active.gradient;
+        return ring;
+    }
     readonly property color currentColor: Style.selectedStateColor(Color.menu.text, Color.accent)
     // An excluded card keeps its last rectangle, so it neither
     // animates toward the origin nor flies back in from it.
@@ -58,11 +70,14 @@ Ui.BorderSurface {
     y: layoutRect.y
     width: layoutRect.width
     height: layoutRect.height
-    z: previewed ? 11 : (exitingPreview ? 10 : 0)
+    z: previewed ? 11 : (exitingPreview ? 10 : (lifted ? 1 : 0))
+    scale: lifted ? 1.04 : 1
     radius: integratedFooter ? Style.cornerRadius : 0
     color: integratedFooter ? Color.menu.background : "transparent"
     borderSpec: integratedFooter ? outlineSpec : Border.none()
-    opacity: card.controller.previewIndex < 0 || previewed ? 1 : 0.28
+    opacity: card.controller.previewIndex >= 0
+        ? (previewed ? 1 : 0.28)
+        : (liftSelection && !selected ? 0.72 : 1)
 
     MouseArea {
         anchors.fill: parent
@@ -106,6 +121,32 @@ Ui.BorderSurface {
         Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
+
+            Rectangle {
+                anchors.fill: previewFrame
+                anchors.margins: -Style.space(4)
+                visible: card.liftSelection
+                radius: previewFrame.radius + Style.space(4)
+                color: Color.accent
+                opacity: card.lifted ? 0.85 : 0
+                layer.enabled: visible
+                layer.effect: MultiEffect {
+                    blurEnabled: true
+                    blur: 1
+                    blurMax: 48
+                    autoPaddingEnabled: true
+                }
+
+                Behavior on opacity {
+                    enabled: card.controller.motionSettled
+
+                    NumberAnimation {
+                        duration: card.controller.previewFadeDuration
+                    }
+
+                }
+
+            }
 
             Rectangle {
                 id: previewFrame
@@ -166,6 +207,20 @@ Ui.BorderSurface {
                 radius: previewFrame.radius
                 color: "transparent"
                 borderSpec: card.outlineSpec
+            }
+
+            Rectangle {
+                anchors.top: previewFrame.top
+                anchors.right: previewFrame.right
+                anchors.margins: Style.spacing.sm
+                z: 6
+                visible: card.liftSelection && card.modelData === card.controller.originToplevel
+                width: Style.space(12)
+                height: width
+                radius: width / 2
+                color: card.currentColor
+                border.color: Color.menu.background
+                border.width: Style.space(2)
             }
 
             Rectangle {
@@ -411,6 +466,16 @@ Ui.BorderSurface {
 
         NumberAnimation {
             duration: card.controller.previewFadeDuration
+        }
+
+    }
+
+    Behavior on scale {
+        enabled: card.controller.motionSettled
+
+        NumberAnimation {
+            duration: card.controller.previewFadeDuration
+            easing.type: Easing.OutCubic
         }
 
     }

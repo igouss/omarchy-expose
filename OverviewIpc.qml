@@ -34,6 +34,12 @@ Item {
             overview.setWindowFooterStyle(style);
             return style;
         }
+        function selectionStyle(style: string): string {
+            if (overview.selectionStyles.indexOf(style) === -1)
+                return overview.expectedOneOf(overview.selectionStyles);
+            overview.setSelectionStyle(style);
+            return style;
+        }
         function animationStyle(style: string): string {
             if (overview.animationStyles.indexOf(style) === -1)
                 return overview.expectedOneOf(overview.animationStyles);

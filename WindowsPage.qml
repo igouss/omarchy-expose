@@ -3,9 +3,27 @@ import QtQuick.Layouts
 
 SettingsPage {
     id: page
-    readonly property var focusControls: [previewPlacementChoices, movePointerToggle]
+    readonly property var focusControls: [selectionStyleChoices, previewPlacementChoices, movePointerToggle]
     categoryIndex: 1
     title: "Quick Look and activation"
+
+    SettingRow {
+        dialog: page.dialog
+        label: "Selection highlight"
+        description: "Outline borders the selected, hovered, and current windows alike. Lift raises only the window Enter opens, with a glow, and marks the current window with a dot."
+
+        SettingChoices {
+            id: selectionStyleChoices
+            view: page.view
+            Layout.fillWidth: true
+            value: view.controller.selectionStyle
+            options: [
+                { label: "Outline", value: "outline" },
+                { label: "Lift", value: "lift" }
+            ]
+            onChosen: function (value) { view.controller.setSelectionStyle(value); }
+        }
+    }
 
     SettingRow {
         dialog: page.dialog

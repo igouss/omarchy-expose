@@ -29,6 +29,9 @@ ShellRoot {
         property bool separateTiming: false
         property string previewPlacement: "in-place"
         property string windowFooterStyle: "floating"
+        property string selectionStyle: "outline"
+        property var originToplevel: null
+        function setSelectionStyle(value) { selectionStyle = value; }
         property string animationStyle: "original"
         property string animationDurationPreviewStyle: ""
         property int animationInDurationPreview: -1

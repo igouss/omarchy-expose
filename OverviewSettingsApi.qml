@@ -26,6 +26,12 @@ OverviewState {
             root.updatePluginSetting("windowFooterStyle", style);
     }
 
+    function setSelectionStyle(value) {
+        var style = root.selectionStyles.indexOf(value) !== -1 ? value : "outline";
+        if (style !== root.selectionStyle)
+            root.updatePluginSetting("selectionStyle", style);
+    }
+
     function setAnimationStyle(value) {
         var style = root.animationStyles.indexOf(value) !== -1 ? value : "original";
         if (style !== root.animationStyle)

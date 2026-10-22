@@ -26,6 +26,8 @@ OverviewLayout {
     }
 
     function open(payload) {
+        // Taken before the overlay takes keyboard focus, which can clear the active window.
+        root.originToplevel = Hyprland.activeToplevel;
         windowBorders.refresh();
         var blurRestoreInFlight = root.backgroundBlurReleasePhase === 1 && backgroundBlurSession.running;
         if (!blurRestoreInFlight)
