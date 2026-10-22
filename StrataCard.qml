@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Effects
 import "StrataLayout.js" as StrataLayout
+import "WorkspacePlanes.js" as WorkspacePlanes
 import qs.Commons as Commons
 
 // One window lying on its workspace's plane at its real place. It shares the
@@ -20,7 +21,7 @@ Item {
     readonly property var plane: stack.planeGeometry(planeIndex)
     readonly property var placed: plane.placed
     readonly property var spot: inLayout
-        ? StrataLayout.onPlane(stack.strata.frames[slot], stack.strata.planes[planeIndex].extent, plane)
+        ? WorkspacePlanes.onPlane(stack.strata.frames[slot], stack.strata.planes[planeIndex].extent, plane)
         : { x: 0, y: 0, width: 1, height: 1 }
     readonly property bool selected: stack.screenWindow.acceptsKeyboard && inLayout && modelData === controller.selection
     readonly property bool previewed: stack.screenWindow.acceptsKeyboard && inLayout && modelData === controller.previewToplevel

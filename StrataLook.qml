@@ -1,5 +1,6 @@
 import QtQuick
 import "StrataLayout.js" as StrataLayout
+import "WorkspacePlanes.js" as WorkspacePlanes
 import "WindowModel.js" as WindowModel
 import qs.Commons as Commons
 
@@ -15,39 +16,11 @@ Look {
     // One snapshot of the listed windows with their planes in stacking order, each
     // window's plane and frame, and navigation rects. Cards read their slot here so
     // slot and plane never come from two different moments.
+    // One snapshot of the listed windows with their planes; cards read their slot
+    // here so slot and plane never come from two different moments.
     readonly property var strata: {
         var revision = overview.modelRevision;
-        var byKey = {};
-        var workspaces = [];
-        var keys = look.toplevels.map(function (top) {
-            var workspace = top.workspace;
-            var key = workspace ? String(workspace.id) + "/" + String(workspace.name) : "-";
-            if (!byKey[key]) {
-                byKey[key] = {
-                    id: workspace ? Number(workspace.id) : 0,
-                    name: WindowModel.workspaceName(top),
-                    viewport: WindowModel.viewportFor(top) || look.screenViewport,
-                    frames: []
-                };
-                workspaces.push(byKey[key]);
-            }
-            return key;
-        });
-        var frames = look.toplevels.map(function (top, index) {
-            var frame = WindowModel.frameFor(top) || byKey[keys[index]].viewport;
-            byKey[keys[index]].frames.push(frame);
-            return frame;
-        });
-        var planes = StrataLayout.planeOrder(workspaces);
-        planes.forEach(function (plane) { plane.extent = StrataLayout.extent(plane.viewport, plane.frames); });
-        var planeOf = keys.map(key => planes.indexOf(byKey[key]));
-        return {
-            toplevels: look.toplevels,
-            planes: planes,
-            planeOf: planeOf,
-            frames: frames,
-            nav: StrataLayout.navRects(frames.map((frame, index) => ({ plane: planeOf[index], rect: frame, extent: planes[planeOf[index]].extent })))
-        };
+        return WorkspacePlanes.snapshot(look.toplevels, look.screenViewport);
     }
 
     readonly property int selectedIndex: toplevels.indexOf(overview.selection)
@@ -78,7 +51,7 @@ Look {
     // A plane's size, where it sits, and how it is laid back, for planes and cards alike.
     function planeGeometry(planeIndex) {
         var plane = look.strata.planes[planeIndex];
-        var size = StrataLayout.fitPlane(plane ? plane.extent : look.screenViewport, look.planeMaxWidth, look.planeMaxHeight);
+        var size = WorkspacePlanes.fitPlane(plane ? plane.extent : look.screenViewport, look.planeMaxWidth, look.planeMaxHeight);
         var placed = StrataLayout.placePlane(planeIndex - look.position - look.bump, look.height, look.planeMaxHeight);
         return {
             x: (look.width - size.width) / 2,
@@ -193,7 +166,7 @@ Look {
 
             // The monitor's viewport, where the workspace is on screen.
             Rectangle {
-                readonly property var rect: StrataLayout.onPlane(plane.modelData.viewport, plane.modelData.extent, plane)
+                readonly property var rect: WorkspacePlanes.onPlane(plane.modelData.viewport, plane.modelData.extent, plane)
                 x: rect.x
                 y: rect.y
                 width: rect.width
