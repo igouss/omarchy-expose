@@ -109,6 +109,21 @@ TestCase {
         toplevel.destroy();
     }
 
+    function test_frameIsTheWindowsPlaceOrNothing() {
+        compare(WindowModel.frameFor(createToplevel({ lastIpcObject: { at: [-2458, 10], size: [1255, 1440] } })), { x: -2458, y: 10, width: 1255, height: 1440 });
+        compare(WindowModel.frameFor(createToplevel({ lastIpcObject: { size: [1255, 1440] } })), null);
+        compare(WindowModel.frameFor(createToplevel({ lastIpcObject: { at: [0, 0], size: [0, 1440] } })), null);
+        compare(WindowModel.frameFor(null), null);
+    }
+
+    function test_viewportIsTheMonitorsLogicalRect() {
+        compare(WindowModel.viewportFor(createToplevel({ monitor: { x: 2560, y: 0, width: 3840, height: 2160, scale: 1.5, lastIpcObject: { transform: 0 } } })),
+            { x: 2560, y: 0, width: 2560, height: 1440 });
+        compare(WindowModel.viewportFor(createToplevel({ monitor: { x: 0, y: 0, width: 2560, height: 1440, scale: 1, lastIpcObject: { transform: 1 } } })),
+            { x: 0, y: 0, width: 1440, height: 2560 });
+        compare(WindowModel.viewportFor(createToplevel({ monitor: null })), null);
+    }
+
     function test_searchesAllNativeIdentityFields() {
         var toplevel = createToplevel();
         verify(WindowModel.searchTextFor(toplevel).includes("wayland.app"));

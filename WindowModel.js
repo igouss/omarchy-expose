@@ -75,6 +75,34 @@ function aspectRatioFor(toplevel) {
     return Math.max(0.45, Math.min(4, width / height));
 }
 
+// Where the window sits in compositor (logical) coordinates; null when unknown.
+function frameFor(toplevel) {
+    var ipc = ipcFor(toplevel);
+    var at = ipc.at || [];
+    var size = ipc.size || [];
+    var x = Number(at[0]), y = Number(at[1]), width = Number(size[0]), height = Number(size[1]);
+    if (at.length < 2 || size.length < 2 || ![x, y, width, height].every(isFinite) || width <= 0 || height <= 0)
+        return null;
+    return { x: x, y: y, width: width, height: height };
+}
+
+// The logical rect of the window's monitor: pixels divided by its scale, with
+// width and height swapped when it is rotated a quarter turn. Null when unknown.
+function viewportFor(toplevel) {
+    var monitor = toplevel && toplevel.monitor ? toplevel.monitor : null;
+    if (!monitor)
+        return null;
+    var scale = Number(monitor.scale) > 0 ? Number(monitor.scale) : 1;
+    var width = Number(monitor.width) / scale, height = Number(monitor.height) / scale;
+    var transform = Number((monitor.lastIpcObject || {}).transform) || 0;
+    var x = Number(monitor.x) || 0, y = Number(monitor.y) || 0;
+    if (!(width > 0 && height > 0))
+        return null;
+    return transform % 2 === 1
+        ? { x: x, y: y, width: height, height: width }
+        : { x: x, y: y, width: width, height: height };
+}
+
 function searchTextFor(toplevel) {
     var ipc = ipcFor(toplevel);
     return (appIdFor(toplevel) + " " + String(ipc.class || "") + " "
