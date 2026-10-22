@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import qs.Commons
+import qs.Commons as Commons
 
 ThemedControl {
     id: categoryButton
@@ -13,8 +13,8 @@ ThemedControl {
     focused: activeFocus
     pressed: categoryMouse.pressed
     signal chosen(int nextIndex)
-    implicitWidth: Style.space(horizontal ? 140 : 200)
-    implicitHeight: Style.space(horizontal ? 52 : 48)
+    implicitWidth: Commons.Style.space(horizontal ? 140 : 200)
+    implicitHeight: Commons.Style.space(horizontal ? 52 : 48)
     activeFocusOnTab: selected
 
     signal entered()
@@ -58,18 +58,18 @@ ThemedControl {
 
     RowLayout {
         anchors.fill: parent
-        anchors.leftMargin: Style.space(categoryButton.horizontal ? 8 : 18)
-        anchors.rightMargin: Style.space(categoryButton.horizontal ? 8 : 18)
-        spacing: Style.spacing.md
+        anchors.leftMargin: Commons.Style.space(categoryButton.horizontal ? 8 : 18)
+        anchors.rightMargin: Commons.Style.space(categoryButton.horizontal ? 8 : 18)
+        spacing: Commons.Style.spacing.md
 
         Text {
-            Layout.preferredWidth: Style.space(18)
+            Layout.preferredWidth: Commons.Style.space(18)
             text: String(categoryButton.categoryIndex + 1)
             textFormat: Text.PlainText
             horizontalAlignment: Text.AlignHCenter
             color: categoryButton.stateColor
-            font.family: Style.font.menuFamily
-            font.pixelSize: Style.font.caption
+            font.family: Commons.Style.font.menuFamily
+            font.pixelSize: Commons.Style.font.caption
             font.bold: categoryButton.selected
         }
 
@@ -79,8 +79,8 @@ ThemedControl {
             textFormat: Text.PlainText
             horizontalAlignment: Text.AlignLeft
             color: categoryButton.stateColor
-            font.family: Style.font.menuFamily
-            font.pixelSize: Style.font.bodySmall
+            font.family: Commons.Style.font.menuFamily
+            font.pixelSize: Commons.Style.font.bodySmall
             font.bold: categoryButton.selected
             elide: Text.ElideRight
         }

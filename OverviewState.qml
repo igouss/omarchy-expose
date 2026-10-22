@@ -4,8 +4,8 @@ import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
 import Quickshell.Wayland
-import qs.Commons // qmllint disable import
-import qs.Ui as Ui // qmllint disable import
+import qs.Commons as Commons
+import qs.Ui as Ui
 import "IconResolver.js" as IconResolver
 import "WindowModel.js" as WindowModel
 import "ScreenLayout.js" as ScreenLayout
@@ -126,7 +126,7 @@ Item {
     readonly property real slideOffsetFraction: root.animationStyle === "slide"
         ? 0.11 * (1 - root.motionProgress)
         : 0
-    readonly property real windowFooterHeight: root.windowFooterStyle === "overlay" ? 0 : Style.space(40)
+    readonly property real windowFooterHeight: root.windowFooterStyle === "overlay" ? 0 : Commons.Style.space(40)
     readonly property int backgroundBlur: {
         var raw = root.pluginEntry ? root.pluginEntry.backgroundBlur : undefined;
         var value = raw === null || raw === undefined ? NaN : Number(raw);
@@ -174,8 +174,8 @@ Item {
     }
     // Reach farther along both screen edges than into the desktop. Fast flings
     // are easier to catch without stealing a large square from the bar below.
-    readonly property int hotCornerReach: Style.space(48)
-    readonly property int hotCornerDepth: Style.space(6)
+    readonly property int hotCornerReach: Commons.Style.space(48)
+    readonly property int hotCornerDepth: Commons.Style.space(6)
     readonly property bool moveCursorToWindow: !root.pluginEntry || root.pluginEntry.moveCursorToWindow !== false
     readonly property string multiMonitorMode: root.pluginEntry && root.pluginEntry.multiMonitorMode === "per-monitor"
         ? "per-monitor"

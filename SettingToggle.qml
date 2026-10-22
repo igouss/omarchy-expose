@@ -1,13 +1,13 @@
 import QtQuick
-import qs.Commons
+import qs.Commons as Commons
 
 Item {
     id: settingToggle
     property var view: null
     property bool checked: false
     signal toggled(bool checked)
-    implicitWidth: Style.space(72)
-    implicitHeight: Style.spacing.controlHeight
+    implicitWidth: Commons.Style.space(72)
+    implicitHeight: Commons.Style.spacing.controlHeight
     activeFocusOnTab: true
 
     Keys.onPressed: function (event) {
@@ -26,9 +26,9 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         text: settingToggle.checked ? "On" : "Off"
         textFormat: Text.PlainText
-        color: Color.menu.text
-        font.family: Style.font.menuFamily
-        font.pixelSize: Style.font.caption
+        color: Commons.Color.menu.text
+        font.family: Commons.Style.font.menuFamily
+        font.pixelSize: Commons.Style.font.caption
     }
 
     ThemedControl {
@@ -36,23 +36,23 @@ Item {
         selected: settingToggle.checked
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
-        width: Style.space(30)
-        height: Style.space(14)
+        width: Commons.Style.space(30)
+        height: Commons.Style.space(14)
 
         Rectangle {
-            width: Style.space(10)
+            width: Commons.Style.space(10)
             height: width
             anchors.verticalCenter: parent.verticalCenter
-            x: settingToggle.checked ? parent.width - width - Style.space(2) : Style.space(2)
+            x: settingToggle.checked ? parent.width - width - Commons.Style.space(2) : Commons.Style.space(2)
             color: toggleTrack.stateColor
-            radius: Math.min(Style.cornerRadius, height / 2)
+            radius: Math.min(Commons.Style.cornerRadius, height / 2)
             Behavior on x { NumberAnimation { duration: 100 } }
         }
     }
 
     ThemedControl {
         anchors.fill: parent
-        anchors.margins: -Style.space(4)
+        anchors.margins: -Commons.Style.space(4)
         visible: settingToggle.activeFocus
         focused: true
         color: "transparent"

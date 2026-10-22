@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import qs.Commons
+import qs.Commons as Commons
 import qs.Ui as Ui
 
 Item {
@@ -36,17 +36,17 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        color: Color.menu.scrim
+        color: Commons.Color.menu.scrim
     }
 
     Ui.BorderSurface {
         id: footerHideDialog
         anchors.centerIn: parent
-        width: Math.min(Style.space(560), parent.width - Style.space(80))
-        height: Math.min(parent.height - Style.space(80), footerHideContent.implicitHeight + Style.space(56))
-        radius: Style.cornerRadius
-        color: Color.menu.background
-        borderSpec: Border.surfaceSpec("menu", "border", Color.foreground, Style.normalBorderWidth)
+        width: Math.min(Commons.Style.space(560), parent.width - Commons.Style.space(80))
+        height: Math.min(parent.height - Commons.Style.space(80), footerHideContent.implicitHeight + Commons.Style.space(56))
+        radius: Commons.Style.cornerRadius
+        color: Commons.Color.menu.background
+        borderSpec: Commons.Border.surfaceSpec("menu", "border", Commons.Color.foreground, Commons.Style.normalBorderWidth)
 
         MouseArea {
             anchors.fill: parent
@@ -56,16 +56,16 @@ Item {
         ColumnLayout {
             id: footerHideContent
             anchors.fill: parent
-            anchors.margins: Style.space(28)
-            spacing: Style.spacing.lg
+            anchors.margins: Commons.Style.space(28)
+            spacing: Commons.Style.spacing.lg
 
             Text {
                 Layout.fillWidth: true
                 text: "Hide bottom text?"
                 textFormat: Text.PlainText
-                color: Color.menu.text
-                font.family: Style.font.menuFamily
-                font.pixelSize: Style.font.heading
+                color: Commons.Color.menu.text
+                font.family: Commons.Style.font.menuFamily
+                font.pixelSize: Commons.Style.font.heading
                 font.bold: true
             }
 
@@ -74,33 +74,33 @@ Item {
                 text: "This also hides the Settings link. You can turn it back on while this panel remains open."
                 textFormat: Text.PlainText
                 wrapMode: Text.WordWrap
-                color: Color.menu.text
-                font.family: Style.font.menuFamily
-                font.pixelSize: Style.font.body
+                color: Commons.Color.menu.text
+                font.family: Commons.Style.font.menuFamily
+                font.pixelSize: Commons.Style.font.body
             }
 
             ThemedControl {
                 Layout.fillWidth: true
-                Layout.preferredHeight: recoveryText.implicitHeight + Style.space(24)
+                Layout.preferredHeight: recoveryText.implicitHeight + Commons.Style.space(24)
 
                 Text {
                     id: recoveryText
                     anchors.fill: parent
-                    anchors.margins: Style.space(12)
+                    anchors.margins: Commons.Style.space(12)
                     text: "After closing Settings, restore it in ~/.config/omarchy/shell.json by setting showFooter to true in the expose.window-overview plugin entry."
                     textFormat: Text.PlainText
                     wrapMode: Text.WordWrap
-                    color: Color.menu.text
+                    color: Commons.Color.menu.text
                     opacity: 0.72
-                    font.family: Style.font.menuFamily
-                    font.pixelSize: Style.font.caption
+                    font.family: Commons.Style.font.menuFamily
+                    font.pixelSize: Commons.Style.font.caption
                 }
             }
 
             Item {
                 id: footerHideAcknowledgement
                 Layout.fillWidth: true
-                Layout.preferredHeight: Math.max(Style.space(40), acknowledgementText.implicitHeight)
+                Layout.preferredHeight: Math.max(Commons.Style.space(40), acknowledgementText.implicitHeight)
                 activeFocusOnTab: true
 
                 Keys.onPressed: function (event) {
@@ -117,12 +117,12 @@ Item {
                 RowLayout {
                     id: acknowledgementRow
                     anchors.fill: parent
-                    spacing: Style.spacing.md
+                    spacing: Commons.Style.spacing.md
 
                     ThemedControl {
                         id: acknowledgementBox
-                        Layout.preferredWidth: Style.space(18)
-                        Layout.preferredHeight: Style.space(18)
+                        Layout.preferredWidth: Commons.Style.space(18)
+                        Layout.preferredHeight: Commons.Style.space(18)
                         selected: view.controller.footerHideAcknowledged
                         focused: footerHideAcknowledgement.activeFocus
 
@@ -132,8 +132,8 @@ Item {
                             text: "✓"
                             textFormat: Text.PlainText
                             color: acknowledgementBox.stateColor
-                            font.family: Style.font.menuFamily
-                            font.pixelSize: Style.font.caption
+                            font.family: Commons.Style.font.menuFamily
+                            font.pixelSize: Commons.Style.font.caption
                             font.bold: true
                         }
                     }
@@ -144,9 +144,9 @@ Item {
                         text: "I understand that closing Settings while it is hidden requires editing the config."
                         textFormat: Text.PlainText
                         wrapMode: Text.WordWrap
-                        color: Color.menu.text
-                        font.family: Style.font.menuFamily
-                        font.pixelSize: Style.font.bodySmall
+                        color: Commons.Color.menu.text
+                        font.family: Commons.Style.font.menuFamily
+                        font.pixelSize: Commons.Style.font.bodySmall
                     }
                 }
 
@@ -160,8 +160,8 @@ Item {
 
             RowLayout {
                 Layout.fillWidth: true
-                Layout.topMargin: Style.spacing.sm
-                spacing: Style.spacing.md
+                Layout.topMargin: Commons.Style.spacing.sm
+                spacing: Commons.Style.spacing.md
 
                 Item { Layout.fillWidth: true }
 

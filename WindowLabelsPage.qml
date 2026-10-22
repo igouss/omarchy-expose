@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import qs.Commons
+import qs.Commons as Commons
 
 SettingsPage {
     id: page
@@ -18,7 +18,7 @@ SettingsPage {
             view: page.view
             Layout.fillWidth: true
             value: view.controller.windowFooterStyle
-            spacing: Style.spacing.md
+            spacing: Commons.Style.spacing.md
             options: [
                 { label: "Floating", value: "floating" },
                 { label: "Rail", value: "integrated" },

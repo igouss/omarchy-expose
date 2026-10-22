@@ -4,8 +4,8 @@ import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
 import Quickshell.Wayland
-import qs.Commons // qmllint disable import
-import qs.Ui as Ui // qmllint disable import
+import qs.Commons as Commons
+import qs.Ui as Ui
 import "IconResolver.js" as IconResolver
 import "WindowModel.js" as WindowModel
 import "ScreenLayout.js" as ScreenLayout
@@ -376,8 +376,8 @@ OverviewLayout {
             if (!event.isAutoRepeat)
                 root.requestClose(root.filteredToplevels[root.selectedIndex]);
         }
-        else if (Util.editsFilter(event, root.filterText))
-            root.setFilter(Util.editedFilter(event, root.filterText));
+        else if (Commons.Util.editsFilter(event, root.filterText))
+            root.setFilter(Commons.Util.editedFilter(event, root.filterText));
         else if (event.text && event.text.length === 1 && event.text.charCodeAt(0) >= 32 && !(event.modifiers & (Qt.AltModifier | Qt.MetaModifier)))
             root.setFilter(root.filterText + event.text);
         else

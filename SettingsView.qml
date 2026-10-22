@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import qs.Commons
+import qs.Commons as Commons
 import qs.Ui as Ui
 
 Item {
@@ -9,7 +9,7 @@ Item {
     required property var controller
     required property var hostWindow
     readonly property var categories: ["Appearance", "Windows", "Window labels", "Workspaces", "Hot corner", "Motion"]
-    readonly property int navigationColumns: settingsDialog.narrow ? (settingsDialog.width < Style.space(540) ? 2 : 3) : 1
+    readonly property int navigationColumns: settingsDialog.narrow ? (settingsDialog.width < Commons.Style.space(540) ? 2 : 3) : 1
     readonly property int navigationRows: Math.ceil(categories.length / navigationColumns)
     readonly property var slideDirectionOptions: [
         { label: "Left", value: "left" },
@@ -108,13 +108,13 @@ Item {
 
     Ui.BorderSurface {
         id: settingsDialog
-        readonly property bool narrow: width < Style.space(760)
+        readonly property bool narrow: width < Commons.Style.space(760)
         anchors.centerIn: parent
-        width: Math.min(Style.space(920), parent.width - Style.space(80))
-        height: Math.min(Style.space(narrow ? 720 : 640), parent.height - Style.space(80))
-        radius: Style.cornerRadius
-        color: Color.menu.background
-        borderSpec: Border.surfaceSpec("menu", "border", Color.foreground, Style.normalBorderWidth)
+        width: Math.min(Commons.Style.space(920), parent.width - Commons.Style.space(80))
+        height: Math.min(Commons.Style.space(narrow ? 720 : 640), parent.height - Commons.Style.space(80))
+        radius: Commons.Style.cornerRadius
+        color: Commons.Color.menu.background
+        borderSpec: Commons.Border.surfaceSpec("menu", "border", Commons.Color.foreground, Commons.Style.normalBorderWidth)
         enabled: !settingsView.controller.footerHideConfirmationOpen
 
         MouseArea {
@@ -128,20 +128,20 @@ Item {
 
             Item {
                 Layout.fillWidth: true
-                Layout.preferredHeight: Style.space(66)
+                Layout.preferredHeight: Commons.Style.space(66)
 
                 RowLayout {
                     anchors.fill: parent
-                    anchors.leftMargin: Style.space(24)
-                    anchors.rightMargin: Style.space(24)
-                    spacing: Style.spacing.lg
+                    anchors.leftMargin: Commons.Style.space(24)
+                    anchors.rightMargin: Commons.Style.space(24)
+                    spacing: Commons.Style.spacing.lg
 
                     Text {
                         text: "Exposé settings"
                         textFormat: Text.PlainText
-                        color: Color.menu.text
-                        font.family: Style.font.menuFamily
-                        font.pixelSize: Style.font.heading
+                        color: Commons.Color.menu.text
+                        font.family: Commons.Style.font.menuFamily
+                        font.pixelSize: Commons.Style.font.heading
                         font.bold: true
                     }
 
@@ -151,10 +151,10 @@ Item {
                         visible: !settingsDialog.narrow
                         text: "1–6 section   ↑↓ move   ←→ adjust   Esc close"
                         textFormat: Text.PlainText
-                        color: Color.menu.text
+                        color: Commons.Color.menu.text
                         opacity: 0.5
-                        font.family: Style.font.menuFamily
-                        font.pixelSize: Style.font.caption
+                        font.family: Commons.Style.font.menuFamily
+                        font.pixelSize: Commons.Style.font.caption
                     }
                 }
             }
@@ -171,8 +171,8 @@ Item {
                 Item {
                     Layout.fillWidth: settingsDialog.narrow
                     Layout.fillHeight: !settingsDialog.narrow
-                    Layout.preferredWidth: settingsDialog.narrow ? 0 : Style.space(218)
-                    Layout.preferredHeight: settingsDialog.narrow ? Style.space(52) * settingsView.navigationRows : 0
+                    Layout.preferredWidth: settingsDialog.narrow ? 0 : Commons.Style.space(218)
+                    Layout.preferredHeight: settingsDialog.narrow ? Commons.Style.space(52) * settingsView.navigationRows : 0
 
                     GridLayout {
                         anchors.top: parent.top
@@ -191,7 +191,7 @@ Item {
                                 required property int index
                                 required property var modelData
                                 Layout.fillWidth: true
-                                Layout.preferredHeight: Style.space(settingsDialog.narrow ? 52 : 48)
+                                Layout.preferredHeight: Commons.Style.space(settingsDialog.narrow ? 52 : 48)
                                 categoryIndex: index
                                 categoryCount: settingsCategoryRepeater.count
                                 label: String(modelData)
@@ -266,21 +266,21 @@ Item {
 
             Item {
                 Layout.fillWidth: true
-                Layout.preferredHeight: Style.space(44)
+                Layout.preferredHeight: Commons.Style.space(44)
 
                 RowLayout {
                     anchors.fill: parent
-                    anchors.leftMargin: Style.space(24)
-                    anchors.rightMargin: Style.space(24)
-                    spacing: Style.spacing.lg
+                    anchors.leftMargin: Commons.Style.space(24)
+                    anchors.rightMargin: Commons.Style.space(24)
+                    spacing: Commons.Style.spacing.lg
 
                     Text {
                         text: "Changes save immediately"
                         textFormat: Text.PlainText
-                        color: Color.menu.text
+                        color: Commons.Color.menu.text
                         opacity: 0.45
-                        font.family: Style.font.menuFamily
-                        font.pixelSize: Style.font.caption
+                        font.family: Commons.Style.font.menuFamily
+                        font.pixelSize: Commons.Style.font.caption
                     }
 
                     Item { Layout.fillWidth: true }
@@ -289,10 +289,10 @@ Item {
                         visible: !settingsDialog.narrow
                         text: "1–6 category   Tab controls"
                         textFormat: Text.PlainText
-                        color: Color.menu.text
+                        color: Commons.Color.menu.text
                         opacity: 0.45
-                        font.family: Style.font.menuFamily
-                        font.pixelSize: Style.font.caption
+                        font.family: Commons.Style.font.menuFamily
+                        font.pixelSize: Commons.Style.font.caption
                     }
                 }
             }

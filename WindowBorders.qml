@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import qs.Commons
+import qs.Commons as Commons
 
 // Window previews use compositor borders, independently of shell button states.
 QtObject {
@@ -11,8 +11,8 @@ QtObject {
     readonly property var inactiveSpec: spec(snapshot.inactive)
 
     function spec(colors) {
-        var gradient = Border.resolvedGradient(colors, "transparent", 1);
-        var result = Border.flat(gradient.colors[0] || "transparent", root.snapshot.width);
+        var gradient = Commons.Border.resolvedGradient(colors, "transparent", 1);
+        var result = Commons.Border.flat(gradient.colors[0] || "transparent", root.snapshot.width);
         result.gradient = gradient;
         return result;
     }

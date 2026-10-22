@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import qs.Commons
+import qs.Commons as Commons
 
 Item {
     id: settingSlider
@@ -12,8 +12,8 @@ Item {
     property string suffix: ""
     signal edited(real nextValue)
     signal committed(real nextValue)
-    implicitWidth: Style.space(280)
-    implicitHeight: Style.spacing.controlHeight
+    implicitWidth: Commons.Style.space(280)
+    implicitHeight: Commons.Style.spacing.controlHeight
     activeFocusOnTab: true
     readonly property real span: Math.max(0.000001, to - from)
     readonly property real normalizedValue: Math.max(0, Math.min(1, (value - from) / span))
@@ -54,7 +54,7 @@ Item {
 
     RowLayout {
         anchors.fill: parent
-        spacing: Style.spacing.md
+        spacing: Commons.Style.spacing.md
 
         Item {
             id: sliderTrackArea
@@ -66,21 +66,21 @@ Item {
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 // The track is value geometry, not a border.
-                height: Style.space(2)
-                color: Style.normalFillFor(Color.menu.text, Color.accent)
+                height: Commons.Style.space(2)
+                color: Commons.Style.normalFillFor(Commons.Color.menu.text, Commons.Color.accent)
             }
 
             Rectangle {
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
                 width: parent.width * settingSlider.normalizedValue
-                height: Style.space(3)
-                color: Style.selectedStateColor(Color.menu.text, Color.accent)
+                height: Commons.Style.space(3)
+                color: Commons.Style.selectedStateColor(Commons.Color.menu.text, Commons.Color.accent)
             }
 
             ThemedControl {
                 id: sliderHandle
-                width: Style.space(12)
+                width: Commons.Style.space(12)
                 height: width
                 x: Math.round((parent.width - width) * settingSlider.normalizedValue)
                 anchors.verticalCenter: parent.verticalCenter
@@ -110,13 +110,13 @@ Item {
         }
 
         Text {
-            Layout.preferredWidth: Style.space(52)
+            Layout.preferredWidth: Commons.Style.space(52)
             horizontalAlignment: Text.AlignRight
             text: Math.round(settingSlider.value) + settingSlider.suffix
             textFormat: Text.PlainText
             color: sliderHandle.stateColor
-            font.family: Style.font.menuFamily
-            font.pixelSize: Style.font.caption
+            font.family: Commons.Style.font.menuFamily
+            font.pixelSize: Commons.Style.font.caption
             font.bold: settingSlider.activeFocus
         }
     }

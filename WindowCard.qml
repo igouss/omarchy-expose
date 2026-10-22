@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import Quickshell.Hyprland
 import Quickshell.Wayland
 import "WindowModel.js" as WindowModel
-import qs.Commons
+import qs.Commons as Commons
 import qs.Ui as Ui
 
 Ui.BorderSurface {
@@ -43,16 +43,16 @@ Ui.BorderSurface {
         : controller.windowBorders.inactiveSpec
     readonly property var liftRingSpec: {
         var active = controller.windowBorders.activeSpec;
-        var ring = Border.flat(active.color, Math.max(3, controller.windowBorders.snapshot.width + 1));
+        var ring = Commons.Border.flat(active.color, Math.max(3, controller.windowBorders.snapshot.width + 1));
         ring.gradient = active.gradient;
         return ring;
     }
-    readonly property color currentColor: Style.selectedStateColor(Color.menu.text, Color.accent)
+    readonly property color currentColor: Commons.Style.selectedStateColor(Commons.Color.menu.text, Commons.Color.accent)
     // An excluded card keeps its last rectangle, so it neither
     // animates toward the origin nor flies back in from it.
     readonly property var packedRectSource: inLayout ? card.windowLayout[slot] : null
     property var packedRect: Qt.rect(0, 0, 1, 1)
-    readonly property var previewRect: card.controller.previewRectFor(modelData, packedRect, card.layoutAreaWidth, card.layoutAreaHeight, Style.spacing.sm, card.controller.windowFooterHeight)
+    readonly property var previewRect: card.controller.previewRectFor(modelData, packedRect, card.layoutAreaWidth, card.layoutAreaHeight, Commons.Style.spacing.sm, card.controller.windowFooterHeight)
     readonly property var layoutRect: previewed ? previewRect : packedRect
 
     onPackedRectSourceChanged: {
@@ -72,9 +72,9 @@ Ui.BorderSurface {
     height: layoutRect.height
     z: previewed ? 11 : (exitingPreview ? 10 : (lifted ? 1 : 0))
     scale: lifted ? 1.04 : 1
-    radius: integratedFooter ? Style.cornerRadius : 0
-    color: integratedFooter ? Color.menu.background : "transparent"
-    borderSpec: integratedFooter ? outlineSpec : Border.none()
+    radius: integratedFooter ? Commons.Style.cornerRadius : 0
+    color: integratedFooter ? Commons.Color.menu.background : "transparent"
+    borderSpec: integratedFooter ? outlineSpec : Commons.Border.none()
     opacity: card.controller.previewIndex >= 0
         ? (previewed ? 1 : 0.28)
         : (liftSelection && !selected ? 0.72 : 1)
@@ -115,8 +115,8 @@ Ui.BorderSurface {
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: Style.spacing.sm
-        spacing: card.overlayFooter ? 0 : Style.spacing.sm
+        anchors.margins: Commons.Style.spacing.sm
+        spacing: card.overlayFooter ? 0 : Commons.Style.spacing.sm
 
         Item {
             Layout.fillWidth: true
@@ -124,10 +124,10 @@ Ui.BorderSurface {
 
             Rectangle {
                 anchors.fill: previewFrame
-                anchors.margins: -Style.space(4)
+                anchors.margins: -Commons.Style.space(4)
                 visible: card.liftSelection
-                radius: previewFrame.radius + Style.space(4)
-                color: Color.accent
+                radius: previewFrame.radius + Commons.Style.space(4)
+                color: Commons.Color.accent
                 opacity: card.lifted ? 0.85 : 0
                 layer.enabled: visible
                 layer.effect: MultiEffect {
@@ -156,8 +156,8 @@ Ui.BorderSurface {
                 anchors.centerIn: parent
                 width: Math.min(parent.width, parent.height * windowAspectRatio)
                 height: Math.min(parent.height, parent.width / windowAspectRatio)
-                radius: Math.max(0, Style.cornerRadius - Style.spacing.xs)
-                color: Color.background
+                radius: Math.max(0, Commons.Style.cornerRadius - Commons.Style.spacing.xs)
+                color: Commons.Color.background
                 clip: true
                 layer.enabled: true
 
@@ -212,15 +212,15 @@ Ui.BorderSurface {
             Rectangle {
                 anchors.top: previewFrame.top
                 anchors.right: previewFrame.right
-                anchors.margins: Style.spacing.sm
+                anchors.margins: Commons.Style.spacing.sm
                 z: 6
                 visible: card.liftSelection && card.modelData === card.controller.originToplevel
-                width: Style.space(12)
+                width: Commons.Style.space(12)
                 height: width
                 radius: width / 2
                 color: card.currentColor
-                border.color: Color.menu.background
-                border.width: Style.space(2)
+                border.color: Commons.Color.menu.background
+                border.width: Commons.Style.space(2)
             }
 
             Rectangle {
@@ -238,7 +238,7 @@ Ui.BorderSurface {
 
         Item {
             Layout.fillWidth: true
-            Layout.preferredHeight: Style.space(40)
+            Layout.preferredHeight: Commons.Style.space(40)
             visible: !card.overlayFooter
 
             Loader {
@@ -253,9 +253,9 @@ Ui.BorderSurface {
     // Shared footer building blocks; each footer style overrides only what differs.
     component CardText: Text {
         textFormat: Text.PlainText
-        color: Color.menu.text
-        font.family: Style.font.menuFamily
-        font.pixelSize: Style.font.body
+        color: Commons.Color.menu.text
+        font.family: Commons.Style.font.menuFamily
+        font.pixelSize: Commons.Style.font.body
     }
 
     component FooterTitle: CardText {
@@ -266,8 +266,8 @@ Ui.BorderSurface {
 
     component FooterIcon: Image {
         property int iconSize: 24
-        Layout.preferredWidth: Style.space(iconSize)
-        Layout.preferredHeight: Style.space(iconSize)
+        Layout.preferredWidth: Commons.Style.space(iconSize)
+        Layout.preferredHeight: Commons.Style.space(iconSize)
         source: card.iconSource
         fillMode: Image.PreserveAspectFit
         asynchronous: true
@@ -279,8 +279,8 @@ Ui.BorderSurface {
         CardText {
             Layout.alignment: Qt.AlignRight
             text: card.workspaceName
-            color: card.focusedWindow ? card.currentColor : Color.menu.text
-            font.pixelSize: Style.font.heading
+            color: card.focusedWindow ? card.currentColor : Commons.Color.menu.text
+            font.pixelSize: Commons.Style.font.heading
             font.bold: true
         }
 
@@ -288,7 +288,7 @@ Ui.BorderSurface {
             Layout.alignment: Qt.AlignRight
             text: "Workspace"
             opacity: 0.55
-            font.pixelSize: Style.font.caption
+            font.pixelSize: Commons.Style.font.caption
         }
     }
 
@@ -301,7 +301,7 @@ Ui.BorderSurface {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
-                height: Math.min(parent.height * 0.45, Style.space(84))
+                height: Math.min(parent.height * 0.45, Commons.Style.space(84))
 
                 gradient: Gradient {
                     orientation: Gradient.Vertical
@@ -313,7 +313,7 @@ Ui.BorderSurface {
 
                     GradientStop {
                         position: 1
-                        color: Color.menu.background
+                        color: Commons.Color.menu.background
                     }
                 }
             }
@@ -322,8 +322,8 @@ Ui.BorderSurface {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
-                anchors.margins: Style.spacing.md
-                spacing: Style.spacing.md
+                anchors.margins: Commons.Style.spacing.md
+                spacing: Commons.Style.spacing.md
 
                 FooterIcon { iconSize: 28 }
 
@@ -337,7 +337,7 @@ Ui.BorderSurface {
                         Layout.fillWidth: true
                         text: card.applicationName
                         opacity: 0.68
-                        font.pixelSize: Style.font.caption
+                        font.pixelSize: Commons.Style.font.caption
                         elide: Text.ElideRight
                     }
                 }
@@ -351,7 +351,7 @@ Ui.BorderSurface {
         id: floatingFooter
 
         RowLayout {
-            spacing: Style.spacing.md
+            spacing: Commons.Style.spacing.md
 
             FooterIcon { iconSize: 30 }
 
@@ -365,7 +365,7 @@ Ui.BorderSurface {
                     Layout.fillWidth: true
                     text: card.applicationName
                     opacity: 0.62
-                    font.pixelSize: Style.font.caption
+                    font.pixelSize: Commons.Style.font.caption
                     elide: Text.ElideRight
                 }
             }
@@ -378,7 +378,7 @@ Ui.BorderSurface {
         id: integratedFooter
 
         RowLayout {
-            spacing: Style.spacing.md
+            spacing: Commons.Style.spacing.md
 
             FooterIcon {}
 
@@ -386,9 +386,9 @@ Ui.BorderSurface {
 
             CardText {
                 text: "WS " + card.workspaceName
-                color: card.focusedWindow ? card.currentColor : Color.menu.text
+                color: card.focusedWindow ? card.currentColor : Commons.Color.menu.text
                 opacity: card.focusedWindow ? 1 : 0.68
-                font.pixelSize: Style.font.caption
+                font.pixelSize: Commons.Style.font.caption
                 font.bold: true
             }
         }
@@ -402,20 +402,20 @@ Ui.BorderSurface {
 
             RowLayout {
                 Layout.alignment: Qt.AlignHCenter
-                spacing: Style.spacing.md
+                spacing: Commons.Style.spacing.md
 
                 FooterIcon {}
 
-                FooterTitle { Layout.maximumWidth: Math.max(1, card.width - Style.space(80)) }
+                FooterTitle { Layout.maximumWidth: Math.max(1, card.width - Commons.Style.space(80)) }
             }
 
             CardText {
                 Layout.alignment: Qt.AlignHCenter
-                Layout.maximumWidth: Math.max(1, card.width - Style.space(32))
+                Layout.maximumWidth: Math.max(1, card.width - Commons.Style.space(32))
                 text: card.applicationName + "  ·  Workspace " + card.workspaceName
-                color: card.focusedWindow ? card.currentColor : Color.menu.text
+                color: card.focusedWindow ? card.currentColor : Commons.Color.menu.text
                 opacity: card.focusedWindow ? 1 : 0.62
-                font.pixelSize: Style.font.caption
+                font.pixelSize: Commons.Style.font.caption
                 elide: Text.ElideRight
             }
         }

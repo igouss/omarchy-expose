@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import qs.Commons
+import qs.Commons as Commons
 
 RowLayout {
     id: displayModeChoices
@@ -58,21 +58,21 @@ RowLayout {
             hovered: displayModeMouse.containsMouse
             pressed: displayModeMouse.pressed
             Layout.fillWidth: true
-            Layout.preferredHeight: displayModeText.implicitHeight + Style.spacing.md * 2
+            Layout.preferredHeight: displayModeText.implicitHeight + Commons.Style.spacing.md * 2
 
             ColumnLayout {
                 id: displayModeText
                 anchors.fill: parent
-                anchors.margins: Style.spacing.md
-                spacing: Style.spacing.xs
+                anchors.margins: Commons.Style.spacing.md
+                spacing: Commons.Style.spacing.xs
 
                 Text {
                     Layout.fillWidth: true
                     text: String(displayModeChoice.modelData.label)
                     textFormat: Text.PlainText
                     color: displayModeChoice.stateColor
-                    font.family: Style.font.menuFamily
-                    font.pixelSize: Style.font.body
+                    font.family: Commons.Style.font.menuFamily
+                    font.pixelSize: Commons.Style.font.body
                     font.bold: displayModeChoice.selected
                 }
 
@@ -80,10 +80,10 @@ RowLayout {
                     Layout.fillWidth: true
                     text: String(displayModeChoice.modelData.description)
                     textFormat: Text.PlainText
-                    color: Color.menu.text
+                    color: Commons.Color.menu.text
                     opacity: 0.45
-                    font.family: Style.font.menuFamily
-                    font.pixelSize: Style.font.caption
+                    font.family: Commons.Style.font.menuFamily
+                    font.pixelSize: Commons.Style.font.caption
                     wrapMode: Text.Wrap
                 }
             }

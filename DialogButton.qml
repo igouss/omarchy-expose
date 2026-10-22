@@ -1,5 +1,5 @@
 import QtQuick
-import qs.Commons
+import qs.Commons as Commons
 
 ThemedControl {
     id: dialogButton
@@ -9,8 +9,8 @@ ThemedControl {
     focused: activeFocus
     pressed: dialogMouse.pressed
     signal clicked()
-    implicitWidth: buttonLabel.implicitWidth + Style.spacing.controlPaddingX * 2
-    implicitHeight: Math.max(Style.spacing.controlHeight, buttonLabel.implicitHeight + Style.spacing.controlPaddingY * 2)
+    implicitWidth: buttonLabel.implicitWidth + Commons.Style.spacing.controlPaddingX * 2
+    implicitHeight: Math.max(Commons.Style.spacing.controlHeight, buttonLabel.implicitHeight + Commons.Style.spacing.controlPaddingY * 2)
     activeFocusOnTab: true
     opacity: enabled ? 1 : 0.38
 
@@ -30,9 +30,9 @@ ThemedControl {
         anchors.centerIn: parent
         text: dialogButton.label
         textFormat: Text.PlainText
-        color: dialogButton.destructive ? Color.urgent : dialogButton.stateColor
-        font.family: Style.font.menuFamily
-        font.pixelSize: Style.font.bodySmall
+        color: dialogButton.destructive ? Commons.Color.urgent : dialogButton.stateColor
+        font.family: Commons.Style.font.menuFamily
+        font.pixelSize: Commons.Style.font.bodySmall
         font.bold: dialogButton.destructive
     }
 

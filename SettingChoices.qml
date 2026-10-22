@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import qs.Commons
+import qs.Commons as Commons
 
 Flow {
     id: settingChoices
@@ -9,7 +9,7 @@ Flow {
     property var options: []
     property string value: ""
     signal chosen(string nextValue)
-    spacing: Style.spacing.md
+    spacing: Commons.Style.spacing.md
     Layout.minimumWidth: 0
     activeFocusOnTab: true
 
@@ -55,8 +55,8 @@ Flow {
             focused: settingChoices.activeFocus && selected
             hovered: choiceMouse.containsMouse
             pressed: choiceMouse.pressed
-            width: choiceLabel.implicitWidth + Style.spacing.controlPaddingX * 2
-            height: Math.max(Style.spacing.controlHeight, choiceLabel.implicitHeight + Style.spacing.controlPaddingY * 2)
+            width: choiceLabel.implicitWidth + Commons.Style.spacing.controlPaddingX * 2
+            height: Math.max(Commons.Style.spacing.controlHeight, choiceLabel.implicitHeight + Commons.Style.spacing.controlPaddingY * 2)
 
             Text {
                 id: choiceLabel
@@ -64,8 +64,8 @@ Flow {
                 text: String(choice.modelData.label)
                 textFormat: Text.PlainText
                 color: choice.stateColor
-                font.family: Style.font.menuFamily
-                font.pixelSize: Style.font.caption
+                font.family: Commons.Style.font.menuFamily
+                font.pixelSize: Commons.Style.font.caption
                 font.bold: choice.selected
             }
 
