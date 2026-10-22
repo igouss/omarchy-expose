@@ -37,8 +37,8 @@ Item {
             + (line.progress < 1 ? "█" : "")
         textFormat: Text.PlainText
         elide: Text.ElideRight
-        color: line.selected ? Commons.Color.background : line.stack.phosphor
-        opacity: line.selected || line.modelData === line.controller.originToplevel ? 1 : 0.78
+        color: line.stack.phosphor
+        opacity: line.selected || line.modelData === line.controller.originToplevel ? 1 : 0.62
         font.family: Commons.Style.font.family
         font.pixelSize: Commons.Style.font.heading
         font.bold: line.selected

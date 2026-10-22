@@ -19,7 +19,8 @@ Look {
     readonly property color phosphor: Commons.Color.accent
     readonly property real rowHeight: Commons.Style.space(34)
     readonly property real promptHeight: Commons.Style.space(48)
-    readonly property var split: CrtLayout.panes(width, height - promptHeight, Commons.Style.space(32))
+    readonly property real statusHeight: Commons.Style.space(30)
+    readonly property var split: CrtLayout.panes(width, height - promptHeight - statusHeight - Commons.Style.space(12), Commons.Style.space(32))
     readonly property real listWidth: split.list.width
 
     windowLayout: CrtLayout.rowRects(toplevels.length, rowHeight, listWidth)
@@ -122,14 +123,6 @@ Look {
         }
     }
 
-    PromptText {
-        anchors.right: parent.right
-        anchors.rightMargin: Commons.Style.space(24)
-        y: 0
-        height: look.promptHeight
-        opacity: 0.6
-        text: look.toplevels.length + " windows · " + (look.overview.workspaceScope === "current" ? "workspace " + look.screenWindow.screenWorkspaceLabel : "all workspaces")
-    }
 
     Item {
         id: listPane
@@ -146,14 +139,23 @@ Look {
             anchors.fill: parent
             clip: true
 
-            // The cursor bar under the selected line.
+            // The cursor under the selected line: a tinted row with a marker at its edge.
             Rectangle {
                 visible: look.selectedIndex >= 0 && look.screenWindow.acceptsKeyboard
                 width: parent.width
                 height: look.rowHeight
                 y: cursorY - look.scroll
-                color: look.phosphor
-                opacity: 0.55 + 0.45 * look.overview.selectionBreath
+                radius: Commons.Style.space(4)
+                color: Qt.alpha(look.phosphor, 0.16)
+
+                Rectangle {
+                    width: Commons.Style.space(4)
+                    height: parent.height
+                    radius: width / 2
+                    color: look.phosphor
+                    opacity: 0.5 + 0.5 * look.overview.selectionBreath
+                }
+
                 property real cursorY: Math.max(0, look.selectedIndex) * look.rowHeight
                 Behavior on cursorY {
                     enabled: look.overview.motionSettled
@@ -178,8 +180,8 @@ Look {
         layer.effect: MultiEffect {
             shadowEnabled: true
             shadowColor: look.phosphor
-            shadowBlur: 0.5
-            shadowOpacity: 0.6
+            shadowBlur: 0.4
+            shadowOpacity: 0.3
             shadowHorizontalOffset: 0
             shadowVerticalOffset: 0
             autoPaddingEnabled: true
@@ -253,11 +255,9 @@ Look {
                     height: Math.min(parent.height, parent.width / ratio)
                     layer.enabled: true
                     layer.effect: MultiEffect {
-                        colorization: 1
+                        colorization: 0.3
                         colorizationColor: look.phosphor
-                        saturation: -1
-                        brightness: 0.1
-                        contrast: 0.35
+                        saturation: -0.25
                     }
 
                     WindowThumbnail {
@@ -268,6 +268,17 @@ Look {
                     }
                 }
 
+
+                // Light catching the glass.
+                Rectangle {
+                    anchors.fill: picture
+                    radius: Commons.Style.space(10)
+                    gradient: Gradient {
+                        orientation: Gradient.Vertical
+                        GradientStop { position: 0; color: Qt.alpha("white", 0.07) }
+                        GradientStop { position: 0.35; color: "transparent" }
+                    }
+                }
 
                 Rectangle {
                     anchors.fill: picture
@@ -281,6 +292,52 @@ Look {
             id: powerOff
             NumberAnimation { target: monitorPower; property: "collapse"; to: 1; duration: 90; easing.type: Easing.InQuad }
             NumberAnimation { target: monitorPower; property: "squeeze"; to: 1; duration: 80; easing.type: Easing.InQuad }
+        }
+    }
+
+    // A tmux-style status line along the bottom.
+    Rectangle {
+        id: status
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: Commons.Style.space(12)
+        height: look.statusHeight
+        radius: Commons.Style.space(6)
+        color: Qt.alpha(look.phosphor, 0.1)
+
+        Row {
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: Commons.Style.space(14)
+
+            Rectangle {
+                width: sessionName.implicitWidth + Commons.Style.space(20)
+                height: look.statusHeight
+                radius: Commons.Style.space(6)
+                color: look.phosphor
+                StatusText { id: sessionName; anchors.centerIn: parent; text: "expose"; color: Commons.Color.background; font.bold: true }
+            }
+            StatusText { text: "0:windows*"; font.bold: true }
+            StatusText { text: (look.selectedIndex + 1) + "/" + look.toplevels.length; opacity: 0.7 }
+            StatusText { text: look.overview.filterText ? "grep: " + look.overview.filterText : ""; opacity: 0.7 }
+        }
+
+        Row {
+            anchors.right: parent.right
+            anchors.rightMargin: Commons.Style.space(12)
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: Commons.Style.space(14)
+            StatusText { text: look.overview.workspaceScope === "current" ? "ws " + look.screenWindow.screenWorkspaceLabel : "all workspaces"; opacity: 0.7 }
+            StatusText { id: clock; text: Qt.formatTime(new Date(), "HH:mm"); font.bold: true }
+        }
+
+        Timer {
+            interval: 15000
+            repeat: true
+            running: look.overview.opened
+            triggeredOnStart: true
+            onTriggered: clock.text = Qt.formatTime(new Date(), "HH:mm")
         }
     }
 
@@ -304,11 +361,18 @@ Look {
                 centerRadius: Math.max(look.width, look.height) * 0.62
                 focalX: centerX
                 focalY: centerY
-                GradientStop { position: 0.6; color: "transparent" }
-                GradientStop { position: 1; color: Qt.alpha("black", 0.55) }
+                GradientStop { position: 0.7; color: "transparent" }
+                GradientStop { position: 1; color: Qt.alpha("black", 0.28) }
             }
             PathRectangle { width: look.width; height: look.height; radius: Commons.Style.space(28) }
         }
+    }
+
+    component StatusText: Text {
+        textFormat: Text.PlainText
+        color: look.phosphor
+        font.family: Commons.Style.font.family
+        font.pixelSize: Commons.Style.font.body
     }
 
     component PromptText: Text {
