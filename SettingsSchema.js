@@ -12,7 +12,8 @@ var specs = {
     look: {
         fallback: "grid",
         options: [
-            { label: "Grid", description: "Live previews packed into balanced rows", value: "grid" }
+            { label: "Grid", description: "Live previews packed into balanced rows", value: "grid" },
+            { label: "Carousel", description: "One window front and centre, the rest turned away on an arc", value: "carousel" }
         ]
     },
     previewPlacement: {

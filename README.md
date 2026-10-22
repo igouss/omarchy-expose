@@ -7,6 +7,7 @@ macOS-style Exposé for Omarchy: one key or a hot corner shows every open window
 ## Highlights
 
 - **Live previews.** Cards are real screencopy views, so videos keep playing and terminals keep scrolling. The Omarchy desktop behind the grid stays live too.
+- **Looks.** Grid packs every preview into balanced rows; Carousel puts the selected window front and centre with the rest turned away in perspective on a reflective floor, spinning on a spring as you move (Left/Right, the scroll wheel, or a click on a side card).
 - **Quick Look.** Space enlarges any preview and restores it again. Shift+Space does it in slow motion, like the classic macOS Easter egg.
 - **Search.** Just start typing to filter windows by title or application.
 - **Workspace scope.** Press Tab to switch between every window and windows on the current workspace, and pick which of the two the overview opens with. Per-monitor mode evaluates the current workspace of the selected display.
@@ -97,6 +98,7 @@ Hot corners default to the outermost display: left corners use the leftmost disp
 
 Open **Settings** from the footer while the overview is open. It is fully keyboard driven: 1-7 jump to a section, Up/Down move between controls, Left/Right adjust sliders and choices, Space or Enter flip toggles and press buttons, Escape closes. Changes apply immediately. Settings are grouped into **Look**, **Appearance**, **Windows**, **Window labels**, **Workspaces**, **Hot corner**, and **Motion**, with explanatory text beneath each control:
 
+- Look: Grid (default) or Carousel. Window footer style, selection highlight, and Quick Look position shape the grid only
 - Opening animation: Original (default), Fade, Zoom, or Slide
 - Animation duration saved per mode, linked for in/out by default or expandable to separate timings
 - Slide direction: left (default), right, up, or down. Splitting in/out splits both speed and direction
@@ -128,7 +130,7 @@ omarchy-shell expose backgroundDim 6             # 0-90
 omarchy-shell expose previewPlacement in-place   # in-place | centered
 omarchy-shell expose windowFooterStyle floating  # floating | integrated | overlay | centered
 omarchy-shell expose selectionStyle outline      # outline | lift
-omarchy-shell expose look grid                   # grid (more looks to come)
+omarchy-shell expose look carousel               # grid or carousel
 omarchy-shell expose multiMonitorMode mirrored   # mirrored | per-monitor
 omarchy-shell expose hotCorner on                # on | off
 omarchy-shell expose hotCornerPosition top-left  # top-left | top-right | bottom-left | bottom-right

@@ -127,11 +127,19 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             // One Component per look, keyed by the look setting's value.
-            readonly property var looks: ({ grid: gridLook })
+            readonly property var looks: ({ grid: gridLook, carousel: carouselLook })
 
             Component {
                 id: gridLook
                 GridLook {
+                    overview: keyCatcher.overview
+                    screenWindow: keyCatcher.screenWindow
+                }
+            }
+
+            Component {
+                id: carouselLook
+                CarouselLook {
                     overview: keyCatcher.overview
                     screenWindow: keyCatcher.screenWindow
                 }
