@@ -150,7 +150,7 @@ Item {
                     spacing: Commons.Style.spacing.lg
 
                     Text {
-                        text: "Exposé settings"
+                        text: "Panorama settings"
                         textFormat: Text.PlainText
                         color: Commons.Color.menu.text
                         font.family: Commons.Style.font.menuFamily

@@ -1,8 +1,46 @@
-# Exposé for Omarchy
+# Panorama for Omarchy
 
-macOS-style Exposé for Omarchy: one key or a hot corner shows every open window as a live preview. Type to search, press Space to Quick Look, press Enter to launch.
+Every open window at once, as live previews, in the look you like: a balanced **Grid**, a cover-flow **Carousel**, workspaces stacked as glass floors in **Strata**, frosted **Glass HUD** panes, or a **CRT** terminal. One key or a hot corner opens it; type to search, Space to Quick Look, Enter to open.
 
-![Exposé demo](https://github.com/kristofferR/omarchy-expose/releases/download/v4.0.0/demo.gif)
+Panorama is a fork of [Exposé for Omarchy](https://github.com/kristofferR/omarchy-expose) by Kristoffer Risanger, which grew out of [Bird's Eye](https://github.com/harel/omarchy-birdseye) by Harel Malka. The grid, live previews, Quick Look, search, hot corner, and settings panel are theirs; Panorama adds the other looks and the parts listed below.
+
+![The Grid look, inherited from Exposé](https://github.com/kristofferR/omarchy-expose/releases/download/v4.0.0/demo.gif)
+
+## Where Panorama comes from
+
+1. **Bird's Eye** by Harel Malka: the first Omarchy window overview plugin.
+2. **Exposé** by Kristoffer Risanger (@kristofferR) rebuilt it into a macOS-style Exposé: live screencopy previews, Quick Look with the slow-motion Easter egg, type-to-search, workspace scope, multi-monitor support, a hot corner, and a full settings panel. Panorama starts from Exposé 5.0.0.
+3. **Panorama** (@igouss) is a GitHub fork of Exposé with its history intact. It separates the window model from the drawing so the overview can have several looks, then adds them. Plugin id `elendal.panorama` and IPC target `panorama`, so it installs alongside Exposé without clashing (give each its own key and corner).
+
+## Thank you
+
+Thank you, Kristoffer, for Exposé: a careful, well-tested plugin that was a pleasure to build on. Thank you, Harel, for Bird's Eye, where it all started. If you enjoy Panorama, please consider sponsoring the original author:
+
+[![Sponsor kristofferR on GitHub](https://img.shields.io/badge/Sponsor_kristofferR-%E2%99%A1-ec6cb9?style=for-the-badge)](https://github.com/sponsors/kristofferR)
+
+## What's new in Panorama
+
+- **Five looks**, chosen on a new first Settings page or with `omarchy-shell panorama look <name>`:
+  - **Grid**: Exposé's balanced rows, with an optional **Lift** selection style that raises and glows only the window Enter opens.
+  - **Carousel**: the selection front and centre, the rest turned away on a reflective floor; it spins on a spring.
+  - **Strata**: every workspace a glass floor in perspective, each window where it really is, including a scrolling layout's off-screen windows.
+  - **Glass HUD**: frosted panes with large titles and one gradient ring that sweeps around the selection and slides between panes.
+  - **CRT**: a terminal listing of every window beside a phosphor monitor of the selection, with a tmux-style status line.
+- **Juice**: a Settings page of motion effects, each its own switch: springy motion, edge bump (an arrow with nowhere to go answers), activation punch (flash and sparks, or the CRT powering off), selection pulse, and pointer tilt.
+- **Scriptable state**: `state`, `get`, `move`, `filter`, `preview`, and `activate` over IPC, so scripts and tests can read and drive the overview without a keyboard; `showFooter` restores the bottom text without editing `shell.json`.
+- **One settings schema** drives values, validation, IPC, and the Settings pages, so a setting can no longer drift between them.
+
+## What was fixed
+
+Compared with Exposé 5.0.0:
+
+- **Grid packing** never tried fewer rows than an estimate that ignored each card's title and padding; in a sweep of window sets it picked a smaller packing about half the time, losing up to half the card area. It now tries every row count.
+- **Up and Down** could step sideways onto a shorter card in the same row; they now move between rows only.
+- **Selection** was a position in a list rebuilt on every change, so closing a window while the overview was open could move the selection to a different window. It now holds the window itself.
+- **The window you came from** lost its marker while the overview held keyboard focus; it is now remembered when the overview opens.
+- **Opening a window** waited a fixed delay through a helper process; it is now dispatched from the shell as soon as the overlay is gone.
+- **Footer styles**: every style drew the Rail style's framed card background; now only Rail does.
+- **Tests and lint**: under Qt 6.12, Omarchy's `Color` singleton resolved to Qt's own `Color` type, which turned the theme, settings, and lint checks red for an unrelated reason and hid a real bug. They now resolve correctly, lint covers every QML file, and the runtime test loads every look.
 
 ## Highlights
 
@@ -17,12 +55,6 @@ macOS-style Exposé for Omarchy: one key or a hot corner shows every open window
 
 Everything is tunable from the built-in Settings panel and over IPC, and changes apply instantly.
 
-## ❤️ Support the project
-
-Enjoying Exposé for Omarchy? Sponsoring its development is a lovely way to say thanks and help keep the project growing.
-
-[![Sponsor on GitHub](https://img.shields.io/badge/Sponsor_on_GitHub-%E2%99%A1-ec6cb9?style=for-the-badge)](https://github.com/sponsors/kristofferR)
-
 ## Requirements
 
 - Omarchy Quattro with the native shell plugin system
@@ -33,47 +65,47 @@ The underlying Quickshell, Hyprland, Bash, and coreutils support ships with Omar
 ## Install
 
 ```sh
-omarchy plugin add https://github.com/kristofferR/omarchy-expose.git --enable
+omarchy plugin add https://github.com/igouss/omarchy-panorama.git --enable
 ```
 
 That's it: the top-left hot corner works right away. Optionally, bind a key in `~/.config/hypr/bindings.lua`, then run `hyprctl reload`:
 
 ```lua
-o.bind("SUPER + A", "Exposé", hl.dsp.event("expose.window-overview:toggle"))
+o.bind("SUPER + A", "Panorama", hl.dsp.event("elendal.panorama:toggle"))
 ```
 
 Any unused chord works. Avoid modifier-only bindings such as standalone Super; Hyprland cannot reliably distinguish them from the start of normal Super shortcuts.
 
-To keep workspace swipes from changing the desktop behind Exposé, replace your workspace gesture in `~/.config/hypr/input.lua` with:
+To keep workspace swipes from changing the desktop behind Panorama, replace your workspace gesture in `~/.config/hypr/input.lua` with:
 
 ```lua
-local expose_gesture_path = os.getenv("HOME") .. "/.config/omarchy/plugins/expose.window-overview/workspace-gesture.lua"
-local expose_gesture_loader = loadfile(expose_gesture_path)
-if expose_gesture_loader then
-  expose_gesture_loader()({ fingers = 4, scale = 0.5 })
+local panorama_gesture_path = os.getenv("HOME") .. "/.config/omarchy/plugins/elendal.panorama/workspace-gesture.lua"
+local panorama_gesture_loader = loadfile(panorama_gesture_path)
+if panorama_gesture_loader then
+  panorama_gesture_loader()({ fingers = 4, scale = 0.5 })
 else
   hl.gesture({ fingers = 4, direction = "horizontal", scale = 0.5, action = "workspace" })
 end
 ```
 
-Adjust `fingers` and `scale` to match your preferred gesture. Only the workspace gesture is swallowed while Exposé is open; media keys and other compositor shortcuts keep working.
+Adjust `fingers` and `scale` to match your preferred gesture. Only the workspace gesture is swallowed while Panorama is open; media keys and other compositor shortcuts keep working.
 
 ### Update
 
 ```sh
-omarchy plugin update expose.window-overview --yes
+omarchy plugin update elendal.panorama --yes
 ```
 
 ### Remove
 
-Delete the Exposé binding from `~/.config/hypr/bindings.lua`, then:
+Delete the Panorama binding from `~/.config/hypr/bindings.lua`, then:
 
 ```sh
-omarchy plugin remove expose.window-overview --yes
+omarchy plugin remove elendal.panorama --yes
 hyprctl reload
 ```
 
-Removal leaves nothing behind: Exposé keeps no files outside its plugin directory and its entry in `~/.config/omarchy/shell.json`.
+Removal leaves nothing behind: Panorama keeps no files outside its plugin directory and its entry in `~/.config/omarchy/shell.json`.
 
 ## Controls
 
@@ -90,7 +122,7 @@ Removal leaves nothing behind: Exposé keeps no files outside its plugin directo
 
 Clicking a card activates it; middle-clicking closes it. Activation moves the pointer to the chosen window by default; this is a setting, not a change to Hyprland's global cursor behavior.
 
-The window grid stays on the display where Exposé opened. Every display gets the same background blur and dim; clicking any backdrop dismisses Exposé without clicking through to the desktop. With **All displays**, the grid shows every window. With **This display**, it shows only windows that already belong to that display; when showing the current workspace, it uses the one active on that display.
+The window grid stays on the display where Panorama opened. Every display gets the same background blur and dim; clicking any backdrop dismisses Panorama without clicking through to the desktop. With **All displays**, the grid shows every window. With **This display**, it shows only windows that already belong to that display; when showing the current workspace, it uses the one active on that display.
 
 Hot corners default to the outermost display: left corners use the leftmost display, and right corners use the rightmost. If displays share that edge, the topmost or bottommost one wins according to the chosen corner. Enable **Hot corner → Use on all displays** to use the chosen corner on every display.
 
@@ -117,47 +149,47 @@ Open **Settings** from the footer while the overview is open. It is fully keyboa
 Every reversible setting is also scriptable:
 
 ```sh
-omarchy-shell expose toggle                      # also: open, close
-omarchy-shell expose settings toggle             # also: open, close
-omarchy-shell expose animationStyle original     # original | fade | zoom | slide
-omarchy-shell expose animationDuration original 190    # linked in/out, 100-800 ms
-omarchy-shell expose animationDurationIn original 190  # separate opening speed
-omarchy-shell expose animationDurationOut original 190 # separate closing speed
-omarchy-shell expose slideDirection left         # left | right | up | down, both halves
-omarchy-shell expose slideDirectionIn left       # separate opening side, also splits slide timing
-omarchy-shell expose slideDirectionOut right     # separate closing side, also splits slide timing
-omarchy-shell expose backgroundBlur 4            # 0-20
-omarchy-shell expose backgroundDim 6             # 0-90
-omarchy-shell expose previewPlacement in-place   # in-place | centered
-omarchy-shell expose windowFooterStyle floating  # floating | integrated | overlay | centered
-omarchy-shell expose selectionStyle outline      # outline | lift
-omarchy-shell expose look strata                 # grid, carousel, strata, hud, or crt
-omarchy-shell expose juice spring off            # spring, edgeBump, punch, pulse, or tilt; on or off
-omarchy-shell expose multiMonitorMode mirrored   # mirrored | per-monitor
-omarchy-shell expose hotCorner on                # on | off
-omarchy-shell expose hotCornerPosition top-left  # top-left | top-right | bottom-left | bottom-right
-omarchy-shell expose hotCornerAllDisplays off    # off: outermost display (default) | on: every display
-omarchy-shell expose hotCornerDelay 0            # 0-1000 ms of dwell before it fires
-omarchy-shell expose moveCursorToWindow on       # on | off
-omarchy-shell expose showFooter on               # on | off; brings back the bottom text and its Settings link
-omarchy-shell expose get look                    # any setting above, or a juice effect: spring, pulse, ...
+omarchy-shell panorama toggle                      # also: open, close
+omarchy-shell panorama settings toggle             # also: open, close
+omarchy-shell panorama animationStyle original     # original | fade | zoom | slide
+omarchy-shell panorama animationDuration original 190    # linked in/out, 100-800 ms
+omarchy-shell panorama animationDurationIn original 190  # separate opening speed
+omarchy-shell panorama animationDurationOut original 190 # separate closing speed
+omarchy-shell panorama slideDirection left         # left | right | up | down, both halves
+omarchy-shell panorama slideDirectionIn left       # separate opening side, also splits slide timing
+omarchy-shell panorama slideDirectionOut right     # separate closing side, also splits slide timing
+omarchy-shell panorama backgroundBlur 4            # 0-20
+omarchy-shell panorama backgroundDim 6             # 0-90
+omarchy-shell panorama previewPlacement in-place   # in-place | centered
+omarchy-shell panorama windowFooterStyle floating  # floating | integrated | overlay | centered
+omarchy-shell panorama selectionStyle outline      # outline | lift
+omarchy-shell panorama look strata                 # grid, carousel, strata, hud, or crt
+omarchy-shell panorama juice spring off            # spring, edgeBump, punch, pulse, or tilt; on or off
+omarchy-shell panorama multiMonitorMode mirrored   # mirrored | per-monitor
+omarchy-shell panorama hotCorner on                # on | off
+omarchy-shell panorama hotCornerPosition top-left  # top-left | top-right | bottom-left | bottom-right
+omarchy-shell panorama hotCornerAllDisplays off    # off: outermost display (default) | on: every display
+omarchy-shell panorama hotCornerDelay 0            # 0-1000 ms of dwell before it fires
+omarchy-shell panorama moveCursorToWindow on       # on | off
+omarchy-shell panorama showFooter on               # on | off; brings back the bottom text and its Settings link
+omarchy-shell panorama get look                    # any setting above, or a juice effect: spring, pulse, ...
 ```
 
 The open overview can be driven and inspected too, without a keyboard:
 
 ```sh
-omarchy-shell expose state                       # JSON: opened, look, windows, filter, selection, preview, ...
-omarchy-shell expose move right                  # left | right | up | down; prints the new selection
-omarchy-shell expose filter term                 # prints how many windows match; "" clears it
-omarchy-shell expose preview                     # toggles Quick Look on the selection
-omarchy-shell expose activate                    # opens the selection, as Enter does
+omarchy-shell panorama state                       # JSON: opened, look, windows, filter, selection, preview, ...
+omarchy-shell panorama move right                  # left | right | up | down; prints the new selection
+omarchy-shell panorama filter term                 # prints how many windows match; "" clears it
+omarchy-shell panorama preview                     # toggles Quick Look on the selection
+omarchy-shell panorama activate                    # opens the selection, as Enter does
 ```
 
 Each of these answers `closed` while the overview is closed.
 
 ## Security and system changes
 
-Exposé runs unsandboxed inside Omarchy Shell with your user's permissions.
+Panorama runs unsandboxed inside Omarchy Shell with your user's permissions.
 
 - Its helpers are plain Bash calling `hyprctl`, `jq`, `sleep`, and `timeout`.
 - It reads window, workspace, and monitor state from Quickshell's native Hyprland model, activates or closes the windows you select, and temporarily raises Hyprland's blur while open, restoring the previous value on close.
@@ -169,11 +201,11 @@ Exposé runs unsandboxed inside Omarchy Shell with your user's permissions.
 - **No thumbnails:** verify Hyprland exposes toplevel-export support and no screen-capture policy blocks Quickshell. Cards stay usable with fallback labels.
 - **Workspace says “—”:** the native Hyprland model has not associated that Wayland toplevel yet. Very short-lived windows can briefly appear this way; restart Omarchy Shell if a normal window remains unassociated.
 - **Plugin not listed:** run `omarchy plugin validate .`, then `omarchy-shell shell rescanPlugins`.
-- **Shortcut does nothing:** run `hyprctl reload`, check `hyprctl configerrors`, and test `hyprctl dispatch 'hl.dsp.event("expose.window-overview:toggle")'` directly.
+- **Shortcut does nothing:** run `hyprctl reload`, check `hyprctl configerrors`, and test `hyprctl dispatch 'hl.dsp.event("elendal.panorama:toggle")'` directly.
 
 ## Credits
 
-Based on [Bird's Eye](https://github.com/harel/omarchy-birdseye) by Harel Malka.
+Panorama is a fork of [Exposé for Omarchy](https://github.com/kristofferR/omarchy-expose) by Kristoffer Risanger, itself based on [Bird's Eye](https://github.com/harel/omarchy-birdseye) by Harel Malka. Both are MIT licensed, as is Panorama.
 
 ## License
 

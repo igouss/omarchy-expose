@@ -1,5 +1,5 @@
 Run `./tests/check-theme-runtime` to exercise the installed Omarchy theme APIs
-with Exposé's actual settings view, window card, and shared control components.
+with Panorama's actual settings view, window card, and shared control components.
 Pass an output directory to save two rendered PNGs. The test uses an offscreen
 Quickshell process with a mock application controller; theme changes affect that
 process only. Live window capture is unavailable offscreen, so Quickshell reports
@@ -35,7 +35,7 @@ normal states. Dialog/search surfaces use menu border specs. No state forces a
 border when its own width or alpha is zero. Slider tracks and handles remain
 value geometry rather than borrowing border widths for their dimensions.
 
-The audit preserves Exposé's blur/dim behavior and animation controls. Other
+The audit preserves Panorama's blur/dim behavior and animation controls. Other
 remaining numeric opacity values express secondary text, disabled controls, or
 Quick Look transitions; there are no corresponding shell theme tokens. The black
 preview mask is an invisible alpha mask, not a surface color. Inner corner radii

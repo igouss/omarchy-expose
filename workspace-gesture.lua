@@ -1,8 +1,8 @@
 return function(options)
   options = options or {}
 
-  local namespace = "expose-window-overview"
-  local expose_layers = #hl.get_layers({ namespace = namespace })
+  local namespace = "panorama-overview"
+  local panorama_layers = #hl.get_layers({ namespace = namespace })
   local workspace_gesture_enabled
 
   local function register_gesture(action)
@@ -17,7 +17,7 @@ return function(options)
   end
 
   local function apply_gesture()
-    local enabled = expose_layers == 0
+    local enabled = panorama_layers == 0
     if enabled == workspace_gesture_enabled then return end
 
     if workspace_gesture_enabled ~= nil then register_gesture("unset") end
@@ -28,14 +28,14 @@ return function(options)
   hl.on("layer.opened", function(layer)
     if layer.namespace ~= namespace then return end
 
-    expose_layers = expose_layers + 1
+    panorama_layers = panorama_layers + 1
     apply_gesture()
   end)
 
   hl.on("layer.closed", function(layer)
     if layer.namespace ~= namespace then return end
 
-    expose_layers = math.max(0, expose_layers - 1)
+    panorama_layers = math.max(0, panorama_layers - 1)
     apply_gesture()
   end)
 

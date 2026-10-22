@@ -6,7 +6,7 @@ codes: set[int] = {e.KEY_LEFTSHIFT}
 for s in steps:
     if not s.startswith("sleep:"):
         codes.add(e.ecodes[s.split("+")[-1]])
-ui: UInput = UInput({e.EV_KEY: sorted(codes)}, name="expose-test")
+ui: UInput = UInput({e.EV_KEY: sorted(codes)}, name="panorama-test")
 time.sleep(0.8)
 for s in steps:
     if s.startswith("sleep:"):

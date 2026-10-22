@@ -3,7 +3,7 @@ import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Wayland
 
-// Exposé entry point: surfaces, compositor wiring, and the hot corner.
+// Panorama entry point: surfaces, compositor wiring, and the hot corner.
 OverviewLifecycle {
     id: root
 
@@ -188,7 +188,7 @@ OverviewLifecycle {
         function onRawEvent(event) {
             if (event && event.name === "configreloaded")
                 windowBorders.refresh();
-            if (event && event.name === "custom" && event.data === "expose.window-overview:toggle")
+            if (event && event.name === "custom" && event.data === "elendal.panorama:toggle")
                 root.toggle();
         }
     }
@@ -251,7 +251,7 @@ OverviewLifecycle {
         }
     }
 
-    // Full-screen surfaces take over corner handling while Exposé is mounted.
+    // Full-screen surfaces take over corner handling while Panorama is mounted.
     Variants {
         id: hotCornerInstances
         model: root.hotCornerScreens
@@ -284,7 +284,7 @@ OverviewLifecycle {
                 }
             }
             exclusionMode: ExclusionMode.Ignore
-            WlrLayershell.namespace: "expose-hot-corner"
+            WlrLayershell.namespace: "panorama-hot-corner"
             WlrLayershell.layer: WlrLayer.Overlay
             WlrLayershell.exclusiveZone: -1
             WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
@@ -315,7 +315,7 @@ OverviewLifecycle {
         }
         color: "transparent"
         exclusionMode: ExclusionMode.Ignore
-        WlrLayershell.namespace: "expose-window-overview"
+        WlrLayershell.namespace: "panorama-overview"
         WlrLayershell.layer: WlrLayer.Overlay
         // Hyprland restricts pointer hit testing to exclusive surfaces too.
         // Every backdrop must participate so clicks on other displays arrive.

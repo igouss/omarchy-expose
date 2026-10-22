@@ -11,7 +11,7 @@ SettingsPage {
     SettingRow {
         dialog: page.dialog
         label: "Open with"
-        description: "Choose which workspaces are shown when Exposé opens. Press Tab in the overview to switch."
+        description: "Choose which workspaces are shown when Panorama opens. Press Tab in the overview to switch."
 
         SettingChoices {
             id: initialWorkspaceScopeChoices
@@ -26,7 +26,7 @@ SettingsPage {
     SettingRow {
         dialog: page.dialog
         label: "Windows to include"
-        description: "The grid stays on the display where Exposé opened. With This display and Current, use the workspace active on that display."
+        description: "The grid stays on the display where Panorama opened. With This display and Current, use the workspace active on that display."
         stacked: true
 
         DisplayModeChoices {

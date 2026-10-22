@@ -1,10 +1,10 @@
 #!/bin/bash
 # Live IPC checks against the running shell; install the working tree into
-# ~/.config/omarchy/plugins/expose.window-overview and restart the shell first.
+# ~/.config/omarchy/plugins/elendal.panorama and restart the shell first.
 # Needs at least two windows. Opens and closes the overview but never activates
 # a window or sends keys, so it is safe while you type.
 set -u
-E() { omarchy-shell expose "$@"; }
+E() { omarchy-shell panorama "$@"; }
 field() { E state | python3 -c "import json,sys; v=json.load(sys.stdin)[sys.argv[1]]; print(v if isinstance(v, str) else json.dumps(v))" "$1"; }
 failures=0
 check() { [[ $2 == "$3" ]] && echo "PASS: $1" || { echo "FAIL: $1: got $2, expected $3"; failures=$((failures + 1)); }; }

@@ -3,7 +3,7 @@ validation, including lint of the assembled runtime fixture.
 The theme runtime check also exercises every settings page at desktop and narrow
 widths, focus traversal and wrapping, disabled hot-corner controls, conditional
 Motion controls, and scrolling focused controls into view. Run
-`./tests/check-theme-runtime /tmp/expose-settings` to save rendered page captures.
+`./tests/check-theme-runtime /tmp/panorama-settings` to save rendered page captures.
 `./tests/check-blur-lock` checks the blur helper with a temporary runtime directory
 and fake `hyprctl`: planted symlinks and invalid lock paths cannot damage files or
 change compositor settings, and concurrent sessions serialize through restoration.
@@ -33,7 +33,7 @@ preview) against the running shell. It sends no keys and activates no window,
 so it is safe while you type. IPC changes load only on a shell restart, not on
 the plugin hot reload.
 
-Pointer tests: read `omarchy-shell expose state` before every click. A click on
+Pointer tests: read `omarchy-shell panorama state` before every click. A click on
 the selection (the carousel's or strata's front card included) opens that window
 and closes the overview; a middle click closes the window under the pointer, so
 middle-click only a card whose `selection` is a throwaway test window. Prefer
@@ -45,7 +45,7 @@ For live multi-display checks, use a second physical or headless Hyprland output
 - Cross to the other display: search, Escape, and settings keyboard controls must
   still reach the grid. A backdrop click must dismiss without reaching an app.
 - Toggle **Hot corner → All displays** and change corner positions; check that
-  only the eligible displays activate Exposé, including after rearranging them.
+  only the eligible displays activate Panorama, including after rearranging them.
 - Add a display while open, then remove the grid's display: the grid should move
   to a remaining display and every other display should retain its backdrop.
 
@@ -68,7 +68,7 @@ snapshots, startup reads, no-op writes, rejection, and malformed configuration.
   and `loaded` is emitted before that read job is cleared. Reloads and subsequent
   writes therefore run after the callback, via `Qt.callLater`.
 - [Omadock at d2d355c](https://github.com/thepathless/omadock/blob/d2d355c58d229ab82d9e9bcf116a620a3c736617/Dock.qml):
-  uses FileView for its own files. Exposé borrows the watched read pattern, but
+  uses FileView for its own files. Panorama borrows the watched read pattern, but
   leaves shared shell.json writes with the host.
 
 The store permits one unconfirmed replacement at a time, with newer edits kept

@@ -11,7 +11,7 @@ SettingsPage {
     SettingRow {
         dialog: page.dialog
         label: "Enable hot corner"
-        description: "Open or close Exposé by moving the pointer into the chosen corner."
+        description: "Open or close Panorama by moving the pointer into the chosen corner."
 
         Item { Layout.fillWidth: true }
 
@@ -26,7 +26,7 @@ SettingsPage {
     SettingRow {
         dialog: page.dialog
         label: "Corner"
-        description: "Choose the corner that activates Exposé. Avoid using the same corner in another hot-corner plugin."
+        description: "Choose the corner that activates Panorama. Avoid using the same corner in another hot-corner plugin."
         enabled: view.controller.hotCornerEnabled
 
         SettingChoices {

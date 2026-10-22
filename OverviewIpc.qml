@@ -18,7 +18,7 @@ Item {
     }
 
     IpcHandler {
-        target: "expose"
+        target: "panorama"
         function open(): string {
             // Must not be overview.toggle(): that makes "open" a duplicate of
             // "toggle", so calling open on an already-open overview closes it.

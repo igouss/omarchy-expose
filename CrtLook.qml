@@ -112,7 +112,7 @@ Look {
         spacing: 0
 
         x: Commons.Style.space(24)
-        PromptText { text: "expose@omarchy:~$ grep -i " }
+        PromptText { text: "panorama@omarchy:~$ grep -i " }
         PromptText { text: look.overview.filterText ? "\"" + look.overview.filterText + "\"" : ""; font.bold: true }
         Rectangle {
             anchors.verticalCenter: parent.verticalCenter
@@ -316,7 +316,7 @@ Look {
                 height: look.statusHeight
                 radius: Commons.Style.space(6)
                 color: look.phosphor
-                StatusText { id: sessionName; anchors.centerIn: parent; text: "expose"; color: Commons.Color.background; font.bold: true }
+                StatusText { id: sessionName; anchors.centerIn: parent; text: "panorama"; color: Commons.Color.background; font.bold: true }
             }
             StatusText { text: "0:windows*"; font.bold: true }
             StatusText { text: (look.selectedIndex + 1) + "/" + look.toplevels.length; opacity: 0.7 }

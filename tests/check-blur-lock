@@ -27,13 +27,13 @@ fi
 EOF
 chmod +x "$test_dir/bin/hyprctl"
 
-lock_dir="$XDG_RUNTIME_DIR/omarchy-expose-blur-session.lock.d"
+lock_dir="$XDG_RUNTIME_DIR/omarchy-panorama-blur-session.lock.d"
 victim="$test_dir/victim"
 printf 'keep this content\n' > "$victim"
 cp "$victim" "$test_dir/expected"
 
 # A stale symlink at the old lock filename must never be opened for writing.
-ln -s "$victim" "$XDG_RUNTIME_DIR/omarchy-expose-blur-session.lock"
+ln -s "$victim" "$XDG_RUNTIME_DIR/omarchy-panorama-blur-session.lock"
 ./background-blur-session </dev/null >"$test_dir/output"
 cmp -s "$victim" "$test_dir/expected" || fail "old lock symlink truncated its target"
 [[ -d $lock_dir && ! -L $lock_dir ]] || fail "lock directory was not retained"

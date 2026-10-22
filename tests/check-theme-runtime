@@ -1,5 +1,5 @@
 #!/bin/bash
-# Exercise actual shell theme singletons and Exposé views in an isolated process.
+# Exercise actual shell theme singletons and Panorama views in an isolated process.
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 test_dir=$(mktemp -d)
@@ -15,7 +15,7 @@ if [[ -n $output_dir ]]; then
   mkdir -p "$output_dir"
   output_dir=$(realpath "$output_dir")
 fi
-QT_QPA_PLATFORM=offscreen EXPOSE_THEME_OUTPUT_DIR="$output_dir" \
+QT_QPA_PLATFORM=offscreen PANORAMA_THEME_OUTPUT_DIR="$output_dir" \
   timeout 15s quickshell --no-color -p "$test_dir/shell.qml" > "$test_dir/output" 2>&1 || {
     cat "$test_dir/output"
     exit 1

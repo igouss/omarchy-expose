@@ -87,7 +87,7 @@ Item {
                     id: recoveryText
                     anchors.fill: parent
                     anchors.margins: Commons.Style.space(12)
-                    text: "After closing Settings, restore it in ~/.config/omarchy/shell.json by setting showFooter to true in the expose.window-overview plugin entry."
+                    text: "After closing Settings, restore it in ~/.config/omarchy/shell.json by setting showFooter to true in the elendal.panorama plugin entry."
                     textFormat: Text.PlainText
                     wrapMode: Text.WordWrap
                     color: Commons.Color.menu.text

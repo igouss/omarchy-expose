@@ -1,6 +1,6 @@
 #!/bin/bash
 # Live keyboard-focus checks against the running shell; install the working tree
-# into ~/.config/omarchy/plugins/expose.window-overview and restart the shell
+# into ~/.config/omarchy/plugins/elendal.panorama and restart the shell
 # first. Needs sudo for a uinput keyboard (python-evdev). Never sends Escape: it
 # would land in whatever terminal is focused once the overlay closes. Restores
 # every setting it changes.
@@ -10,30 +10,30 @@ config=~/.config/omarchy/shell.json
 before=$(mktemp)
 trap 'rm -f "$before"' EXIT
 failures=0
-mapped() { [[ $(hyprctl layers -j | grep -c expose-window-overview) -ge 1 ]]; }
+mapped() { [[ $(hyprctl layers -j | grep -c panorama-overview) -ge 1 ]]; }
 keys() { mapped || { echo "overlay not mapped"; return 1; }; sudo python3 -I "$here/keys.py" "$@"; }
-setting() { python3 -c "import json,sys; print(next(p for p in json.load(open(sys.argv[1]))['plugins'] if p.get('id') == 'expose.window-overview').get(sys.argv[2]))" "$config" "$1"; }
+setting() { python3 -c "import json,sys; print(next(p for p in json.load(open(sys.argv[1]))['plugins'] if p.get('id') == 'elendal.panorama').get(sys.argv[2]))" "$config" "$1"; }
 fail() { echo "FAIL: $*"; failures=$((failures + 1)); }
-close() { omarchy-shell expose close >/dev/null; sleep 1; }
+close() { omarchy-shell panorama close >/dev/null; sleep 1; }
 
 # Settings opened while closed start on the category list: Down Down Right Left
 # reaches Windows, enters it, and flips Selection highlight from Lift to Outline.
 close
-omarchy-shell expose selectionStyle lift >/dev/null
+omarchy-shell panorama selectionStyle lift >/dev/null
 cp "$config" "$before"
-omarchy-shell expose settings open >/dev/null; sleep 1.5
+omarchy-shell panorama settings open >/dev/null; sleep 1.5
 keys KEY_DOWN KEY_DOWN KEY_RIGHT KEY_LEFT sleep:0.3
 close
 style=$(setting selectionStyle)
-omarchy-shell expose selectionStyle lift >/dev/null; sleep 0.5
+omarchy-shell panorama selectionStyle lift >/dev/null; sleep 0.5
 [[ $style == outline ]] && echo "PASS: settings opened while closed take focus" || fail "settings opened while closed: selectionStyle=$style"
 cmp -s "$before" "$config" || fail "shell.json not restored after the first check"
 
 # The Motion page's Animate preview keeps focus on the button: Up Right goes to
 # the category and back without changing anything. Focus pulled to the window
 # grid would make Up land on the last slider and Right lengthen its duration.
-omarchy-shell expose open >/dev/null; sleep 1.2
-omarchy-shell expose settings open >/dev/null; sleep 1
+omarchy-shell panorama open >/dev/null; sleep 1.2
+omarchy-shell panorama settings open >/dev/null; sleep 1
 keys KEY_7 KEY_RIGHT KEY_SPACE sleep:0.8 KEY_UP KEY_RIGHT sleep:0.3
 close
 if cmp -s "$before" "$config"; then

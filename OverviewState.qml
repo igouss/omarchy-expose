@@ -15,7 +15,7 @@ Item {
     property var manifest: null
     readonly property alias windowBorders: windowBorders
     WindowBorders { id: windowBorders }
-    readonly property string pluginId: String((root.manifest && root.manifest.id) || "expose.window-overview")
+    readonly property string pluginId: String((root.manifest && root.manifest.id) || "elendal.panorama")
     readonly property string pluginDir: String((root.manifest && root.manifest.__sourceDir)
         || (Quickshell.env("HOME") + "/.config/omarchy/plugins/" + root.pluginId))
     readonly property var pluginEntry: pluginSettings.entry

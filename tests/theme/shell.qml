@@ -271,8 +271,8 @@ ShellRoot {
                 compositorBorders(4, "invalid", "ff000000");
                 require(card.outlineSpec.widths.top === 2, "invalid queries preserve last compositor state");
                 require(normal.radius === 12 && Commons.Style.font.baseSize === 14 && Commons.Style.spacing.controlHeight === 35, "radius font and spacing");
-                if (Quickshell.env("EXPOSE_THEME_OUTPUT_DIR"))
-                    canvas.grabToImage(function(result) { result.saveToFile(Quickshell.env("EXPOSE_THEME_OUTPUT_DIR") + "/theme-dark.png"); });
+                if (Quickshell.env("PANORAMA_THEME_OUTPUT_DIR"))
+                    canvas.grabToImage(function(result) { result.saveToFile(Quickshell.env("PANORAMA_THEME_OUTPUT_DIR") + "/theme-dark.png"); });
                 test.phase++;
             } else if (test.phase === 2) {
                 Commons.Color.loadShell('[menu]\nbackground = "#f1f5fa"\ntext = "#172331"\nborder-width = 0\nborder-alpha = 0.3\n[controls]\nnormal-border-width = 0\nhover-cursor-border-width = 0\nfocus-border-width = 0\nselected-border-width = 0\nnormal-color = "#172331"\nnormal-fill-alpha = 0\nhover-cursor-color = "#365ca0"\nhover-cursor-fill-alpha = 0.1\nfocus-color = "#365ca0"\nfocus-fill-alpha = 0.1\nselected-color = "#1a6380"\nselected-fill-alpha = 0.15\n');
@@ -289,8 +289,8 @@ ShellRoot {
                 require(Commons.Border.isNone(card.outlineSpec) && Qt.color(card.outlineSpec.color).a === 0, "compositor zero width and transparent colors are respected");
                 compositorBorders(3, "ff224466 0deg", "aa595959 0deg");
                 require(card.outlineSpec.widths.top === 3 && !card.outlineSpec.gradient.enabled, "live compositor change replaces prior gradient and width");
-                if (Quickshell.env("EXPOSE_THEME_OUTPUT_DIR"))
-                    canvas.grabToImage(function(result) { result.saveToFile(Quickshell.env("EXPOSE_THEME_OUTPUT_DIR") + "/theme-light.png"); });
+                if (Quickshell.env("PANORAMA_THEME_OUTPUT_DIR"))
+                    canvas.grabToImage(function(result) { result.saveToFile(Quickshell.env("PANORAMA_THEME_OUTPUT_DIR") + "/theme-light.png"); });
                 test.phase++;
             } else if (test.phase === 4) {
                 prepareSettingsPage(0);
@@ -298,8 +298,8 @@ ShellRoot {
             } else if (test.phase >= 5 && test.phase <= 28) {
                 var index = test.phase - 5;
                 checkSettingsPage(index);
-                if (Quickshell.env("EXPOSE_THEME_OUTPUT_DIR")) {
-                    var path = Quickshell.env("EXPOSE_THEME_OUTPUT_DIR") + "/settings-" + index + ".png";
+                if (Quickshell.env("PANORAMA_THEME_OUTPUT_DIR")) {
+                    var path = Quickshell.env("PANORAMA_THEME_OUTPUT_DIR") + "/settings-" + index + ".png";
                     testTimer.stop();
                     canvas.grabToImage(function(result) {
                         result.saveToFile(path);

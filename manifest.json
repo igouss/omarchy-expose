@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "id": "expose.window-overview",
-  "name": "Expos\u00e9",
-  "version": "5.0.0",
-  "author": "Kristoffer Risanger (@kristofferR)",
+  "id": "elendal.panorama",
+  "name": "Panorama",
+  "version": "1.0.0",
+  "author": "igouss (fork of Expos\u00e9 by Kristoffer Risanger, @kristofferR)",
   "license": "MIT",
-  "description": "macOS-style Expos\u00e9 for Omarchy: one key or a hot corner shows every open window as a live preview. Type to search, press Space to Quick Look, press Enter to launch.",
+  "description": "Every open window at once, in five looks: Grid, Carousel, Strata, Glass HUD, and CRT. A fork of Expos\u00e9 for Omarchy: type to search, Space to Quick Look, Enter to open.",
   "icon": "assets/icon.svg",
   "preview": "preview.png",
   "kinds": [

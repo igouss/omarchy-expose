@@ -3,7 +3,7 @@
 ## Installing locally for testing
 
 - Installing means updating the running desktop, not just the files on disk.
-  The installed plugin is `~/.config/omarchy/plugins/expose.window-overview`.
+  The installed plugin is `~/.config/omarchy/plugins/elendal.panorama`.
 - Inspect its Git status before updating. Preserve local changes and save a
   rollback ref before installing a committed test build. When possible, fetch
   the task checkout locally and fast-forward the installed checkout to the
@@ -15,10 +15,10 @@
   `omarchy-shell shell rescanPlugins` can leave cached QML running. A successful
   rescan, matching Git HEAD, or successful IPC call does not prove the new UI
   is loaded.
-- Close Exposé with `omarchy-shell expose close` before running
+- Close Panorama with `omarchy-shell panorama close` before running
   `omarchy restart shell`, so its temporary blur changes are restored. Respect
-  the restart command's lock-screen safeguards. Wait for the shell and Exposé
-  IPC target to become ready, then open `omarchy-shell expose settings open`.
+  the restart command's lock-screen safeguards. Wait for the shell and Panorama
+  IPC target to become ready, then open `omarchy-shell panorama settings open`.
 - **Verify the actual desktop before claiming success.** Capture and inspect
   the running panel, checking a visible feature of the installed change. For
   the settings reorganization, verify all six pages and explanatory text.
@@ -54,8 +54,5 @@
   binaries in `/usr/lib/qt6/bin` directly.
 - The README demo is a GitHub release asset, not a tracked file, so clones stay
   small. Attach replacement media to a release and update the README link.
-- Keep `https://github.com/kristofferR/omarchy-expose.git` published in the
-  Okomart catalog at `brianblakely/omarchy-plugins`. When adding or changing
-  its catalog entry, update `plugins.txt`, regenerate the marker-owned README
-  table, validate the catalog, and submit the change through the
-  `kristofferR/omarchy-plugins` fork.
+- Panorama is a fork of `https://github.com/kristofferR/omarchy-expose`; the
+  upstream author owns Exposé's plugin catalog entry. Do not edit it from here.
