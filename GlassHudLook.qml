@@ -17,10 +17,7 @@ Look {
 
     windowLayout: {
         var revision = overview.modelRevision;
-        var screenRatio = screenWindow.screen && screenWindow.screen.height > 0
-            ? screenWindow.screen.width / screenWindow.screen.height
-            : 0;
-        return overview.computeWindowLayout(toplevels, field.width, field.height, Commons.Style.space(40), cardPadding, titleBandHeight, screenRatio);
+        return overview.computeWindowLayout(toplevels, field.width, field.height, Commons.Style.space(40), cardPadding, titleBandHeight);
     }
 
     // The readout across the top.

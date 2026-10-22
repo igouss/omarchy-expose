@@ -89,7 +89,10 @@ function composeRows(rows, scale, width, height, gap, padding, footerHeight) {
     return result;
 }
 
-function computeLayout(ratios, width, height, gap, padding, footerHeight, viewportRatioHint) {
+// Every row count that fits is tried and the largest cards win: a card's title
+// band and padding make it taller than its preview, so no estimate from the
+// previews' shapes alone can rule a row count out.
+function computeLayout(ratios, width, height, gap, padding, footerHeight) {
     var count = ratios.length;
     if (!count || width <= 0 || height <= 0)
         return [];
@@ -128,19 +131,7 @@ function computeLayout(ratios, width, height, gap, padding, footerHeight, viewpo
     var bestScale = -1;
     var minimumCardHeight = footerHeight + padding * 2 + footerSpacing + 1;
     var maxRows = Math.max(1, Math.min(count, Math.floor((availableHeight + gap) / (minimumCardHeight + gap))));
-    var totalNaturalWidth = 0;
-    var totalNaturalHeight = 0;
-    for (let naturalIndex = 0; naturalIndex < entries.length; naturalIndex++) {
-        totalNaturalWidth += Math.sqrt(entries[naturalIndex].weight * entries[naturalIndex].ratio);
-        totalNaturalHeight += Math.sqrt(entries[naturalIndex].weight / entries[naturalIndex].ratio);
-    }
-    var averageNaturalHeight = totalNaturalHeight / entries.length;
-    var viewportRatio = Number(viewportRatioHint);
-    if (!isFinite(viewportRatio) || viewportRatio <= 0)
-        viewportRatio = availableWidth / availableHeight;
-    var balancedRows = Math.round(Math.sqrt(totalNaturalWidth / Math.max(0.01, viewportRatio * averageNaturalHeight)));
-    var minimumRows = Math.max(1, Math.min(maxRows, balancedRows));
-    for (let rowCount = minimumRows; rowCount <= maxRows; rowCount++) {
+    for (let rowCount = 1; rowCount <= maxRows; rowCount++) {
         let rows = assignCompositionRows(entries, rowCount);
         let low = 0;
         let rowHigh = high;

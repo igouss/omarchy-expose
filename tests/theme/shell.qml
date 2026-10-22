@@ -69,8 +69,8 @@ ShellRoot {
         property int modelRevision: 0
         property real motionProgress: 1
         property real motionTarget: 1
-        function computeWindowLayout(toplevels, width, height, gap, padding, footerHeight, hint) {
-            return GridLayout.computeLayout(toplevels.map(top => 1.8), width, height, gap, padding, footerHeight, hint);
+        function computeWindowLayout(toplevels, width, height, gap, padding, footerHeight) {
+            return GridLayout.computeLayout(toplevels.map(top => 1.8), width, height, gap, padding, footerHeight);
         }
         function formatWorkspaceLabel(name) { return String(name); }
         function moveDirectional(dx, dy, layout) {}

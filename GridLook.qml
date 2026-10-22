@@ -8,10 +8,7 @@ Look {
 
     windowLayout: {
         var revision = overview.modelRevision;
-        var screenRatio = screenWindow.screen && screenWindow.screen.height > 0
-            ? screenWindow.screen.width / screenWindow.screen.height
-            : 0;
-        return overview.computeWindowLayout(screenWindow.screenToplevels, width, height, Commons.Style.space(64), Commons.Style.spacing.sm, overview.windowFooterHeight, screenRatio);
+        return overview.computeWindowLayout(screenWindow.screenToplevels, width, height, Commons.Style.space(64), Commons.Style.spacing.sm, overview.windowFooterHeight);
     }
 
     Item {

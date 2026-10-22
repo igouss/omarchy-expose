@@ -8,9 +8,9 @@ OverviewWindows {
     // An arrow found no window that way; sent only while edge bump is on.
     signal edgeBumped(int dx, int dy)
 
-    function computeWindowLayout(toplevels, width, height, gap, padding, footerHeight, viewportRatioHint) {
+    function computeWindowLayout(toplevels, width, height, gap, padding, footerHeight) {
         return GridLayout.computeLayout(toplevels.map(top => root.aspectRatioFor(top)),
-            width, height, gap, padding, footerHeight, viewportRatioHint);
+            width, height, gap, padding, footerHeight);
     }
 
     function previewRectFor(top, sourceRect, width, height, padding, footerHeight) {

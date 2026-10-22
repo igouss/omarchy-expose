@@ -12,7 +12,7 @@ TestCase {
     readonly property int footer: 40
 
     function layoutFor(ratios) {
-        return GridLayout.computeLayout(ratios, areaWidth, areaHeight, gap, padding, footer, areaWidth / areaHeight);
+        return GridLayout.computeLayout(ratios, areaWidth, areaHeight, gap, padding, footer);
     }
 
     function inside(rect) {
@@ -30,8 +30,8 @@ TestCase {
 
     function test_noWindowsOrNoSpaceLaysOutNothing() {
         compare(layoutFor([]).length, 0);
-        compare(GridLayout.computeLayout([1.6], 0, areaHeight, gap, padding, footer, 1).length, 0);
-        compare(GridLayout.computeLayout([1.6], areaWidth, -5, gap, padding, footer, 1).length, 0);
+        compare(GridLayout.computeLayout([1.6], 0, areaHeight, gap, padding, footer).length, 0);
+        compare(GridLayout.computeLayout([1.6], areaWidth, -5, gap, padding, footer).length, 0);
     }
 
     function test_oneWindowFitsAndKeepsItsShape() {
@@ -57,7 +57,7 @@ TestCase {
     // its width is the binding limit.
     function test_crowdedRowsStayInsideAndKeepTheirGap() {
         let ratios = [1, 1, 1, 1, 1, 1];
-        let rects = GridLayout.computeLayout(ratios, areaWidth, 300, gap, padding, footer, areaWidth / 300);
+        let rects = GridLayout.computeLayout(ratios, areaWidth, 300, gap, padding, footer);
         compare(rects.length, ratios.length);
         for (let i = 0; i < rects.length; i++) {
             verify(rects[i].x >= 0 && rects[i].x + rects[i].width <= areaWidth + 0.001, "card " + i + " within the width");
@@ -70,10 +70,32 @@ TestCase {
         }
     }
 
-    // The row-count estimate comes from a viewport ratio hint; even a hint that
-    // asks for one row in a tall area must not push cards past the width.
-    function test_misleadingViewportHintStillFitsTheWidth() {
-        let rects = GridLayout.computeLayout([1, 1, 1, 1, 1, 1], areaWidth, 3000, gap, padding, footer, 100);
+    function rowCount(rects) {
+        let tops = {};
+        rects.forEach(rect => tops[Math.round(rect.y)] = true);
+        return Object.keys(tops).length;
+    }
+
+    // Each card's title band and padding make it taller than its preview, so
+    // fewer rows than the previews alone suggest can hold larger cards.
+    function test_fewerLargerRowsWinWhenTheyFit() {
+        let rects = layoutFor([1.6, 1.6, 1.6, 1.6, 1.6, 1.6, 1.6, 1.6]);
+        compare(rowCount(rects), 2);
+        verify(rects[0].width > 330, "cards " + rects[0].width + " wide");
+    }
+
+    // The most rows the area allows can be the best: one card per row.
+    function test_narrowTallAreaStacksOneColumn() {
+        compare(rowCount(GridLayout.computeLayout([1, 1, 1, 1, 1, 1], 400, 3000, gap, padding, footer)), 6);
+    }
+
+    function test_twoWideWindowsSitSideBySide() {
+        compare(rowCount(layoutFor([2, 2])), 1);
+    }
+
+    // A tall, narrow area favours one column; the cards must still fit its width.
+    function test_tallAreaStillFitsTheWidth() {
+        let rects = GridLayout.computeLayout([1, 1, 1, 1, 1, 1], areaWidth, 3000, gap, padding, footer);
         compare(rects.length, 6);
         for (let i = 0; i < rects.length; i++)
             verify(rects[i].x >= 0 && rects[i].x + rects[i].width <= areaWidth + 0.001, "card " + i + " within the width");
