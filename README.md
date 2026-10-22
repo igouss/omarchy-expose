@@ -99,7 +99,7 @@ Hot corners default to the outermost display: left corners use the leftmost disp
 Open **Settings** from the footer while the overview is open. It is fully keyboard driven: 1-8 jump to a section, Up/Down move between controls, Left/Right adjust sliders and choices, Space or Enter flip toggles and press buttons, Escape closes. Changes apply immediately. Settings are grouped into **Look**, **Appearance**, **Windows**, **Window labels**, **Workspaces**, **Hot corner**, **Motion**, and **Juice**, with explanatory text beneath each control:
 
 - Look: Grid (default) or Carousel. Window footer style, selection highlight, and Quick Look position shape the grid only
-- Juice, each effect its own switch (all on by default): springy motion (moves overshoot and settle; carousel cards stretch as they travel, the grid's lifted card pops)
+- Juice, each effect its own switch (all on by default): springy motion (moves overshoot and settle; carousel cards stretch as they travel, the grid's lifted card pops) and edge bump (an arrow with no window that way shakes the selection; the carousel rubber-bands)
 - Opening animation: Original (default), Fade, Zoom, or Slide
 - Animation duration saved per mode, linked for in/out by default or expandable to separate timings
 - Slide direction: left (default), right, up, or down. Splitting in/out splits both speed and direction

@@ -29,6 +29,24 @@ Look {
         }
     }
 
+    // Edge bump: the arc leans toward the missing window and snaps back.
+    property real bump: 0
+    Connections {
+        target: look.overview
+        function onEdgeBumped(dx, dy) {
+            if (dx === 0)
+                return;
+            rubberBand.lean = dx * 0.35;
+            rubberBand.restart();
+        }
+    }
+    SequentialAnimation {
+        id: rubberBand
+        property real lean: 0
+        NumberAnimation { target: look; property: "bump"; to: rubberBand.lean; duration: 90; easing.type: Easing.OutQuad }
+        NumberAnimation { target: look; property: "bump"; to: 0; duration: 420; easing.type: Easing.OutElastic; easing.amplitude: 1; easing.period: 0.35 }
+    }
+
     // How far the arc lags its target; springy motion stretches cards along travel by it.
     readonly property real stretch: overview.juiceSpring ? Math.min(0.12, Math.abs(position - centreIndex) * 0.1) : 0
 
@@ -94,7 +112,7 @@ Look {
             controller: look.overview
             screenToplevels: look.toplevels
             acceptsKeyboard: look.screenWindow.acceptsKeyboard
-            position: look.position
+            position: look.position + look.bump
             stretch: look.stretch
             areaWidth: look.width
             areaHeight: look.height

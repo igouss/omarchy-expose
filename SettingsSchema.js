@@ -85,12 +85,13 @@ var specs = {
     hotCornerAllDisplays: { fallback: false },
     moveCursorToWindow: { fallback: true },
     showFooter: { fallback: true },
-    juiceSpring: { fallback: true }
+    juiceSpring: { fallback: true },
+    juiceEdgeBump: { fallback: true }
 };
 
 // Juice effects, each its own boolean setting named "juice" + Effect. IPC and
 // the Juice page name them by effect.
-var juiceEffects = ["spring"];
+var juiceEffects = ["spring", "edgeBump"];
 
 function juiceSetting(effect) {
     return juiceEffects.indexOf(effect) !== -1 ? "juice" + effect.charAt(0).toUpperCase() + effect.slice(1) : "";

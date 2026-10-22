@@ -5,6 +5,9 @@ import "GridLayout.js" as GridLayout
 OverviewWindows {
     id: root
 
+    // An arrow found no window that way; sent only while edge bump is on.
+    signal edgeBumped(int dx, int dy)
+
     function computeWindowLayout(toplevels, width, height, gap, padding, footerHeight, viewportRatioHint) {
         return GridLayout.computeLayout(toplevels.map(top => root.aspectRatioFor(top)),
             width, height, gap, padding, footerHeight, viewportRatioHint);
@@ -18,8 +21,11 @@ OverviewWindows {
     function moveDirectional(dx, dy, layout, slowMotion) {
         var currentIndex = root.filteredToplevels.indexOf(root.selection);
         var bestIndex = GridLayout.neighbourIndex(layout, currentIndex, dx, dy);
-        if (bestIndex < 0)
+        if (bestIndex < 0) {
+            if (root.juiceEdgeBump && root.selection)
+                root.edgeBumped(dx, dy);
             return;
+        }
 
         var previousPreview = root.previewToplevel;
         var next = root.filteredToplevels[bestIndex];

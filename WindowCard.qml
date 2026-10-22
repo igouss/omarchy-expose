@@ -66,6 +66,7 @@ Ui.BorderSurface {
 
     }
     visible: inLayout
+    transform: Translate { id: bumpShift }
     x: layoutRect.x
     y: layoutRect.y
     width: layoutRect.width
@@ -204,6 +205,33 @@ Ui.BorderSurface {
 
         }
 
+    }
+
+    // Edge bump: the selection shakes along the arrow that found nothing.
+    Connections {
+        target: card.controller
+        function onEdgeBumped(dx, dy) {
+            if (!card.selected)
+                return;
+            bumpShake.dx = dx;
+            bumpShake.dy = dy;
+            bumpShake.restart();
+        }
+    }
+
+    SequentialAnimation {
+        id: bumpShake
+        property int dx: 0
+        property int dy: 0
+        readonly property real reach: Commons.Style.space(14)
+        ParallelAnimation {
+            NumberAnimation { target: bumpShift; property: "x"; to: bumpShake.dx * bumpShake.reach; duration: 60; easing.type: Easing.OutQuad }
+            NumberAnimation { target: bumpShift; property: "y"; to: bumpShake.dy * bumpShake.reach; duration: 60; easing.type: Easing.OutQuad }
+        }
+        ParallelAnimation {
+            NumberAnimation { target: bumpShift; property: "x"; to: 0; duration: 320; easing.type: Easing.OutElastic; easing.amplitude: 1; easing.period: 0.3 }
+            NumberAnimation { target: bumpShift; property: "y"; to: 0; duration: 320; easing.type: Easing.OutElastic; easing.amplitude: 1; easing.period: 0.3 }
+        }
     }
 
     // Shared footer building blocks; each footer style overrides only what differs.

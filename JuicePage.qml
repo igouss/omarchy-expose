@@ -4,7 +4,7 @@ import QtQuick.Layouts
 // Game-style feedback, one switch per effect.
 SettingsPage {
     id: page
-    readonly property var focusControls: [springToggle]
+    readonly property var focusControls: [springToggle, edgeBumpToggle]
     categoryIndex: 7
     title: "Feel and feedback"
 
@@ -20,6 +20,21 @@ SettingsPage {
             view: page.view
             checked: view.controller.juiceSpring
             onToggled: function (checked) { view.controller.setSetting("juiceSpring", checked); }
+        }
+    }
+
+    SettingRow {
+        dialog: page.dialog
+        label: "Edge bump"
+        description: "An arrow with no window that way shakes the selection instead of doing nothing; the carousel rubber-bands."
+
+        Item { Layout.fillWidth: true }
+
+        SettingToggle {
+            id: edgeBumpToggle
+            view: page.view
+            checked: view.controller.juiceEdgeBump
+            onToggled: function (checked) { view.controller.setSetting("juiceEdgeBump", checked); }
         }
     }
 }
