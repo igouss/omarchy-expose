@@ -32,11 +32,11 @@ QtObject {
     function applySnapshot(raw) {
         try {
             // A JSON batch is a sequence of objects, not a JSON array.
-            var options = JSON.parse("[" + raw.trim().replace(/}\s*{/g, "},{") + "]");
-            var values = {};
-            for (var i = 0; i < options.length; i++)
+            let options = JSON.parse("[" + raw.trim().replace(/}\s*{/g, "},{") + "]");
+            let values = {};
+            for (let i = 0; i < options.length; i++)
                 values[options[i].option] = options[i];
-            var width = values["general:border_size"].int;
+            let width = values["general:border_size"].int;
             if (typeof width !== "number" || !isFinite(width) || width < 0)
                 return;
             root.snapshot = {

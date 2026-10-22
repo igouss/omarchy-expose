@@ -229,8 +229,8 @@ Item {
         var screens = Quickshell.screens;
         var wanted = String(root.overviewScreenName || "");
         var fallback = null;
-        for (var index = 0; index < screens.length; index++) {
-            var screen = screens[index];
+        for (let index = 0; index < screens.length; index++) {
+            let screen = screens[index];
             if (!screen)
                 continue;
             if (!fallback)

@@ -19,7 +19,7 @@ Flow {
         if (!count)
             return;
         var current = 0;
-        for (var index = 0; index < count; index++)
+        for (let index = 0; index < count; index++)
             if (String(settingChoices.options[index].value) === settingChoices.value)
                 current = index;
         var next = wrap

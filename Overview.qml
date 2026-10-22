@@ -22,9 +22,9 @@ OverviewLifecycle {
 
     function hotCornerHovered() {
         var groups = [hotCornerInstances, surfaceInstances, backdropInstances];
-        for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) {
-            var instances = groups[groupIndex].instances;
-            for (var index = 0; index < instances.length; index++)
+        for (let groupIndex = 0; groupIndex < groups.length; groupIndex++) {
+            let instances = groups[groupIndex].instances;
+            for (let index = 0; index < instances.length; index++)
                 if (instances[index] && instances[index].hotCornerHovered)
                     return true;
         }
@@ -59,8 +59,8 @@ OverviewLifecycle {
     }
 
     function focusKeyboardWindow() {
-        for (var i = 0; i < surfaceInstances.instances.length; i++) {
-            var surface = surfaceInstances.instances[i];
+        for (let i = 0; i < surfaceInstances.instances.length; i++) {
+            let surface = surfaceInstances.instances[i];
             if (surface && surface.acceptsKeyboard) {
                 surface.keyboardItem.forceActiveFocus();
                 return;
@@ -69,8 +69,8 @@ OverviewLifecycle {
     }
 
     function focusSettingsCategory() {
-        for (var i = 0; i < surfaceInstances.instances.length; i++) {
-            var surface = surfaceInstances.instances[i];
+        for (let i = 0; i < surfaceInstances.instances.length; i++) {
+            let surface = surfaceInstances.instances[i];
             if (surface && surface.acceptsKeyboard) {
                 surface.focusSettingsCategory();
                 return;
@@ -99,8 +99,8 @@ OverviewLifecycle {
         var forward = isTab
             ? event.key !== Qt.Key_Backtab && !(event.modifiers & Qt.ShiftModifier)
             : event.key === Qt.Key_Down || event.key === Qt.Key_Right;
-        for (var index = 0; index < surfaceInstances.instances.length; index++) {
-            var surface = surfaceInstances.instances[index];
+        for (let index = 0; index < surfaceInstances.instances.length; index++) {
+            let surface = surfaceInstances.instances[index];
             if (!surface || !surface.acceptsKeyboard)
                 continue;
             if (root.footerHideConfirmationOpen)

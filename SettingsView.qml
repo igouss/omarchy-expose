@@ -19,7 +19,7 @@ Item {
     ]
 
     function revealSettingsItem(item) {
-        for (var parent = item.parent; parent; parent = parent.parent) {
+        for (let parent = item.parent; parent; parent = parent.parent) {
             if (parent instanceof Flickable) {
                 parent.reveal(item);
                 return;
@@ -31,8 +31,8 @@ Item {
 
     function availableFocusItems(candidates) {
         var items = [];
-        for (var index = 0; index < candidates.length; index++) {
-            var candidate = candidates[index];
+        for (let index = 0; index < candidates.length; index++) {
+            let candidate = candidates[index];
             if (candidate && candidate.visible && candidate.enabled)
                 items.push(candidate);
         }
@@ -60,7 +60,7 @@ Item {
         if (!items.length)
             return;
         var focusedIndex = -1;
-        for (var index = 0; index < items.length; index++) {
+        for (let index = 0; index < items.length; index++) {
             if (items[index].activeFocus) {
                 focusedIndex = index;
                 break;

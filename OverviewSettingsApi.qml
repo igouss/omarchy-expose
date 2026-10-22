@@ -40,10 +40,10 @@ OverviewState {
         if (nextIn !== Number(current["in"])
                 || nextOut !== Number(current["out"])
                 || nextSeparate !== (current.separate === true)) {
-            var timings = {};
-            for (var index = 0; index < root.animationStyles.length; index++) {
-                var animationMode = root.animationStyles[index];
-                var timing = root.animationTimingFor(animationMode);
+            let timings = {};
+            for (let index = 0; index < root.animationStyles.length; index++) {
+                let animationMode = root.animationStyles[index];
+                let timing = root.animationTimingFor(animationMode);
                 timings[animationMode] = animationMode === mode
                     ? {"in": nextIn, "out": nextOut, separate: nextSeparate}
                     : {"in": Number(timing["in"]), "out": Number(timing["out"]), separate: timing.separate === true};

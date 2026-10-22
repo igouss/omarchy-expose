@@ -27,7 +27,7 @@ QtObject {
     function contains(entry, expected) {
         if (!entry)
             return false;
-        for (var key in expected)
+        for (let key in expected)
             if (JSON.stringify(entry[key]) !== JSON.stringify(expected[key]))
                 return false;
         return true;
@@ -47,7 +47,7 @@ QtObject {
 
         var plugins = Array.isArray(config.plugins) ? config.plugins : [];
         var next = null;
-        for (var i = 0; i < plugins.length; i++) {
+        for (let i = 0; i < plugins.length; i++) {
             if (plugins[i] && plugins[i].id === root.pluginId) {
                 next = plugins[i];
                 break;

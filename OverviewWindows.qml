@@ -60,9 +60,9 @@ OverviewSettingsApi {
         var previewExitTop = root.previewExitIndex >= 0 ? root.filteredToplevels[root.previewExitIndex] : null;
         var membershipChanged = root.syncSessionToplevels();
         if (root.openingPending) {
-            var sessionIndex = root.sessionToplevels.indexOf(top);
+            let sessionIndex = root.sessionToplevels.indexOf(top);
             if (sessionIndex >= 0) {
-                var ratios = root.sessionAspectRatios.slice();
+                let ratios = root.sessionAspectRatios.slice();
                 ratios[sessionIndex] = WindowModel.aspectRatioFor(top);
                 root.sessionAspectRatios = ratios;
             }
@@ -76,13 +76,13 @@ OverviewSettingsApi {
         root.selectedIndex = Math.max(0, selectedIndex);
 
         if (previewTop) {
-            var previewIndex = root.filteredToplevels.indexOf(previewTop);
+            let previewIndex = root.filteredToplevels.indexOf(previewTop);
             if (previewIndex < 0)
                 root.clearPreview();
             else
                 root.previewIndex = previewIndex;
         } else if (previewExitTop) {
-            var previewExitIndex = root.filteredToplevels.indexOf(previewExitTop);
+            let previewExitIndex = root.filteredToplevels.indexOf(previewExitTop);
             if (previewExitIndex < 0)
                 root.clearPreview();
             else
@@ -144,15 +144,15 @@ OverviewSettingsApi {
 
         var next = [];
         var nextRatios = [];
-        for (var oldIndex = 0; oldIndex < root.sessionToplevels.length; oldIndex++) {
-            var existing = root.sessionToplevels[oldIndex];
+        for (let oldIndex = 0; oldIndex < root.sessionToplevels.length; oldIndex++) {
+            let existing = root.sessionToplevels[oldIndex];
             if (current.indexOf(existing) === -1)
                 continue;
             next.push(existing);
             nextRatios.push(root.sessionAspectRatios[oldIndex] || WindowModel.aspectRatioFor(existing));
         }
-        for (var newIndex = 0; newIndex < current.length; newIndex++) {
-            var candidate = current[newIndex];
+        for (let newIndex = 0; newIndex < current.length; newIndex++) {
+            let candidate = current[newIndex];
             if (next.indexOf(candidate) !== -1)
                 continue;
             next.push(candidate);
@@ -178,8 +178,8 @@ OverviewSettingsApi {
     function monitorForScreen(screenName) {
         var wanted = String(screenName || "");
         var monitors = Hyprland.monitors ? Hyprland.monitors.values : [];
-        for (var index = 0; index < monitors.length; index++) {
-            var monitor = monitors[index];
+        for (let index = 0; index < monitors.length; index++) {
+            let monitor = monitors[index];
             if (monitor && monitor.name === wanted)
                 return monitor;
         }
@@ -188,7 +188,7 @@ OverviewSettingsApi {
 
     function workspaceForScreen(screenName) {
         if (root.multiMonitorMode === "per-monitor") {
-            var monitor = root.monitorForScreen(screenName);
+            let monitor = root.monitorForScreen(screenName);
             if (monitor && monitor.activeWorkspace)
                 return monitor.activeWorkspace;
         }
@@ -215,8 +215,8 @@ OverviewSettingsApi {
     function toplevelsOnScreen(screenName) {
         var result = [];
         var source = root.surfaceMounted || root.openingPending ? root.sessionToplevels : root.allToplevels;
-        for (var index = 0; index < source.length; index++) {
-            var top = source[index];
+        for (let index = 0; index < source.length; index++) {
+            let top = source[index];
             if (top && root.isOnScreen(top, screenName))
                 result.push(top);
         }
@@ -228,11 +228,11 @@ OverviewSettingsApi {
         var currentWorkspace = root.workspaceForScreen(screenName);
         var candidates = root.toplevelsOnScreen(screenName);
         var result = [];
-        for (var index = 0; index < candidates.length; index++) {
-            var top = candidates[index];
+        for (let index = 0; index < candidates.length; index++) {
+            let top = candidates[index];
             if (root.workspaceScope === "current" && !WindowModel.isOnWorkspace(top, currentWorkspace))
                 continue;
-            var haystack = WindowModel.searchTextFor(top);
+            let haystack = WindowModel.searchTextFor(top);
             if (!needle || haystack.indexOf(needle) !== -1)
                 result.push(top);
         }
@@ -242,7 +242,7 @@ OverviewSettingsApi {
     function toplevelListsEqual(left, right) {
         if (left.length !== right.length)
             return false;
-        for (var index = 0; index < left.length; index++)
+        for (let index = 0; index < left.length; index++)
             if (left[index] !== right[index])
                 return false;
         return true;
@@ -250,7 +250,7 @@ OverviewSettingsApi {
 
     function aspectRatioFor(top) {
         if (root.surfaceMounted) {
-            var index = root.sessionToplevels.indexOf(top);
+            let index = root.sessionToplevels.indexOf(top);
             if (index >= 0 && root.sessionAspectRatios[index] > 0)
                 return root.sessionAspectRatios[index];
         }
