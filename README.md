@@ -4,7 +4,17 @@ Every open window at once, as live previews, in the look you like: a balanced **
 
 Panorama is a fork of [Exposé for Omarchy](https://github.com/kristofferR/omarchy-expose) by Kristoffer Risanger, which grew out of [Bird's Eye](https://github.com/harel/omarchy-birdseye) by Harel Malka. The grid, live previews, Quick Look, search, hot corner, and settings panel are theirs; Panorama adds the other looks and the parts listed below.
 
-![The Grid look, inherited from Exposé](https://github.com/kristofferR/omarchy-expose/releases/download/v4.0.0/demo.gif)
+![The Strata look: every workspace a glass floor, each window where it really is](docs/screenshots/strata.jpg)
+
+## The looks
+
+<table>
+  <tr><td align="center"><a href="docs/screenshots/grid.jpg"><img src="docs/screenshots/grid.jpg" alt="The Grid look" width="280"></a><br><b>Grid</b></td><td align="center"><a href="docs/screenshots/carousel.jpg"><img src="docs/screenshots/carousel.jpg" alt="The Carousel look" width="280"></a><br><b>Carousel</b></td><td align="center"><a href="docs/screenshots/strata.jpg"><img src="docs/screenshots/strata.jpg" alt="The Strata look" width="280"></a><br><b>Strata</b></td></tr>
+  <tr><td align="center"><a href="docs/screenshots/hud.jpg"><img src="docs/screenshots/hud.jpg" alt="The Glass HUD look" width="280"></a><br><b>Glass HUD</b></td><td align="center"><a href="docs/screenshots/crt.jpg"><img src="docs/screenshots/crt.jpg" alt="The CRT look" width="280"></a><br><b>CRT</b></td><td align="center"><a href="docs/screenshots/time.jpg"><img src="docs/screenshots/time.jpg" alt="The Time Machine look" width="280"></a><br><b>Time Machine</b></td></tr>
+  <tr><td align="center"><a href="docs/screenshots/diorama.jpg"><img src="docs/screenshots/diorama.jpg" alt="The Diorama look" width="280"></a><br><b>Diorama</b></td><td align="center"><a href="docs/screenshots/atlas.jpg"><img src="docs/screenshots/atlas.jpg" alt="The Atlas look" width="280"></a><br><b>Atlas</b></td><td align="center"><a href="docs/screenshots/helix.jpg"><img src="docs/screenshots/helix.jpg" alt="The Helix look" width="280"></a><br><b>Helix</b></td></tr>
+</table>
+
+Screenshots show throwaway terminals on three empty workspaces (Panorama's own source files in nvim), filtered with `panorama-demo`.
 
 ## Where Panorama comes from
 
