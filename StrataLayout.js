@@ -10,17 +10,18 @@ var backAngle = 62;      // ...and every other plane
 var reach = 2.5;         // planes beyond this offset fade out and stop capturing
 var centreYFraction = 0.4; // where the front plane's centre sits, as a fraction of the height
 
-// Where the plane at `offset` from the camera sits: the y of its centre, how
-// far it is laid back, its turn (none: strata face the viewer), its scale,
-// stacking order, shade, and opacity. The stack spaces planes by the front
-// plane's laid-back height.
-function placePlane(offset, areaHeight, planeHeight) {
+// Where the plane at `offset` from the camera sits: its centre (always
+// horizontally centred), how far it is laid back, its turn (none: strata face
+// the viewer), its scale, stacking order, shade, and opacity. The stack spaces
+// planes by the front plane's laid-back height.
+function placePlane(offset, areaWidth, areaHeight, planeHeight) {
     var distance = Math.abs(offset);
     var near = Math.min(distance, 1);
     var step = planeHeight * Math.cos(backAngle * Math.PI / 180) * 0.75 + areaHeight * 0.05;
     var frontGap = planeHeight * 0.22;
     var side = offset < 0 ? -1 : 1;
     return {
+        centreX: areaWidth / 2,
         centreY: areaHeight * centreYFraction + side * (near * frontGap + distance * step),
         angle: frontAngle + (backAngle - frontAngle) * near,
         turn: 0,
