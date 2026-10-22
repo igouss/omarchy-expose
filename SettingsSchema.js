@@ -88,12 +88,13 @@ var specs = {
     juiceSpring: { fallback: true },
     juiceEdgeBump: { fallback: true },
     juicePunch: { fallback: true },
-    juicePulse: { fallback: true }
+    juicePulse: { fallback: true },
+    juiceTilt: { fallback: true }
 };
 
 // Juice effects, each its own boolean setting named "juice" + Effect. IPC and
 // the Juice page name them by effect.
-var juiceEffects = ["spring", "edgeBump", "punch", "pulse"];
+var juiceEffects = ["spring", "edgeBump", "punch", "pulse", "tilt"];
 
 function juiceSetting(effect) {
     return juiceEffects.indexOf(effect) !== -1 ? "juice" + effect.charAt(0).toUpperCase() + effect.slice(1) : "";

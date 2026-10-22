@@ -37,6 +37,7 @@ ShellRoot {
         signal activating(var top)
         property bool juicePulse: true
         property real selectionBreath: 1
+        property bool juiceTilt: true
         property string look: "grid"
         property var originToplevel: null
         function setSetting(name, value) { controller[name] = value; return value; }
@@ -123,7 +124,7 @@ ShellRoot {
     }
     function checkSettingsPage(index) {
         var items = settings.settingsFocusItems();
-        var expectedCounts = [2, 4, 4, 3, 3, 5, 8, 5];
+        var expectedCounts = [2, 4, 4, 3, 3, 5, 8, 6];
         require(items.length === expectedCounts[index % 8], "focusable controls on page " + index);
         settings.focusSettingsCategory();
         require(items[0].activeFocus, "category focus on page " + index);

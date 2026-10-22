@@ -60,7 +60,13 @@ Item {
             origin.x: card.width / 2
             origin.y: card.height / 2
             axis { x: 0; y: 1; z: 0 }
-            angle: card.blend(card.placed.angle, 0)
+            angle: card.blend(card.placed.angle, 0) + tilt.aroundY
+        },
+        Rotation {
+            origin.x: card.width / 2
+            origin.y: card.height / 2
+            axis { x: 1; y: 0; z: 0 }
+            angle: tilt.aroundX
         }
     ]
 
@@ -171,8 +177,17 @@ Item {
         toplevel: card.modelData
     }
 
+    // Only the front card leans; side cards are already turned away.
+    PointerTilt {
+        id: tilt
+        area: pointer
+        active: card.controller.juiceTilt && card.front && !card.previewed
+    }
+
     MouseArea {
+        id: pointer
         anchors.fill: parent
+        hoverEnabled: card.controller.juiceTilt
         enabled: !card.controller.settingsOpen && (!card.controller.previewToplevel || card.previewed)
         acceptedButtons: Qt.LeftButton | Qt.MiddleButton
         onClicked: function (mouse) {

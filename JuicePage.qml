@@ -4,7 +4,7 @@ import QtQuick.Layouts
 // Game-style feedback, one switch per effect.
 SettingsPage {
     id: page
-    readonly property var focusControls: [springToggle, edgeBumpToggle, punchToggle, pulseToggle]
+    readonly property var focusControls: [springToggle, edgeBumpToggle, punchToggle, pulseToggle, tiltToggle]
     categoryIndex: 7
     title: "Feel and feedback"
 
@@ -65,6 +65,21 @@ SettingsPage {
             view: page.view
             checked: view.controller.juicePulse
             onToggled: function (checked) { view.controller.setSetting("juicePulse", checked); }
+        }
+    }
+
+    SettingRow {
+        dialog: page.dialog
+        label: "Pointer tilt"
+        description: "The card under the pointer leans toward it in 3D. In the carousel only the front card leans."
+
+        Item { Layout.fillWidth: true }
+
+        SettingToggle {
+            id: tiltToggle
+            view: page.view
+            checked: view.controller.juiceTilt
+            onToggled: function (checked) { view.controller.setSetting("juiceTilt", checked); }
         }
     }
 }

@@ -70,6 +70,7 @@ TestCase {
         compare(Schema.juiceSetting("edgeBump"), "juiceEdgeBump");
         compare(Schema.juiceSetting("punch"), "juicePunch");
         compare(Schema.juiceSetting("pulse"), "juicePulse");
+        compare(Schema.juiceSetting("tilt"), "juiceTilt");
         compare(Schema.juiceSetting("Spring"), "");
         compare(Schema.juiceSetting(""), "");
     }

@@ -66,7 +66,21 @@ Ui.BorderSurface {
 
     }
     visible: inLayout
-    transform: Translate { id: bumpShift }
+    transform: [
+        Translate { id: bumpShift },
+        Rotation {
+            origin.x: card.width / 2
+            origin.y: card.height / 2
+            axis { x: 0; y: 1; z: 0 }
+            angle: tilt.aroundY
+        },
+        Rotation {
+            origin.x: card.width / 2
+            origin.y: card.height / 2
+            axis { x: 1; y: 0; z: 0 }
+            angle: tilt.aroundX
+        }
+    ]
     x: layoutRect.x
     y: layoutRect.y
     width: layoutRect.width
@@ -80,7 +94,14 @@ Ui.BorderSurface {
         ? (previewed ? 1 : 0.28)
         : (liftSelection && !selected ? 0.72 : 1)
 
+    PointerTilt {
+        id: tilt
+        area: pointer
+        active: card.controller.juiceTilt && !card.previewed
+    }
+
     MouseArea {
+        id: pointer
         anchors.fill: parent
         enabled: !card.controller.settingsOpen && (!card.controller.previewToplevel || card.previewed)
         hoverEnabled: true

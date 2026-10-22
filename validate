@@ -31,7 +31,7 @@ ln -s /usr/share/omarchy/shell/Ui "$lint_dir/qs/Ui"
   -I "$lint_dir" \
   --max-warnings 0 \
   --unqualified disable \
-  Overview.qml OverviewState.qml OverviewSettingsApi.qml OverviewWindows.qml OverviewLayout.qml OverviewLifecycle.qml OverviewIpc.qml OverviewCanvas.qml Look.qml GridLook.qml CarouselLook.qml CarouselCard.qml WindowCard.qml WindowThumbnail.qml WindowBorders.qml SettingsView.qml SettingSlider.qml SettingChoices.qml DisplayModeChoices.qml SettingsCategoryButton.qml SettingsDivider.qml SettingRow.qml SettingsPage.qml SettingToggle.qml DialogButton.qml LookPage.qml AppearancePage.qml WindowsPage.qml WindowLabelsPage.qml WorkspacesPage.qml HotCornerPage.qml MotionPage.qml JuicePage.qml JuicePunch.qml FooterHideConfirmation.qml ThemedControl.qml ThemeDivider.qml PluginSettings.qml
+  Overview.qml OverviewState.qml OverviewSettingsApi.qml OverviewWindows.qml OverviewLayout.qml OverviewLifecycle.qml OverviewIpc.qml OverviewCanvas.qml Look.qml GridLook.qml CarouselLook.qml CarouselCard.qml WindowCard.qml WindowThumbnail.qml WindowBorders.qml SettingsView.qml SettingSlider.qml SettingChoices.qml DisplayModeChoices.qml SettingsCategoryButton.qml SettingsDivider.qml SettingRow.qml SettingsPage.qml SettingToggle.qml DialogButton.qml LookPage.qml AppearancePage.qml WindowsPage.qml WindowLabelsPage.qml WorkspacesPage.qml HotCornerPage.qml MotionPage.qml JuicePage.qml JuicePunch.qml PointerTilt.qml FooterHideConfirmation.qml ThemedControl.qml ThemeDivider.qml PluginSettings.qml
 
 # Lint the runtime fixture after injecting its host functions and imports.
 ./tests/check-settings-runtime --lint
