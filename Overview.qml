@@ -14,10 +14,10 @@ OverviewLifecycle {
         : []
 
     onMultiMonitorModeChanged: {
-        root.hoveredIndex = -1;
+        root.hoveredToplevel = null;
         root.clearPreview();
         root.modelRevision++;
-        root.selectedIndex = Math.max(0, root.filteredToplevels.indexOf(Hyprland.activeToplevel));
+        root.selectedToplevel = root.originToplevel;
     }
 
     function hotCornerHovered() {
@@ -176,9 +176,8 @@ OverviewLifecycle {
         function onActiveToplevelChanged() {
             if (!root.opened)
                 return;
-            var index = root.filteredToplevels.indexOf(Hyprland.activeToplevel);
-            if (index >= 0)
-                root.selectedIndex = index;
+            if (root.filteredToplevels.indexOf(Hyprland.activeToplevel) !== -1)
+                root.selectedToplevel = Hyprland.activeToplevel;
         }
         function onRawEvent(event) {
             if (event && event.name === "configreloaded")
@@ -338,7 +337,7 @@ OverviewLifecycle {
             acceptedButtons: Qt.AllButtons
             onClicked: {
                 if (surface.modelData === root.effectiveOverviewScreen
-                        && (root.previewIndex >= 0 || root.previewExitIndex >= 0))
+                        && (root.previewToplevel || root.previewExitToplevel))
                     root.clearPreview();
                 else
                     root.dismiss();

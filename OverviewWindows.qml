@@ -10,10 +10,10 @@ OverviewSettingsApi {
 
     function setFilter(value) {
         root.filterText = value;
-        root.selectedIndex = 0;
-        root.hoveredIndex = -1;
+        root.hoveredToplevel = null;
         root.clearPreview();
         root.modelRevision++;
+        root.selectedToplevel = root.filteredToplevels[0] || null;
     }
 
     function setWorkspaceScope(value) {
@@ -23,10 +23,10 @@ OverviewSettingsApi {
         if (next === root.workspaceScope)
             return;
         root.workspaceScope = next;
-        root.hoveredIndex = -1;
+        root.hoveredToplevel = null;
         root.clearPreview();
         root.modelRevision++;
-        root.selectedIndex = Math.max(0, root.filteredToplevels.indexOf(Hyprland.activeToplevel));
+        root.selectedToplevel = root.originToplevel;
     }
 
     function toggleWorkspaceScope() {
@@ -44,20 +44,14 @@ OverviewSettingsApi {
             return;
         if (!root.overviewScreenPinned && (!root.surfaceMounted || root.openingPending))
             root.overviewScreenName = root.focusedMonitorName || root.keyboardScreenName;
-        var selectedTop = root.filteredToplevels[root.selectedIndex];
-        root.hoveredIndex = -1;
+        root.hoveredToplevel = null;
         root.clearPreview();
         root.modelRevision++;
-        var nextIndex = root.filteredToplevels.indexOf(selectedTop);
-        root.selectedIndex = nextIndex >= 0 ? nextIndex : Math.max(0, root.filteredToplevels.indexOf(Hyprland.activeToplevel));
     }
 
     function handleToplevelMetadataChanged(top) {
         if (!root.surfaceMounted && !root.openingPending)
             return;
-        var selectedTop = root.filteredToplevels[root.selectedIndex];
-        var previewTop = root.previewIndex >= 0 ? root.filteredToplevels[root.previewIndex] : null;
-        var previewExitTop = root.previewExitIndex >= 0 ? root.filteredToplevels[root.previewExitIndex] : null;
         var membershipChanged = root.syncSessionToplevels();
         if (root.openingPending) {
             let sessionIndex = root.sessionToplevels.indexOf(top);
@@ -69,41 +63,23 @@ OverviewSettingsApi {
         }
         if (!membershipChanged)
             root.modelRevision++;
+        root.clearUnlistedPreview();
+    }
 
-        var selectedIndex = root.filteredToplevels.indexOf(selectedTop);
-        if (selectedIndex < 0)
-            selectedIndex = root.filteredToplevels.indexOf(Hyprland.activeToplevel);
-        root.selectedIndex = Math.max(0, selectedIndex);
-
-        if (previewTop) {
-            let previewIndex = root.filteredToplevels.indexOf(previewTop);
-            if (previewIndex < 0)
-                root.clearPreview();
-            else
-                root.previewIndex = previewIndex;
-        } else if (previewExitTop) {
-            let previewExitIndex = root.filteredToplevels.indexOf(previewExitTop);
-            if (previewExitIndex < 0)
-                root.clearPreview();
-            else
-                root.previewExitIndex = previewExitIndex;
-        }
+    function clearUnlistedPreview() {
+        var listed = root.filteredToplevels;
+        if ((root.previewToplevel && listed.indexOf(root.previewToplevel) === -1)
+                || (root.previewExitToplevel && listed.indexOf(root.previewExitToplevel) === -1))
+            root.clearPreview();
     }
 
     function handleToplevelCollectionChanged() {
         if (!root.surfaceMounted && !root.openingPending)
             return;
         var membershipChanged = root.syncSessionToplevels();
-        var filteredMembershipMayChange = !membershipChanged && root.filterText.length > 0;
-        if ((membershipChanged || filteredMembershipMayChange)
-                && (root.previewIndex >= 0 || root.previewExitIndex >= 0))
-            root.clearPreview();
-        if (filteredMembershipMayChange)
+        if (!membershipChanged && root.filterText.length > 0)
             root.modelRevision++;
-        if (root.selectedIndex >= root.filteredToplevels.length)
-            root.selectedIndex = Math.max(0, root.filteredToplevels.length - 1);
-        if (root.previewIndex >= root.filteredToplevels.length)
-            root.clearPreview();
+        root.clearUnlistedPreview();
     }
 
     function activate(top) {

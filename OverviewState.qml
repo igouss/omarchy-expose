@@ -1,4 +1,5 @@
 import QtQuick
+import "WindowModel.js" as WindowModel
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
@@ -181,10 +182,12 @@ Item {
     property bool hotCornerArmed: true
     property string filterText: ""
     property string workspaceScope: "all"
-    property int selectedIndex: 0
-    property int hoveredIndex: -1
-    property int previewIndex: -1
-    property int previewExitIndex: -1
+    // Selection state holds windows, not positions in filteredToplevels, so it
+    // survives the list being rebuilt by filtering, scope, or windows closing.
+    property var selectedToplevel: null
+    property var hoveredToplevel: null
+    property var previewToplevel: null
+    property var previewExitToplevel: null
     property bool previewSlowMotion: false
     property bool previewNavigationSlowMotion: false
     property bool openingPending: false
@@ -273,6 +276,7 @@ Item {
         var revision = root.modelRevision;
         return root.toplevelsForScreen(root.keyboardScreenName);
     }
+    readonly property var selection: WindowModel.selectionFor(root.filteredToplevels, root.selectedToplevel, root.originToplevel)
 
     readonly property alias previewExitTimer: previewExitTimerObject
 
@@ -319,8 +323,8 @@ Item {
         previewExitTimer.stop();
         root.previewSlowMotion = false;
         root.previewNavigationSlowMotion = false;
-        root.previewIndex = -1;
-        root.previewExitIndex = -1;
+        root.previewToplevel = null;
+        root.previewExitToplevel = null;
     }
 
     function clearOverviewScreen() {
@@ -332,9 +336,9 @@ Item {
         id: previewExitTimerObject
         interval: root.previewAnimationDuration
         onTriggered: {
-            root.previewExitIndex = -1;
+            root.previewExitToplevel = null;
             root.previewNavigationSlowMotion = false;
-            if (root.previewIndex < 0)
+            if (!root.previewToplevel)
                 root.previewSlowMotion = false;
         }
     }

@@ -80,3 +80,13 @@ function searchTextFor(toplevel) {
     return (appIdFor(toplevel) + " " + String(ipc.class || "") + " "
         + String(ipc.initialClass || "") + " " + String((toplevel && toplevel.title) || "")).toLowerCase();
 }
+
+// What Enter opens: the chosen window while it is listed, else the window the
+// overview was opened from, else the first listed window.
+function selectionFor(listed, selected, origin) {
+    if (selected && listed.indexOf(selected) !== -1)
+        return selected;
+    if (origin && listed.indexOf(origin) !== -1)
+        return origin;
+    return listed.length ? listed[0] : null;
+}

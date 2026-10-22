@@ -50,8 +50,8 @@ OverviewLayout {
         root.openingPending = true;
         root.refreshHyprlandState();
         root.resetSessionToplevels();
-        root.selectedIndex = Math.max(0, root.filteredToplevels.indexOf(Hyprland.activeToplevel));
-        root.hoveredIndex = -1;
+        root.selectedToplevel = root.originToplevel;
+        root.hoveredToplevel = null;
         root.clearPreview();
         root.backgroundBlurPrimed = false;
         root.backgroundBlurFailed = false;
@@ -70,7 +70,7 @@ OverviewLayout {
     function startDismiss(notifyShell) {
         root.openingPending = false;
         root.closeSettings();
-        root.hoveredIndex = -1;
+        root.hoveredToplevel = null;
         root.clearPreview();
         root.opened = false;
         root.dismissNotifyShell = root.dismissNotifyShell || notifyShell;
@@ -334,7 +334,7 @@ OverviewLayout {
             return;
         }
         if (event.key === Qt.Key_Escape) {
-            if (root.previewIndex >= 0 || root.previewExitIndex >= 0)
+            if (root.previewToplevel || root.previewExitToplevel)
                 root.clearPreview();
             else
                 root.dismiss();
@@ -356,12 +356,12 @@ OverviewLayout {
         else if (event.key === Qt.Key_Down)
             root.moveDirectional(0, 1, layout, Boolean(event.modifiers & Qt.ShiftModifier));
         else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter)
-            root.activate(root.filteredToplevels[root.selectedIndex]);
+            root.activate(root.selection);
         else if (event.key === Qt.Key_Q
                 && Boolean(event.modifiers & Qt.ShiftModifier)
                 && !(event.modifiers & (Qt.ControlModifier | Qt.AltModifier | Qt.MetaModifier))) {
             if (!event.isAutoRepeat)
-                root.requestClose(root.filteredToplevels[root.selectedIndex]);
+                root.requestClose(root.selection);
         }
         else if (Commons.Util.editsFilter(event, root.filterText))
             root.setFilter(Commons.Util.editedFilter(event, root.filterText));

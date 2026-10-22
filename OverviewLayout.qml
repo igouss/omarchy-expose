@@ -196,15 +196,16 @@ OverviewWindows {
     }
 
     function moveDirectional(dx, dy, layout, slowMotion) {
-        if (!layout || !layout[root.selectedIndex])
+        var currentIndex = root.filteredToplevels.indexOf(root.selection);
+        if (!layout || !layout[currentIndex])
             return;
-        var current = layout[root.selectedIndex];
+        var current = layout[currentIndex];
         var currentX = current.x + current.width / 2;
         var currentY = current.y + current.height / 2;
         var bestIndex = -1;
         var bestScore = Number.MAX_VALUE;
         for (let index = 0; index < layout.length; index++) {
-            if (index === root.selectedIndex || !layout[index])
+            if (index === currentIndex || !layout[index])
                 continue;
             let candidate = layout[index];
             let deltaX = candidate.x + candidate.width / 2 - currentX;
@@ -222,14 +223,15 @@ OverviewWindows {
         if (bestIndex < 0)
             return;
 
-        var previousPreviewIndex = root.previewIndex;
-        root.selectedIndex = bestIndex;
-        if (previousPreviewIndex >= 0) {
+        var previousPreview = root.previewToplevel;
+        var next = root.filteredToplevels[bestIndex];
+        root.selectedToplevel = next;
+        if (previousPreview) {
             root.previewSlowMotion = false;
             root.previewNavigationSlowMotion = slowMotion === true;
             previewExitTimer.stop();
-            root.previewExitIndex = previousPreviewIndex;
-            root.previewIndex = bestIndex;
+            root.previewExitToplevel = previousPreview;
+            root.previewToplevel = next;
             previewExitTimer.restart();
         }
     }
@@ -237,18 +239,18 @@ OverviewWindows {
     function togglePreview(slowMotion) {
         root.previewNavigationSlowMotion = false;
         root.previewSlowMotion = slowMotion === true;
-        if (root.previewIndex >= 0) {
-            root.previewExitIndex = root.previewIndex;
-            root.previewIndex = -1;
+        if (root.previewToplevel) {
+            root.previewExitToplevel = root.previewToplevel;
+            root.previewToplevel = null;
             previewExitTimer.restart();
             return;
         }
         previewExitTimer.stop();
-        root.previewExitIndex = -1;
-        var target = root.hoveredIndex >= 0 ? root.hoveredIndex : root.selectedIndex;
-        if (target >= 0 && target < root.filteredToplevels.length) {
-            root.selectedIndex = target;
-            root.previewIndex = target;
+        root.previewExitToplevel = null;
+        var target = root.hoveredToplevel || root.selection;
+        if (target && root.filteredToplevels.indexOf(target) !== -1) {
+            root.selectedToplevel = target;
+            root.previewToplevel = target;
         }
     }
 }
