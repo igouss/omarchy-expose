@@ -13,9 +13,6 @@ Look {
     readonly property var toplevels: screenWindow.screenToplevels
     readonly property var screenViewport: ({ x: 0, y: 0, width: screenWindow.width, height: screenWindow.height })
 
-    // One snapshot of the listed windows with their planes in stacking order, each
-    // window's plane and frame, and navigation rects. Cards read their slot here so
-    // slot and plane never come from two different moments.
     // One snapshot of the listed windows with their planes; cards read their slot
     // here so slot and plane never come from two different moments.
     readonly property var strata: {
