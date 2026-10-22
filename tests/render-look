@@ -1,0 +1,20 @@
+#!/bin/bash
+# Render one look offscreen with six stand-in windows on three workspaces, no
+# shell involved: tests/render-look <LookType> <out.png> [selectedIndex] [delayMs]
+# e.g. tests/render-look HelixLook /tmp/helix.png 3. Thumbnails stay empty
+# (nothing to capture); geometry, chrome, and QML warnings are real.
+set -euo pipefail
+repo=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+[[ $# -ge 2 ]] || { sed -n '2,5p' "$0" >&2; exit 2; }
+look=$1; out=$(realpath -m "$2"); selected=${3:-1}; delay=${4:-2500}
+[[ $look =~ ^[A-Za-z]+$ && $selected =~ ^[0-5]$ && $delay =~ ^[0-9]+$ ]] || { echo "render-look: bad arguments" >&2; exit 2; }
+dir=$(mktemp -d); trap 'rm -rf "$dir"' EXIT
+ln -s /usr/share/omarchy/shell/Commons "$dir/Commons"
+ln -s /usr/share/omarchy/shell/Ui "$dir/Ui"
+cp "$repo"/*.qml "$repo"/*.js "$dir/"
+cp -r "$repo/assets" "$dir/"
+sed -e "s/@LOOK@/$look/; s|@OUT@|$out|; s/@SEL@/$selected/; s/@DELAY@/$delay/" "$repo/tests/render-look.qml.in" > "$dir/shell.qml"
+QT_QPA_PLATFORM=offscreen timeout 20s quickshell --no-color -p "$dir/shell.qml" > "$dir/output" 2>&1 || true
+grep -E "TypeError|ReferenceError|Unable to assign|Binding loop|rror:" "$dir/output" | grep -v dmabuf && exit 1
+[[ -s $out ]] || { cat "$dir/output" >&2; exit 1; }
+echo "render-look: $out"

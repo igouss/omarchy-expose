@@ -1,0 +1,67 @@
+import QtQuick
+import Quickshell
+import qs.Commons as Commons
+ShellRoot {
+    id: root
+    component Win: QtObject {
+        property string title
+        property var lastIpcObject
+        property var workspace
+        property var monitor: ({ x: 0, y: 0, width: 2560, height: 1440, scale: 1, lastIpcObject: { transform: 0 } })
+    }
+    Win { id: w0; title: "Editor"; lastIpcObject: ({ class: "dev.zed", at: [-2458, 0], size: [1255, 1440], focusHistoryID: 3 }); workspace: ({ id: 1, name: "1" }) }
+    Win { id: w1; title: "Terminal"; lastIpcObject: ({ class: "com.mitchellh.ghostty", at: [51, 0], size: [1255, 1440], focusHistoryID: 0 }); workspace: ({ id: 1, name: "1" }) }
+    Win { id: w2; title: "Logs"; lastIpcObject: ({ class: "foot", at: [1306, 0], size: [1254, 1440], focusHistoryID: 4 }); workspace: ({ id: 1, name: "1" }) }
+    Win { id: w3; title: "Browser"; lastIpcObject: ({ class: "google-chrome", at: [0, 0], size: [2560, 1440], focusHistoryID: 1 }); workspace: ({ id: 2, name: "2" }) }
+    Win { id: w4; title: "Chat"; lastIpcObject: ({ class: "com.anthropic.Claude", at: [0, 0], size: [1700, 1440], focusHistoryID: 2 }); workspace: ({ id: 3, name: "3" }) }
+    Win { id: w5; title: "Notes"; lastIpcObject: ({ class: "obsidian", at: [1700, 0], size: [860, 1440], focusHistoryID: 5 }); workspace: ({ id: 3, name: "3" }) }
+    readonly property var windows: [w0, w1, w2, w3, w4, w5]
+    QtObject {
+        id: controller
+        signal edgeBumped(int dx, int dy)
+        signal activating(var top)
+        property bool opened: true
+        property var selection: root.windows[@SEL@]
+        property var selectedToplevel: null
+        property var hoveredToplevel: null
+        property var previewToplevel: null
+        property var originToplevel: root.windows[1]
+        property bool settingsOpen: false
+        property bool juiceSpring: true
+        property bool juiceTilt: true
+        property real selectionBreath: 1
+        property bool motionSettled: true
+        property int previewAnimationDuration: 190
+        property int previewAnimationEasing: Easing.OutQuart
+        property int previewFadeDuration: 130
+        property int modelRevision: 0
+        function aspectRatioFor(model) { return model.lastIpcObject.size[0] / model.lastIpcObject.size[1]; }
+        function previewRectFor(model, rect) { return rect; }
+        function workspaceName(model) { return model.workspace.name; }
+        function iconFor(model) { return ""; }
+        function formatWorkspaceLabel(name) { return String(name); }
+        function moveDirectional(dx, dy, layout) {}
+        function activate(top) {}
+        function requestClose(top) {}
+    }
+    QtObject {
+        id: screen
+        readonly property var screenToplevels: root.windows
+        readonly property var cardToplevels: root.windows
+        readonly property bool acceptsKeyboard: true
+        readonly property int width: 2560
+        readonly property int height: 1440
+    }
+    Window {
+        visible: true; width: 1600; height: 900; color: Commons.Color.background
+        Item {
+            id: canvas
+            anchors.fill: parent
+            @LOOK@ { id: look; anchors.fill: parent; overview: controller; screenWindow: screen }
+        }
+    }
+    Timer {
+        interval: @DELAY@; running: true
+        onTriggered: canvas.grabToImage(function (result) { result.saveToFile("@OUT@"); Qt.quit(); })
+    }
+}

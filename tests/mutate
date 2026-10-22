@@ -1,0 +1,84 @@
+#!/usr/bin/env python3
+"""Operator mutation pass for a `.pragma library` JS file, judged by one QML test file.
+
+usage: tests/mutate <lib.js> <tests/tst_x.qml> [function names to restrict to...]
+
+Each mutant changes one token on one code line (comparison, arithmetic, logic,
+Math.min/max, or a number + 1) in a copy of the repo. A mutant is killed when
+the test file fails, errors, or runs past 10 s (a mutated loop that never ends).
+Prints the score and every survivor; classify each survivor before trusting the
+tests (an equivalent mutant, a tuning constant, or a missing test).
+"""
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+
+RUNNER = '/usr/lib/qt6/bin/qmltestrunner'
+SWAPS = [(r'<=', '<'), (r'>=', '>'), (r'(?<![<>=!])<(?!=)', '<='), (r'(?<![<>=!-])>(?!=)', '>='),
+         (r'===', '!=='), (r'!==', '==='), (r'(?<![+])\+(?![+=])', '-'), (r'(?<![-])-(?![-=>])', '+'),
+         (r'(?<!/)\*(?![*/])', '/'), (r'(?<![/*])/(?![/*])', '*'), (r'Math\.min', 'Math.max'), (r'Math\.max', 'Math.min'),
+         (r'&&', '||'), (r'\|\|', '&&'), (r'\b(\d+\.?\d*)\b', None)]
+
+
+def mutants(source, only):
+    """Every single-token mutant of `source` lines, as (line number, before, after, lines)."""
+    lines = source.split('\n')
+    function = None
+    for number, line in enumerate(lines):
+        match = re.match(r'function (\w+)', line)
+        if match:
+            function = match.group(1)
+        code = line.split('//')[0]
+        if not code.strip() or line.startswith('.'):
+            continue
+        if only and function not in only:
+            continue
+        for pattern, replacement in SWAPS:
+            for found in re.finditer(pattern, code):
+                if replacement is None:
+                    value = found.group(1)
+                    replacement_text = str(float(value) + 1) if '.' in value else str(int(value) + 1)
+                else:
+                    replacement_text = replacement
+                mutated = line[:found.start()] + replacement_text + line[found.end():]
+                yield number + 1, line.strip(), mutated.strip(), lines[:number] + [mutated] + lines[number + 1:]
+
+
+def run(test_path, env):
+    """True when the test file passes."""
+    try:
+        result = subprocess.run([RUNNER, '-input', test_path], capture_output=True, text=True, env=env, timeout=10)
+    except subprocess.TimeoutExpired:
+        return False
+    return result.returncode == 0 and 'Totals' in result.stdout
+
+
+def main():
+    if len(sys.argv) < 3:
+        sys.exit(__doc__)
+    lib, test = sys.argv[1:3]
+    only = set(sys.argv[3:])
+    repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    env = dict(os.environ, QT_QPA_PLATFORM='offscreen')
+    with tempfile.TemporaryDirectory() as work:
+        root = os.path.join(work, 'repo')
+        shutil.copytree(repo, root, ignore=shutil.ignore_patterns('.git', '.beads'))
+        test_path = os.path.join(root, test)
+        if not run(test_path, env):
+            sys.exit(f'mutate: {test} is red before mutation')
+        candidates = list(mutants(open(os.path.join(repo, lib)).read(), only))
+        survivors = []
+        for number, before, after, lines in candidates:
+            with open(os.path.join(root, lib), 'w') as file:
+                file.write('\n'.join(lines))
+            if run(test_path, env):
+                survivors.append((number, before, after))
+    print(f'{len(candidates) - len(survivors)}/{len(candidates)} killed')
+    for number, before, after in survivors:
+        print(f'SURVIVED {lib}:{number}\n   - {before}\n   + {after}')
+
+
+main()

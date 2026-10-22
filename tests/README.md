@@ -76,3 +76,15 @@ locally until disk acknowledgement. An unconfirmed write gets a fresh read after
 two seconds; if it still differs, local edits are discarded and disk settings
 are restored with a warning. This is not a disk-success acknowledgement from the
 host, which the current API does not provide.
+
+`./tests/render-look <LookType> <out.png> [selectedIndex]` renders one look
+offscreen with six stand-in windows on three workspaces, without touching the
+running shell, and fails on QML errors or binding loops. Thumbnails stay empty;
+use it to iterate on a look's geometry and chrome before installing. Plugin hot
+reload did not refresh the open overview in practice, so a live check needs a
+shell restart; render offscreen first and restart once per finished change.
+
+`./tests/mutate <lib.js> <tests/tst_x.qml> [function...]` runs an operator
+mutation pass over a JS layout library against its test file (qmltestrunner has
+no mutation tool). Classify every survivor: an equivalent mutant, a tuning
+constant, or a missing test.
