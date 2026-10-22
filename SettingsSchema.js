@@ -17,7 +17,8 @@ var specs = {
             { label: "Strata", description: "Every workspace a glass floor, windows where they really are", value: "strata" },
             { label: "Glass HUD", description: "Frosted glass panes, a gradient ring sweeping around the selection", value: "hud" },
             { label: "CRT", description: "A terminal listing every window beside a phosphor monitor", value: "crt" },
-            { label: "Time Machine", description: "Windows recede down a tunnel by when you last used them", value: "time" }
+            { label: "Time Machine", description: "Windows recede down a tunnel by when you last used them", value: "time" },
+            { label: "Diorama", description: "A small model of the desktop: workspaces as slabs, windows as blocks", value: "diorama" }
         ]
     },
     previewPlacement: {

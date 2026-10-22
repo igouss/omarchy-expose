@@ -1,6 +1,6 @@
 # Panorama for Omarchy
 
-Every open window at once, as live previews, in the look you like: a balanced **Grid**, a cover-flow **Carousel**, workspaces stacked as glass floors in **Strata**, frosted **Glass HUD** panes, a **CRT** terminal, or a **Time Machine** of windows receding by when you last used them. One key or a hot corner opens it; type to search, Space to Quick Look, Enter to open.
+Every open window at once, as live previews, in the look you like: a balanced **Grid**, a cover-flow **Carousel**, workspaces stacked as glass floors in **Strata**, frosted **Glass HUD** panes, a **CRT** terminal, a **Time Machine** of windows receding by when you last used them, or a **Diorama**, a small isometric model of your desktop. One key or a hot corner opens it; type to search, Space to Quick Look, Enter to open.
 
 Panorama is a fork of [Exposé for Omarchy](https://github.com/kristofferR/omarchy-expose) by Kristoffer Risanger, which grew out of [Bird's Eye](https://github.com/harel/omarchy-birdseye) by Harel Malka. The grid, live previews, Quick Look, search, hot corner, and settings panel are theirs; Panorama adds the other looks and the parts listed below.
 
@@ -20,13 +20,14 @@ Thank you, Kristoffer, for Exposé: a careful, well-tested plugin that was a ple
 
 ## What's new in Panorama
 
-- **Six looks**, chosen on a new first Settings page or with `omarchy-shell panorama look <name>`:
+- **Seven looks**, chosen on a new first Settings page or with `omarchy-shell panorama look <name>`:
   - **Grid**: Exposé's balanced rows, with an optional **Lift** selection style that raises and glows only the window Enter opens.
   - **Carousel**: the selection front and centre, the rest turned away on a reflective floor; it spins on a spring.
   - **Strata**: every workspace a glass floor in perspective, each window where it really is, including a scrolling layout's off-screen windows.
   - **Glass HUD**: frosted panes with large titles and one gradient ring that sweeps around the selection and slides between panes.
   - **CRT**: a terminal listing of every window beside a phosphor monitor of the selection, with a tmux-style status line.
   - **Time Machine**: windows recede down a starlit tunnel by when you last used them, the most recent in front, with a timeline ruler of every step back.
+  - **Diorama**: the desktop as a small isometric model, every workspace a slab and every window a block on it with its live preview on top; the selection's block rises.
 - **Juice**: a Settings page of motion effects, each its own switch: springy motion, edge bump (an arrow with nowhere to go answers), activation punch (flash and sparks, or the CRT powering off), selection pulse, and pointer tilt.
 - **Scriptable state**: `state`, `get`, `move`, `filter`, `preview`, and `activate` over IPC, so scripts and tests can read and drive the overview without a keyboard; `showFooter` restores the bottom text without editing `shell.json`.
 - **One settings schema** drives values, validation, IPC, and the Settings pages, so a setting can no longer drift between them.
@@ -46,7 +47,7 @@ Compared with Exposé 5.0.0:
 ## Highlights
 
 - **Live previews.** Cards are real screencopy views, so videos keep playing and terminals keep scrolling. The Omarchy desktop behind the grid stays live too.
-- **Looks.** Grid packs every preview into balanced rows; Carousel puts the selected window front and centre with the rest turned away in perspective on a reflective floor, spinning on a spring as you move (Left/Right, the scroll wheel, or a click on a side card). Strata lays every workspace back as a glass floor, stacked in perspective, with each window where it really is (a scrolling layout's off-screen windows sit beside the monitor's outline); Up/Down climb between floors. Glass HUD sets frosted glass panes on the grid's rows, each title in large type, with one gradient ring sweeping around the selection that slides from pane to pane. CRT lists every window like a terminal, beside a phosphor monitor of the selection under scanlines; the prompt echoes your filter, the list scrolls to keep the selection in view, and Space fills the screen with the monitor. Time Machine orders windows by Hyprland's focus history: the window you came from is in front, Up (or the wheel) steps back in time with each older window waiting behind it, and newer windows fly past the camera as you go; the ruler on the right marks every step and takes clicks.
+- **Looks.** Grid packs every preview into balanced rows; Carousel puts the selected window front and centre with the rest turned away in perspective on a reflective floor, spinning on a spring as you move (Left/Right, the scroll wheel, or a click on a side card). Strata lays every workspace back as a glass floor, stacked in perspective, with each window where it really is (a scrolling layout's off-screen windows sit beside the monitor's outline); Up/Down climb between floors. Glass HUD sets frosted glass panes on the grid's rows, each title in large type, with one gradient ring sweeping around the selection that slides from pane to pane. CRT lists every window like a terminal, beside a phosphor monitor of the selection under scanlines; the prompt echoes your filter, the list scrolls to keep the selection in view, and Space fills the screen with the monitor. Time Machine orders windows by Hyprland's focus history: the window you came from is in front, Up (or the wheel) steps back in time with each older window waiting behind it, and newer windows fly past the camera as you go; the ruler on the right marks every step and takes clicks. Diorama builds a model of every workspace as a slab in a grid, each window a block at its real place (a scrolling layout's off-screen windows included); arrows move by where the blocks sit on screen, the selection's block rises on a spring and hops at an edge, and Quick Look unfolds its lid to fill the screen.
 - **Quick Look.** Space enlarges any preview and restores it again. Shift+Space does it in slow motion, like the classic macOS Easter egg.
 - **Search.** Just start typing to filter windows by title or application.
 - **Workspace scope.** Press Tab to switch between every window and windows on the current workspace, and pick which of the two the overview opens with. Per-monitor mode evaluates the current workspace of the selected display.
@@ -131,7 +132,7 @@ Hot corners default to the outermost display: left corners use the leftmost disp
 
 Open **Settings** from the footer while the overview is open. It is fully keyboard driven: 1-8 jump to a section, Up/Down move between controls, Left/Right adjust sliders and choices, Space or Enter flip toggles and press buttons, Escape closes. Changes apply immediately. Settings are grouped into **Look**, **Appearance**, **Windows**, **Window labels**, **Workspaces**, **Hot corner**, **Motion**, and **Juice**, with explanatory text beneath each control:
 
-- Look: Grid (default), Carousel, Strata, Glass HUD, Time Machine, or CRT (its phosphor is your theme's accent colour). Window labels and selection highlight shape the grid only; their settings say so while another look is active
+- Look: Grid (default), Carousel, Strata, Glass HUD, Time Machine, Diorama, or CRT (its phosphor is your theme's accent colour). Window labels and selection highlight shape the grid only; their settings say so while another look is active
 - Juice, each effect its own switch (all on by default): springy motion (moves overshoot and settle; carousel cards stretch as they travel, the grid's lifted card pops) and edge bump (an arrow with no window that way shakes the selection; the carousel rubber-bands), and activation punch (the opened window flashes, jumps toward you and throws sparks; the overview closes about 0.2 s later, instantly with punch off; the CRT's monitor powers off to a line and a dot instead), and selection pulse (the selection's glow breathes; carousel and the grid's Lift highlight; the CRT's cursor), and pointer tilt (the card under the pointer leans toward it in 3D; in the carousel only the front card; not in the CRT, whose screen is flat)
 - Opening animation: Original (default), Fade, Zoom, or Slide
 - Animation duration saved per mode, linked for in/out by default or expandable to separate timings
@@ -164,7 +165,7 @@ omarchy-shell panorama backgroundDim 6             # 0-90
 omarchy-shell panorama previewPlacement in-place   # in-place | centered
 omarchy-shell panorama windowFooterStyle floating  # floating | integrated | overlay | centered
 omarchy-shell panorama selectionStyle outline      # outline | lift
-omarchy-shell panorama look strata                 # grid, carousel, strata, hud, crt, or time
+omarchy-shell panorama look strata                 # grid, carousel, strata, hud, crt, time, or diorama
 omarchy-shell panorama juice spring off            # spring, edgeBump, punch, pulse, or tilt; on or off
 omarchy-shell panorama multiMonitorMode mirrored   # mirrored | per-monitor
 omarchy-shell panorama hotCorner on                # on | off
