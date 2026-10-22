@@ -23,9 +23,14 @@ Look {
         return WorkspacePlanes.snapshot(look.toplevels, look.screenViewport);
     }
 
-    readonly property int selectedIndex: toplevels.indexOf(overview.selection)
-    readonly property int centrePlane: selectedIndex >= 0 ? strata.planeOf[selectedIndex] : 0
-    readonly property var centreWindow: selectedIndex >= 0 ? toplevels[selectedIndex] : null
+    // The selection's slot and plane from one read of the snapshot.
+    readonly property var centre: {
+        const snapshot = look.strata;
+        const slot = snapshot.toplevels.indexOf(look.overview.selection);
+        return { plane: slot >= 0 ? snapshot.planeOf[slot] : 0, window: slot >= 0 ? snapshot.toplevels[slot] : null };
+    }
+    readonly property int centrePlane: centre.plane
+    readonly property var centreWindow: centre.window
     readonly property real reach: StrataLayout.reach
     readonly property real planeMaxWidth: width * 0.74
     readonly property real planeMaxHeight: height * 0.5
