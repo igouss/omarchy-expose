@@ -68,6 +68,7 @@ TestCase {
     function test_juiceEffectNamesItsSetting() {
         compare(Schema.juiceSetting("spring"), "juiceSpring");
         compare(Schema.juiceSetting("edgeBump"), "juiceEdgeBump");
+        compare(Schema.juiceSetting("punch"), "juicePunch");
         compare(Schema.juiceSetting("Spring"), "");
         compare(Schema.juiceSetting(""), "");
     }

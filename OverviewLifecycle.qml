@@ -13,6 +13,8 @@ OverviewLayout {
     // open sequence cannot pull focus out of settings.
     signal focusRequested()
     signal surfaceReleased()
+    // A window is being activated; sent only while activation punch is on.
+    signal activating(var top)
 
     onEffectiveBackgroundBlurChanged: {
         if (!root.surfaceMounted)
@@ -26,6 +28,11 @@ OverviewLayout {
     }
 
     function open() {
+        // A reopen during the activation punch cancels that activation.
+        if (punchHold.running) {
+            punchHold.stop();
+            root.pendingActivation = null;
+        }
         // Taken before the overlay takes keyboard focus, which can clear the active window.
         root.originToplevel = Hyprland.activeToplevel;
         windowBorders.refresh();
@@ -206,7 +213,13 @@ OverviewLayout {
         if (!top)
             return;
         root.pendingActivation = top;
-        root.dismiss();
+        if (!root.juicePunch) {
+            root.dismiss();
+            return;
+        }
+        // Activation punch plays on the open overlay; closing at once would hide it.
+        root.activating(top);
+        punchHold.restart();
     }
 
     function finishDismiss() {
@@ -238,6 +251,15 @@ OverviewLayout {
                 if (root.opened)
                     root.focusRequested();
             });
+    }
+
+    Timer {
+        id: punchHold
+        interval: 180
+        onTriggered: {
+            if (root.opened)
+                root.dismiss();
+        }
     }
 
     NumberAnimation {

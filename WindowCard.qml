@@ -72,7 +72,7 @@ Ui.BorderSurface {
     width: layoutRect.width
     height: layoutRect.height
     z: previewed ? 11 : (exitingPreview ? 10 : (lifted ? 1 : 0))
-    scale: lifted ? 1.04 : 1
+    scale: (lifted ? 1.04 : 1) * (1 + punch.zoom * 0.1)
     radius: card.railFooter ? Commons.Style.cornerRadius : 0
     color: card.railFooter ? Commons.Color.menu.background : "transparent"
     borderSpec: card.railFooter ? outlineSpec : Commons.Border.none()
@@ -161,6 +161,12 @@ Ui.BorderSurface {
                 toplevel: card.modelData
                 live: card.controller.opened && card.inLayout
 
+                Rectangle {
+                    anchors.fill: parent
+                    color: "white"
+                    opacity: punch.flash
+                }
+
                 Loader {
                     anchors.fill: parent
                     active: card.overlaidFooter
@@ -205,6 +211,14 @@ Ui.BorderSurface {
 
         }
 
+    }
+
+    JuicePunch {
+        id: punch
+        anchors.fill: parent
+        z: 20
+        controller: card.controller
+        toplevel: card.modelData
     }
 
     // Edge bump: the selection shakes along the arrow that found nothing.

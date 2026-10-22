@@ -47,6 +47,7 @@ Item {
     readonly property string selectionStyle: SettingsSchema.read(root.pluginEntry, "selectionStyle")
     readonly property bool juiceSpring: SettingsSchema.read(root.pluginEntry, "juiceSpring")
     readonly property bool juiceEdgeBump: SettingsSchema.read(root.pluginEntry, "juiceEdgeBump")
+    readonly property bool juicePunch: SettingsSchema.read(root.pluginEntry, "juicePunch")
     readonly property var animationStyles: SettingsSchema.values("animationStyle")
     readonly property string animationStyle: SettingsSchema.read(root.pluginEntry, "animationStyle")
     readonly property var defaultAnimationDurations: ({ original: 190, fade: 400, zoom: 320, slide: 320 })

@@ -53,8 +53,8 @@ Item {
         Scale {
             origin.x: card.width / 2
             origin.y: card.height / 2
-            xScale: card.blend(card.placed.scale, 1) * (1 + card.stretch)
-            yScale: card.blend(card.placed.scale, 1) * (1 - card.stretch / 2)
+            xScale: card.blend(card.placed.scale, 1) * (1 + card.stretch) * (1 + punch.zoom * 0.1)
+            yScale: card.blend(card.placed.scale, 1) * (1 - card.stretch / 2) * (1 + punch.zoom * 0.1)
         },
         Rotation {
             origin.x: card.width / 2
@@ -95,6 +95,12 @@ Item {
             anchors.fill: parent
             color: "black"
             opacity: card.blend(card.placed.shade, 0)
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            color: "white"
+            opacity: punch.flash
         }
     }
 
@@ -156,6 +162,13 @@ Item {
             GradientStop { position: 0; color: "white" }
             GradientStop { position: 1; color: "transparent" }
         }
+    }
+
+    JuicePunch {
+        id: punch
+        anchors.fill: parent
+        controller: card.controller
+        toplevel: card.modelData
     }
 
     MouseArea {

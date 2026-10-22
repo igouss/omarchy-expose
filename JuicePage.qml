@@ -4,7 +4,7 @@ import QtQuick.Layouts
 // Game-style feedback, one switch per effect.
 SettingsPage {
     id: page
-    readonly property var focusControls: [springToggle, edgeBumpToggle]
+    readonly property var focusControls: [springToggle, edgeBumpToggle, punchToggle]
     categoryIndex: 7
     title: "Feel and feedback"
 
@@ -35,6 +35,21 @@ SettingsPage {
             view: page.view
             checked: view.controller.juiceEdgeBump
             onToggled: function (checked) { view.controller.setSetting("juiceEdgeBump", checked); }
+        }
+    }
+
+    SettingRow {
+        dialog: page.dialog
+        label: "Activation punch"
+        description: "The window you open flashes, jumps toward you, and throws sparks and the overview closes about 0.2 s later. Off, windows open at once."
+
+        Item { Layout.fillWidth: true }
+
+        SettingToggle {
+            id: punchToggle
+            view: page.view
+            checked: view.controller.juicePunch
+            onToggled: function (checked) { view.controller.setSetting("juicePunch", checked); }
         }
     }
 }

@@ -33,6 +33,8 @@ ShellRoot {
         property bool juiceSpring: true
         property bool juiceEdgeBump: true
         signal edgeBumped(int dx, int dy)
+        property bool juicePunch: true
+        signal activating(var top)
         property string look: "grid"
         property var originToplevel: null
         function setSetting(name, value) { controller[name] = value; return value; }
@@ -119,7 +121,7 @@ ShellRoot {
     }
     function checkSettingsPage(index) {
         var items = settings.settingsFocusItems();
-        var expectedCounts = [2, 4, 4, 3, 3, 5, 8, 3];
+        var expectedCounts = [2, 4, 4, 3, 3, 5, 8, 4];
         require(items.length === expectedCounts[index % 8], "focusable controls on page " + index);
         settings.focusSettingsCategory();
         require(items[0].activeFocus, "category focus on page " + index);
