@@ -85,7 +85,6 @@ ShellRoot {
                 controller: controller
                 hostWindow: QtObject {
                     property bool acceptsKeyboard: false
-                    function focusFirstSettingsControl() {}
                 }
             }
             WindowCard {

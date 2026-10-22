@@ -8,7 +8,7 @@ Item {
     id: keyCatcher
     property var overview: null
     property var screenWindow: null
-    readonly property alias settingsLayer: settingsLayerLoader
+    readonly property SettingsView settings: settingsLayerLoader.item as SettingsView
     anchors.fill: parent
     focus: screenWindow.acceptsKeyboard
     enabled: overview.opened
@@ -31,7 +31,7 @@ Item {
                 && event.key >= Qt.Key_1
                 && event.key < Qt.Key_1 + SettingsSchema.categories.length) {
             overview.settingsCategoryIndex = event.key - Qt.Key_1;
-            Qt.callLater(screenWindow.focusSettingsCategory);
+            Qt.callLater(() => keyCatcher.settings?.focusSettingsCategory());
             event.accepted = true;
             return;
         }
@@ -202,7 +202,7 @@ Item {
         z: 200
         onLoaded: {
             if (screenWindow.acceptsKeyboard)
-                Qt.callLater(screenWindow.focusSettingsCategory);
+                Qt.callLater(() => keyCatcher.settings?.focusSettingsCategory());
         }
 
         sourceComponent: Component {

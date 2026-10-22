@@ -60,18 +60,23 @@ OverviewLifecycle {
         }
     }
 
-    function keyboardSurface() {
-        return surfaceInstances.instances.find(surface => surface && surface.acceptsKeyboard) || null;
+    // The canvas of the display that takes the keyboard.
+    function keyboardCanvas(): OverviewCanvas {
+        var surface = surfaceInstances.instances.find(surface => surface && surface.acceptsKeyboard);
+        return surface ? surface.keyboardItem : null;
     }
 
     function focusKeyboardSurface() {
-        var surface = root.keyboardSurface();
-        if (!surface)
+        var canvas = root.keyboardCanvas();
+        if (!canvas)
             return;
-        if (root.settingsOpen)
-            surface.focusSettings();
-        else
-            surface.keyboardItem.forceActiveFocus();
+        // The settings layer exists exactly while settings are open. Focus
+        // already on a visible settings control stays; otherwise the category.
+        var settings = canvas.settings;
+        if (!settings)
+            canvas.forceActiveFocus();
+        else if (!settings.holdsFocus())
+            settings.focusSettingsCategory();
     }
 
     function focusSettingsItem(item) {
@@ -95,13 +100,14 @@ OverviewLifecycle {
         var forward = isTab
             ? event.key !== Qt.Key_Backtab && !(event.modifiers & Qt.ShiftModifier)
             : event.key === Qt.Key_Down || event.key === Qt.Key_Right;
-        var surface = root.keyboardSurface();
-        if (!surface)
+        var canvas = root.keyboardCanvas();
+        if (!canvas || !canvas.settings)
             return false;
+        var settings = canvas.settings;
         if (root.footerHideConfirmationOpen)
-            surface.moveFooterConfirmationFocus(forward, isTab);
+            settings.moveFooterConfirmationFocus(forward, isTab);
         else
-            surface.moveSettingsFocus(forward, isTab);
+            settings.moveSettingsFocus(forward, isTab);
         event.accepted = true;
         return true;
     }
@@ -308,7 +314,7 @@ OverviewLifecycle {
         // Every backdrop must participate so clicks on other displays arrive.
         WlrLayershell.keyboardFocus: root.opened ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
         HyprlandWindow.opacity: root.motionProgress
-        BackgroundEffect.blurRegion: root.effectiveBackgroundBlur > 0 // qmllint disable missing-type
+        BackgroundEffect.blurRegion: root.effectiveBackgroundBlur > 0
                 && !root.backgroundBlurFailed
             ? backgroundBlurRegion
             : null
@@ -409,40 +415,9 @@ OverviewLifecycle {
             readonly property string screenWorkspaceLabel: root.activeWorkspaceLabelForScreen(String(modelData.name || ""))
             readonly property string screenScopeLabel: root.workspaceScopeLabelForScreen(String(modelData.name || ""))
 
-            function focusSettingsCategory() {
-                var settings = keyCatcher.settingsLayer.item;
-                if (settings)
-                    settings.focusSettingsCategory(); // qmllint disable missing-property
-            }
-
-            // Keeps focus already on a visible settings control; otherwise the category.
-            function focusSettings() {
-                var settings = keyCatcher.settingsLayer.item;
-                if (settings && !settings.holdsFocus()) // qmllint disable missing-property
-                    settings.focusSettingsCategory(); // qmllint disable missing-property
-            }
-
-            function moveSettingsFocus(forward, wrap) {
-                var settings = keyCatcher.settingsLayer.item;
-                if (settings)
-                    settings.moveSettingsFocus(forward, wrap); // qmllint disable missing-property
-            }
-
-            function focusFirstSettingsControl() {
-                var settings = keyCatcher.settingsLayer.item;
-                if (settings)
-                    settings.focusFirstSettingsControl(); // qmllint disable missing-property
-            }
-
-            function moveFooterConfirmationFocus(forward, wrap) {
-                var settings = keyCatcher.settingsLayer.item;
-                if (settings)
-                    settings.moveFooterConfirmationFocus(forward, wrap); // qmllint disable missing-property
-            }
-
             onAcceptsKeyboardChanged: {
                 if (acceptsKeyboard && root.settingsOpen)
-                    Qt.callLater(overviewWindow.focusSettingsCategory);
+                    Qt.callLater(() => keyCatcher.settings?.focusSettingsCategory());
             }
 
             OverviewCanvas {

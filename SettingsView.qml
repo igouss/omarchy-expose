@@ -216,7 +216,7 @@ Item {
                                     if (nextButton)
                                         nextButton.forceActiveFocus();
                                 }
-                                onEntered: settingsView.hostWindow.focusFirstSettingsControl()
+                                onEntered: settingsView.focusFirstSettingsControl()
                             }
                         }
                     }

@@ -314,7 +314,7 @@ OverviewLayout {
                 }
             }
         }
-        onExited: function (exitCode, exitStatus) { // qmllint disable signal-handler-parameters
+        onExited: function (exitCode, exitStatus) {
             root.backgroundBlurPrimed = false;
             root.lastRequestedBlur = -1;
             if (root.backgroundBlurReleasePhase > 0) {
