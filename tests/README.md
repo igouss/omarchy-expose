@@ -33,6 +33,12 @@ preview) against the running shell. It sends no keys and activates no window,
 so it is safe while you type. IPC changes load only on a shell restart, not on
 the plugin hot reload.
 
+Pointer tests: read `omarchy-shell expose state` before every click. A click on
+the selection (the carousel's or strata's front card included) opens that window
+and closes the overview; a middle click closes the window under the pointer, so
+middle-click only a card whose `selection` is a throwaway test window. Prefer
+`move`, `filter`, `preview`, and `activate` over clicks and keys.
+
 For live multi-display checks, use a second physical or headless Hyprland output:
 
 - Open on either display: both backdrops should blur/dim, with only one grid.
