@@ -201,32 +201,14 @@ Item {
         active: card.controller.juiceTilt && !card.previewed
     }
 
-    MouseArea {
+    CardPointer {
         id: pointer
-        anchors.fill: parent
-        enabled: !card.controller.settingsOpen && (!card.controller.previewToplevel || card.previewed)
-        hoverEnabled: true
-        acceptedButtons: Qt.LeftButton | Qt.MiddleButton
-        onEnabledChanged: {
-            if (!enabled && card.controller.hoveredToplevel === card.modelData)
-                card.controller.hoveredToplevel = null;
-        }
-        onEntered: {
-            if (card.stack.screenWindow.acceptsKeyboard) {
-                card.controller.hoveredToplevel = card.modelData;
-                card.controller.selectedToplevel = card.modelData;
-            }
-        }
-        onExited: {
-            if (card.stack.screenWindow.acceptsKeyboard && card.controller.hoveredToplevel === card.modelData)
-                card.controller.hoveredToplevel = null;
-        }
-        onClicked: function (mouse) {
-            if (mouse.button === Qt.MiddleButton)
-                card.controller.requestClose(card.modelData);
-            else
-                card.controller.activate(card.modelData);
-        }
+        controller: card.controller
+        toplevel: card.modelData
+        acceptsKeyboard: card.stack.screenWindow.acceptsKeyboard
+        selected: card.selected
+        previewed: card.previewed
+        hoverSelects: true
     }
 
     Behavior on x { enabled: card.controller.motionSettled; CardMotion {} }

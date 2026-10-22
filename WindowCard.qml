@@ -18,7 +18,7 @@ Ui.BorderSurface {
     // Position in the filtered list; -1 hides the card.
     readonly property int slot: card.screenToplevels.indexOf(modelData)
     readonly property bool inLayout: slot >= 0
-    property bool hovered: false
+    property bool hovered: pointer.hovering
     readonly property bool selected: card.acceptsKeyboard && inLayout && modelData === card.controller.selection
     // The window the overview was opened from; the overlay holds focus while open.
     readonly property bool focusedWindow: modelData === card.controller.originToplevel
@@ -100,39 +100,14 @@ Ui.BorderSurface {
         active: card.controller.juiceTilt && !card.previewed
     }
 
-    MouseArea {
+    CardPointer {
         id: pointer
-        anchors.fill: parent
-        enabled: !card.controller.settingsOpen && (!card.controller.previewToplevel || card.previewed)
-        hoverEnabled: true
-        onEnabledChanged: {
-            if (!enabled) {
-                card.hovered = false;
-                if (card.controller.hoveredToplevel === card.modelData)
-                    card.controller.hoveredToplevel = null;
-
-            }
-        }
-        onEntered: {
-            card.hovered = true;
-            if (card.acceptsKeyboard) {
-                card.controller.hoveredToplevel = card.modelData;
-                card.controller.selectedToplevel = card.modelData;
-            }
-        }
-        onExited: {
-            card.hovered = false;
-            if (card.acceptsKeyboard && card.controller.hoveredToplevel === card.modelData)
-                card.controller.hoveredToplevel = null;
-
-        }
-        acceptedButtons: Qt.LeftButton | Qt.MiddleButton
-        onClicked: function(mouse) {
-            if (mouse.button === Qt.MiddleButton)
-                card.controller.requestClose(card.modelData);
-            else
-                card.controller.activate(card.modelData);
-        }
+        controller: card.controller
+        toplevel: card.modelData
+        acceptsKeyboard: card.acceptsKeyboard
+        selected: card.selected
+        previewed: card.previewed
+        hoverSelects: true
     }
 
     ColumnLayout {
