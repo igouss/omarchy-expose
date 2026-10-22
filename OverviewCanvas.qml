@@ -20,6 +20,12 @@ Item {
                 ? 0.96 + 0.04 * overview.motionProgress
                 : 1))
     transformOrigin: Item.Center
+
+    // The current look's rects for directional moves, from keys or IPC.
+    function windowLayout(): var {
+        return lookLoader.item ? (lookLoader.item as Look).windowLayout : [];
+    }
+
     transform: Translate {
         x: screenWindow.width * overview.slideOffsetFraction * overview.slideVector.x
         y: screenWindow.height * overview.slideOffsetFraction * overview.slideVector.y
@@ -37,7 +43,7 @@ Item {
         }
         if (overview.handleSettingsNavigation(event))
             return;
-        overview.handleKey(event, lookLoader.item ? (lookLoader.item as Look).windowLayout : []);
+        overview.handleKey(event, keyCatcher.windowLayout());
     }
 
     ColumnLayout {

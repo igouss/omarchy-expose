@@ -139,9 +139,21 @@ omarchy-shell expose hotCornerPosition top-left  # top-left | top-right | bottom
 omarchy-shell expose hotCornerAllDisplays off    # off: outermost display (default) | on: every display
 omarchy-shell expose hotCornerDelay 0            # 0-1000 ms of dwell before it fires
 omarchy-shell expose moveCursorToWindow on       # on | off
+omarchy-shell expose showFooter on               # on | off; brings back the bottom text and its Settings link
+omarchy-shell expose get look                    # any setting above, or a juice effect: spring, pulse, ...
 ```
 
-After hiding the bottom text, you can restore it while Settings remains open. If you close Settings first, edit `~/.config/omarchy/shell.json` and set `"showFooter": true` in the `expose.window-overview` plugin entry.
+The open overview can be driven and inspected too, without a keyboard:
+
+```sh
+omarchy-shell expose state                       # JSON: opened, look, windows, filter, selection, preview, ...
+omarchy-shell expose move right                  # left | right | up | down; prints the new selection
+omarchy-shell expose filter term                 # prints how many windows match; "" clears it
+omarchy-shell expose preview                     # toggles Quick Look on the selection
+omarchy-shell expose activate                    # opens the selection, as Enter does
+```
+
+Each of these answers `closed` while the overview is closed.
 
 ## Security and system changes
 

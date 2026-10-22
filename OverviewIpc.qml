@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell.Io
 import "SettingsSchema.js" as SettingsSchema
+import "WindowModel.js" as WindowModel
 
 // IpcHandler publishes its own properties, so the overview reference lives on this wrapper.
 // Each command is declared so it can be discovered; simple settings validate
@@ -44,6 +45,60 @@ Item {
                 return "expected open, close, or toggle";
             return mode;
         }
+        // What the overview is doing now, as JSON: for scripts and live tests.
+        function state(): string {
+            var top = overview.selection;
+            return JSON.stringify({
+                opened: overview.opened,
+                opening: overview.openingPending,
+                mounted: overview.surfaceMounted,
+                blurRelease: overview.backgroundBlurReleasePhase,
+                settingsOpen: overview.settingsOpen,
+                look: overview.look,
+                windows: overview.filteredToplevels.length,
+                filter: overview.filterText,
+                selection: top ? String(top.title || WindowModel.appIdFor(top) || "") : null,
+                preview: overview.previewToplevel !== null
+            });
+        }
+        function get(name: string): string {
+            var setting = SettingsSchema.juiceSetting(name) || name;
+            if (!SettingsSchema.specs[setting])
+                return SettingsSchema.expectedOneOf(Object.keys(SettingsSchema.specs).concat(SettingsSchema.juiceEffects));
+            var value = SettingsSchema.read(overview.pluginEntry, setting);
+            return typeof value === "boolean" ? (value ? "on" : "off") : String(value);
+        }
+        // The overview's own keys, for scripts: each answers "closed" unless it is open.
+        function move(direction: string): string {
+            var step = ({ left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1] })[direction];
+            if (!step)
+                return SettingsSchema.expectedOneOf(["left", "right", "up", "down"]);
+            if (!overview.opened)
+                return "closed";
+            overview.moveFromIpc(step[0], step[1]);
+            return overview.selection ? String(overview.selection.title || "") : "";
+        }
+        function filter(text: string): string {
+            if (!overview.opened)
+                return "closed";
+            overview.setFilter(text);
+            return String(overview.filteredToplevels.length);
+        }
+        function preview(): string {
+            if (!overview.opened)
+                return "closed";
+            overview.togglePreview(false);
+            return overview.previewToplevel ? "on" : "off";
+        }
+        function activate(): string {
+            if (!overview.opened)
+                return "closed";
+            if (!overview.selection)
+                return "no selection";
+            overview.activate(overview.selection);
+            return "ok";
+        }
+        function showFooter(mode: string): string { return overview.setSettingFromIpc("showFooter", mode); }
         function look(name: string): string { return overview.setSettingFromIpc("look", name); }
         function previewPlacement(mode: string): string { return overview.setSettingFromIpc("previewPlacement", mode); }
         function windowFooterStyle(style: string): string { return overview.setSettingFromIpc("windowFooterStyle", style); }

@@ -66,6 +66,13 @@ OverviewLifecycle {
         return surface ? surface.keyboardItem : null;
     }
 
+    // An arrow key's move, for IPC: the keyboard canvas holds the current look's layout.
+    function moveFromIpc(dx, dy) {
+        var canvas = root.keyboardCanvas();
+        if (canvas)
+            root.moveDirectional(dx, dy, canvas.windowLayout(), false);
+    }
+
     function focusKeyboardSurface() {
         var canvas = root.keyboardCanvas();
         if (!canvas)

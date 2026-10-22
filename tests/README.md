@@ -28,6 +28,11 @@ the overview is closed start with focus on the category list, and that the Motio
 page's Animate preview leaves focus on its button. It restores every setting it
 changes and never sends Escape.
 
+`./tests/live/check-ipc` exercises the IPC commands (state, get, move, filter,
+preview) against the running shell. It sends no keys and activates no window,
+so it is safe while you type. IPC changes load only on a shell restart, not on
+the plugin hot reload.
+
 For live multi-display checks, use a second physical or headless Hyprland output:
 
 - Open on either display: both backdrops should blur/dim, with only one grid.
