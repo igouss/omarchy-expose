@@ -52,7 +52,9 @@
   `omarchy plugin validate .`. The `qmltestrunner` and `qmllint` on PATH are
   Qt 5 builds that silently do nothing useful; the script calls the Qt 6
   binaries in `/usr/lib/qt6/bin` directly.
-- The README demo is a GitHub release asset, not a tracked file, so clones stay
-  small. Attach replacement media to a release and update the README link.
+- README screenshots are tracked JPEGs in `docs/screenshots/` (1600x900,
+  about 100 KB each), so the gallery needs no release. Take them on empty
+  workspaces with throwaway windows filtered by name, never the user's own
+  windows, and keep the set small.
 - Panorama is a fork of `https://github.com/kristofferR/omarchy-expose`; the
   upstream author owns Exposé's plugin catalog entry. Do not edit it from here.
