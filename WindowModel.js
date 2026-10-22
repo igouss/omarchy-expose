@@ -117,6 +117,11 @@ function focusHistoryFor(toplevel) {
     return typeof id === "number" && id >= 0 ? id : -1;
 }
 
+// The window Hyprland focused last, by focus history; null when none is known.
+function mostRecent(toplevels) {
+    return toplevels.find(function (toplevel) { return focusHistoryFor(toplevel) === 0; }) || null;
+}
+
 function searchTextFor(toplevel) {
     var ipc = ipcFor(toplevel);
     return (appIdFor(toplevel) + " " + String(ipc.class || "") + " "

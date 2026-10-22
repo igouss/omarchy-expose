@@ -134,6 +134,16 @@ TestCase {
         compare(WindowModel.focusHistoryFor(null), -1);
     }
 
+    function test_mostRecentIsTheFirstInFocusHistory() {
+        compare(WindowModel.mostRecent([]), null);
+        let only = createToplevel({ lastIpcObject: { focusHistoryID: 0 } });
+        compare(WindowModel.mostRecent([only]), only);
+        let older = createToplevel({ lastIpcObject: { focusHistoryID: 1 } });
+        let newest = createToplevel({ lastIpcObject: { focusHistoryID: 0 } });
+        compare(WindowModel.mostRecent([older, newest]), newest);
+        compare(WindowModel.mostRecent([older, createToplevel({ lastIpcObject: {} })]), null);
+    }
+
     function test_viewportIsTheMonitorsLogicalRect() {
         compare(WindowModel.viewportFor(createToplevel({ monitor: { x: 2560, y: 0, width: 3840, height: 2160, scale: 1.5, lastIpcObject: { transform: 0 } } })),
             { x: 2560, y: 0, width: 2560, height: 1440 });

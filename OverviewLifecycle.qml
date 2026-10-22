@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell.Hyprland
 import Quickshell.Io
 import qs.Commons as Commons
+import "WindowModel.js" as WindowModel
 
 // Opening, dismissing, the background blur session, and overview keys.
 OverviewLayout {
@@ -34,7 +35,8 @@ OverviewLayout {
             root.pendingActivation = null;
         }
         // Taken before the overlay takes keyboard focus, which can clear the active window.
-        root.originToplevel = Hyprland.activeToplevel;
+        // Right after a shell restart the active window is not known yet; focus history is.
+        root.originToplevel = Hyprland.activeToplevel || WindowModel.mostRecent(Hyprland.toplevels.values);
         windowBorders.refresh();
         var blurRestoreInFlight = root.backgroundBlurReleasePhase === 1 && backgroundBlurSession.running;
         if (!blurRestoreInFlight)
