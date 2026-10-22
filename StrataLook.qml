@@ -118,7 +118,7 @@ Look {
     SequentialAnimation {
         id: cameraLean
         property real lean: 0
-        NumberAnimation { target: look; property: "bump"; to: -cameraLean.lean; duration: 90; easing.type: Easing.OutQuad }
+        NumberAnimation { target: look; property: "bump"; to: cameraLean.lean; duration: 90; easing.type: Easing.OutQuad }
         NumberAnimation { target: look; property: "bump"; to: 0; duration: 420; easing.type: Easing.OutElastic; easing.amplitude: 1; easing.period: 0.35 }
     }
 
