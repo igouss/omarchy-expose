@@ -44,6 +44,15 @@ TestCase {
         compare(WindowModel.formatWorkspaceLabel(undefined, "slot"), "");
     }
 
+    function test_appsGoByTheLastPartOfTheirId() {
+        compare(WindowModel.appNameFor(createToplevel({ wayland: { appId: "com.mitchellh.ghostty" } })), "ghostty");
+        compare(WindowModel.appNameFor(createToplevel({ wayland: { appId: "foot" } })), "foot");
+        compare(WindowModel.appNameFor(createToplevel({ wayland: { appId: "org.x" } })), "x");
+        compare(WindowModel.appNameFor(createToplevel({ wayland: { appId: "org.gnome." } })), "gnome");
+        compare(WindowModel.appNameFor(createToplevel({ wayland: { appId: "" }, lastIpcObject: {} })), "-");
+        compare(WindowModel.appNameFor(null), "-");
+    }
+
     function test_usesStableNativeAddress() {
         var toplevel = createToplevel();
         compare(WindowModel.addressFor(toplevel), "0xabc123");

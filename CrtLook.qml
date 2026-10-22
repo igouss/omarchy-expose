@@ -215,7 +215,7 @@ Look {
             anchors.right: parent.right
             anchors.margins: Commons.Style.space(14)
             text: look.monitorWindow
-                ? "/dev/tty" + (look.selectedIndex + 1) + " — " + CrtLayout.appName(WindowModel.appIdFor(look.monitorWindow))
+                ? "/dev/tty" + (look.selectedIndex + 1) + " — " + WindowModel.appNameFor(look.monitorWindow)
                     + " — ws " + look.overview.workspaceName(look.monitorWindow)
                 : ""
             textFormat: Text.PlainText

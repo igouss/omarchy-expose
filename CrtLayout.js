@@ -61,12 +61,6 @@ function column(text, width) {
     return value;
 }
 
-// An application id as a terminal would name it: its last dotted part.
-function appName(appId) {
-    var parts = String(appId || "").split(".").filter(function (part) { return part.length > 0; });
-    return parts.length ? parts[parts.length - 1] : "-";
-}
-
 // One list row in fixed-width columns: number, workspace, application, title.
 function row(number, workspace, app, title) {
     return column(String(number).padStart(2, "0"), 3) + column("ws:" + workspace, 7) + column(app, 12) + " " + title;

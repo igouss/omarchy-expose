@@ -17,6 +17,13 @@ function appIdFor(toplevel) {
     return String(ipc.class || ipc.initialClass || "");
 }
 
+// The window's application as a person would name it: the last dotted part
+// of its id, "-" when it has none.
+function appNameFor(toplevel) {
+    var parts = appIdFor(toplevel).split(".").filter(function (part) { return part.length > 0; });
+    return parts.length ? parts[parts.length - 1] : "-";
+}
+
 function addressFor(toplevel) {
     var address = String((toplevel && toplevel.address) || "");
     return /^[0-9a-fA-F]+$/.test(address) ? "0x" + address : "";

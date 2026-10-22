@@ -18,7 +18,7 @@ Item {
     readonly property bool selected: stack.screenWindow.acceptsKeyboard && inLayout && modelData === controller.selection
     readonly property bool previewed: stack.screenWindow.acceptsKeyboard && inLayout && modelData === controller.previewToplevel
     readonly property string fullText: CrtLayout.row(slot + 1, controller.workspaceName(modelData),
-        CrtLayout.appName(WindowModel.appIdFor(modelData)), String(modelData.title || "untitled"))
+        WindowModel.appNameFor(modelData), String(modelData.title || "untitled"))
     readonly property real progress: CrtLayout.typed(Math.max(0, slot), stack.toplevels.length, stack.boot)
 
     visible: inLayout && progress > 0

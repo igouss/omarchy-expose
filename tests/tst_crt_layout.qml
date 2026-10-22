@@ -93,12 +93,6 @@ TestCase {
         compare(CrtLayout.column("abcd", 1), "a");
     }
 
-    function test_appsGoByTheirLastName() {
-        compare(CrtLayout.appName("com.mitchellh.ghostty"), "ghostty");
-        compare(CrtLayout.appName("foot"), "foot");
-        compare(CrtLayout.appName(""), "-");
-        compare(CrtLayout.appName("org.gnome."), "gnome");
-    }
 
     function test_rowsLineUpInColumns() {
         compare(CrtLayout.row(3, "1", "ghostty", "Shell"), "03 ws:1   ghostty      Shell");
