@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "author": "igouss (fork of Expos\u00e9 by Kristoffer Risanger, @kristofferR)",
   "license": "MIT",
-  "description": "Every open window at once, in eight looks: Grid, Carousel, Strata, Glass HUD, CRT, Time Machine, Diorama, and Atlas. A fork of Expos\u00e9 for Omarchy: type to search, Space to Quick Look, Enter to open.",
+  "description": "Every open window at once, in nine looks: Grid, Carousel, Strata, Glass HUD, CRT, Time Machine, Diorama, Atlas, and Helix. A fork of Expos\u00e9 for Omarchy: type to search, Space to Quick Look, Enter to open.",
   "icon": "assets/icon.svg",
   "preview": "preview.png",
   "kinds": [

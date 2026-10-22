@@ -133,7 +133,7 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             // One Component per look, keyed by the look setting's value.
-            readonly property var looks: ({ grid: gridLook, carousel: carouselLook, strata: strataLook, hud: hudLook, crt: crtLook, time: timeLook, diorama: dioramaLook, atlas: atlasLook })
+            readonly property var looks: ({ grid: gridLook, carousel: carouselLook, strata: strataLook, hud: hudLook, crt: crtLook, time: timeLook, diorama: dioramaLook, atlas: atlasLook, helix: helixLook })
 
             Component {
                 id: gridLook
@@ -194,6 +194,14 @@ Item {
             Component {
                 id: atlasLook
                 AtlasLook {
+                    overview: keyCatcher.overview
+                    screenWindow: keyCatcher.screenWindow
+                }
+            }
+
+            Component {
+                id: helixLook
+                HelixLook {
                     overview: keyCatcher.overview
                     screenWindow: keyCatcher.screenWindow
                 }

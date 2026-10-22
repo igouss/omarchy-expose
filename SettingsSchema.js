@@ -19,7 +19,8 @@ var specs = {
             { label: "CRT", description: "A terminal listing every window beside a phosphor monitor", value: "crt" },
             { label: "Time Machine", description: "Windows recede down a tunnel by when you last used them", value: "time" },
             { label: "Diorama", description: "A small model of the desktop: workspaces as slabs, windows as blocks", value: "diorama" },
-            { label: "Atlas", description: "The whole desktop as one map; the camera flies to the selection", value: "atlas" }
+            { label: "Atlas", description: "The whole desktop as one map; the camera flies to the selection", value: "atlas" },
+            { label: "Helix", description: "Workspaces wound around a spiral; the tower turns to the selection", value: "helix" }
         ]
     },
     previewPlacement: {
