@@ -253,6 +253,17 @@ OverviewLayout {
             });
     }
 
+    // Selection pulse: every look multiplies its selection glow by this.
+    property real selectionBreath: 1
+
+    SequentialAnimation {
+        running: root.juicePulse && root.opened
+        loops: Animation.Infinite
+        onStopped: root.selectionBreath = 1
+        NumberAnimation { target: root; property: "selectionBreath"; to: 0.4; duration: 900; easing.type: Easing.InOutSine }
+        NumberAnimation { target: root; property: "selectionBreath"; to: 1; duration: 900; easing.type: Easing.InOutSine }
+    }
+
     Timer {
         id: punchHold
         interval: 180

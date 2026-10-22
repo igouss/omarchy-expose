@@ -129,7 +129,7 @@ Ui.BorderSurface {
                 visible: card.liftSelection
                 radius: previewFrame.radius + Commons.Style.space(4)
                 color: Commons.Color.accent
-                opacity: card.lifted ? 0.85 : 0
+                opacity: card.lifted ? 0.85 * card.controller.selectionBreath : 0
                 layer.enabled: visible
                 layer.effect: MultiEffect {
                     blurEnabled: true

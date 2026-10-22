@@ -72,7 +72,7 @@ Item {
         sourceComponent: Rectangle {
             radius: thumbnail.radius + Commons.Style.space(6)
             color: Commons.Color.accent
-            opacity: 0.7
+            opacity: 0.7 * card.controller.selectionBreath
             layer.enabled: true
             layer.effect: MultiEffect {
                 blurEnabled: true

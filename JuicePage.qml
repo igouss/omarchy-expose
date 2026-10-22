@@ -4,7 +4,7 @@ import QtQuick.Layouts
 // Game-style feedback, one switch per effect.
 SettingsPage {
     id: page
-    readonly property var focusControls: [springToggle, edgeBumpToggle, punchToggle]
+    readonly property var focusControls: [springToggle, edgeBumpToggle, punchToggle, pulseToggle]
     categoryIndex: 7
     title: "Feel and feedback"
 
@@ -50,6 +50,21 @@ SettingsPage {
             view: page.view
             checked: view.controller.juicePunch
             onToggled: function (checked) { view.controller.setSetting("juicePunch", checked); }
+        }
+    }
+
+    SettingRow {
+        dialog: page.dialog
+        label: "Selection pulse"
+        description: "The selection's glow breathes slowly. Applies to the carousel and to the grid's Lift highlight."
+
+        Item { Layout.fillWidth: true }
+
+        SettingToggle {
+            id: pulseToggle
+            view: page.view
+            checked: view.controller.juicePulse
+            onToggled: function (checked) { view.controller.setSetting("juicePulse", checked); }
         }
     }
 }
