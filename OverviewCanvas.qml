@@ -36,7 +36,7 @@ Item {
         }
         if (overview.handleSettingsNavigation(event))
             return;
-        overview.handleKey(event, overviewArea.windowLayout);
+        overview.handleKey(event, lookLoader.item ? (lookLoader.item as Look).windowLayout : []);
     }
 
     ColumnLayout {
@@ -125,38 +125,21 @@ Item {
             id: overviewArea
             Layout.fillWidth: true
             Layout.fillHeight: true
-            readonly property var windowLayout: {
-                var revision = overview.modelRevision;
-                var screenRatio = screenWindow.screen && screenWindow.screen.height > 0
-                    ? screenWindow.screen.width / screenWindow.screen.height
-                    : 0;
-                return overview.computeWindowLayout(screenWindow.screenToplevels, width, height, Commons.Style.space(64), Commons.Style.spacing.sm, overview.windowFooterHeight, screenRatio);
+            // One Component per look, keyed by the look setting's value.
+            readonly property var looks: ({ grid: gridLook })
+
+            Component {
+                id: gridLook
+                GridLook {
+                    overview: keyCatcher.overview
+                    screenWindow: keyCatcher.screenWindow
+                }
             }
 
-            Item {
-                id: cardLayer
+            Loader {
+                id: lookLoader
                 anchors.fill: parent
-                // The original style grows the whole arrangement out of the
-                // top-left corner. A single transform does that without
-                // resizing any card, so no layout, text elision, or layer
-                // texture is redone per frame.
-                scale: overview.animationStyle === "original" && overview.motionTarget > 0
-                    ? overview.motionProgress
-                    : 1
-                transformOrigin: Item.TopLeft
-
-                Repeater {
-                    model: screenWindow.cardToplevels
-
-                    delegate: WindowCard {
-                        controller: overview
-                        screenToplevels: screenWindow.screenToplevels
-                        acceptsKeyboard: screenWindow.acceptsKeyboard
-                        windowLayout: overviewArea.windowLayout
-                        layoutAreaWidth: overviewArea.width
-                        layoutAreaHeight: overviewArea.height
-                    }
-                    }
+                sourceComponent: overviewArea.looks.grid
             }
 
             Text {
