@@ -26,6 +26,7 @@ Look {
     readonly property int selectedIndex: toplevels.indexOf(overview.selection)
     readonly property int centrePlane: selectedIndex >= 0 ? strata.planeOf[selectedIndex] : 0
     readonly property var centreWindow: selectedIndex >= 0 ? toplevels[selectedIndex] : null
+    readonly property real reach: StrataLayout.reach
     readonly property real planeMaxWidth: width * 0.74
     readonly property real planeMaxHeight: height * 0.5
 
@@ -206,7 +207,7 @@ Look {
     Repeater {
         model: screenWindow.cardToplevels
 
-        delegate: StrataCard {
+        delegate: PlaneCard {
             stack: look
         }
     }

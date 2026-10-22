@@ -1,13 +1,15 @@
 import QtQuick
 import QtQuick.Effects
-import "StrataLayout.js" as StrataLayout
 import "WorkspacePlanes.js" as WorkspacePlanes
 import qs.Commons as Commons
 
-// One window lying on its workspace's plane at its real place. It shares the
-// plane's transform (origin at the plane's centre), so it lies flat on the
-// glass. A click selects it; a click on the selection opens it. Hover selects
-// nothing, because it would move the camera under the pointer.
+// One window lying on its workspace's plane at its real place, for looks that
+// draw workspaces as planes (Strata, Helix). It shares the plane's transform
+// (origin at the plane's centre): laid back by `placed.angle`, then turned by
+// `placed.turn`, so it lies flat on the glass. The look provides strata,
+// position, reach, bumpX, and planeGeometry(). A click selects it; a click on
+// the selection opens it. Hover selects nothing, because it would move the
+// camera under the pointer.
 Item {
     id: card
 
@@ -26,7 +28,7 @@ Item {
     readonly property bool selected: stack.screenWindow.acceptsKeyboard && inLayout && modelData === controller.selection
     readonly property bool previewed: stack.screenWindow.acceptsKeyboard && inLayout && modelData === controller.previewToplevel
     readonly property bool focusedWindow: modelData === controller.originToplevel
-    readonly property bool nearby: Math.abs(planeIndex - stack.position) <= StrataLayout.reach + 0.5
+    readonly property bool nearby: Math.abs(planeIndex - stack.position) <= stack.reach + 0.5
     readonly property var previewRect: controller.previewRectFor(modelData,
         Qt.rect(plane.x + spot.x, plane.y + spot.y, spot.width, spot.height), stack.width, stack.height, 0, 0)
 
@@ -64,6 +66,12 @@ Item {
             origin.y: card.planeOriginY
             axis { x: 1; y: 0; z: 0 }
             angle: card.blend(card.placed.angle, 0) + tilt.aroundX
+        },
+        Rotation {
+            origin.x: card.planeOriginX
+            origin.y: card.planeOriginY
+            axis { x: 0; y: 1; z: 0 }
+            angle: card.blend(card.placed.turn, 0)
         },
         Rotation {
             origin.x: card.width / 2

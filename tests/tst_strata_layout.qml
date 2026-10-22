@@ -22,6 +22,7 @@ TestCase {
         let next = StrataLayout.placePlane(1, 1300, 600);
         fuzzyCompare(front.centreY, 1300 * StrataLayout.centreYFraction, 0.001);
         compare(front.angle, StrataLayout.frontAngle);
+        compare(front.turn, 0);
         compare(next.angle, StrataLayout.backAngle);
         verify(front.z > next.z && front.scale > next.scale && front.shade < next.shade);
     }
