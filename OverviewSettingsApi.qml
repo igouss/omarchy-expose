@@ -1,14 +1,4 @@
 import QtQuick
-import QtQuick.Layouts
-import Quickshell
-import Quickshell.Hyprland
-import Quickshell.Io
-import Quickshell.Wayland
-import qs.Commons as Commons
-import qs.Ui as Ui
-import "IconResolver.js" as IconResolver
-import "WindowModel.js" as WindowModel
-import "ScreenLayout.js" as ScreenLayout
 
 // Validated setters behind the settings panel and IPC.
 OverviewState {
@@ -123,6 +113,13 @@ OverviewState {
         root.animationDurationPreviewStyle = "";
         root.animationInDurationPreview = -1;
         root.animationOutDurationPreview = -1;
+    }
+
+    function clearSettingsPreviews() {
+        root.clearAnimationTimingPreview();
+        root.backgroundBlurPreview = -1;
+        root.backgroundDimPreview = -1;
+        root.hotCornerDelayPreview = -1;
     }
 
     function setBackgroundBlur(value) {

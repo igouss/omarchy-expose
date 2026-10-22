@@ -1,14 +1,7 @@
 import QtQuick
-import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
-import Quickshell.Io
 import Quickshell.Wayland
-import qs.Commons as Commons
-import qs.Ui as Ui
-import "IconResolver.js" as IconResolver
-import "WindowModel.js" as WindowModel
-import "ScreenLayout.js" as ScreenLayout
 
 // Exposé entry point: surfaces, compositor wiring, and the hot corner.
 OverviewLifecycle {
@@ -51,7 +44,7 @@ OverviewLifecycle {
             root.overviewScreenPinned = true;
             root.overviewScreenName = name;
         }
-        root.open("{}");
+        root.open();
     }
 
     function scheduleHotCornerRearm() {

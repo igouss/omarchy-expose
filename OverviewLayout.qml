@@ -1,14 +1,4 @@
 import QtQuick
-import QtQuick.Layouts
-import Quickshell
-import Quickshell.Hyprland
-import Quickshell.Io
-import Quickshell.Wayland
-import qs.Commons as Commons
-import qs.Ui as Ui
-import "IconResolver.js" as IconResolver
-import "WindowModel.js" as WindowModel
-import "ScreenLayout.js" as ScreenLayout
 
 // Card placement, Quick Look, and directional selection.
 OverviewWindows {

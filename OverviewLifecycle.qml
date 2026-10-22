@@ -1,14 +1,7 @@
 import QtQuick
-import QtQuick.Layouts
-import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
-import Quickshell.Wayland
 import qs.Commons as Commons
-import qs.Ui as Ui
-import "IconResolver.js" as IconResolver
-import "WindowModel.js" as WindowModel
-import "ScreenLayout.js" as ScreenLayout
 
 // Opening, dismissing, the background blur session, and overview keys.
 OverviewLayout {
@@ -25,7 +18,7 @@ OverviewLayout {
         }
     }
 
-    function open(payload) {
+    function open() {
         // Taken before the overlay takes keyboard focus, which can clear the active window.
         root.originToplevel = Hyprland.activeToplevel;
         windowBorders.refresh();
@@ -102,7 +95,7 @@ OverviewLayout {
     }
 
     function toggle() {
-        (root.opened || root.openingPending) ? root.dismiss() : root.open("{}");
+        (root.opened || root.openingPending) ? root.dismiss() : root.open();
     }
 
     function requestedBackgroundBlur() {
@@ -211,12 +204,9 @@ OverviewLayout {
 
     function openSettings() {
         if (!root.surfaceMounted)
-            root.open("{}");
+            root.open();
         root.closeFooterHideConfirmation();
-        root.clearAnimationTimingPreview();
-        root.backgroundBlurPreview = -1;
-        root.backgroundDimPreview = -1;
-        root.hotCornerDelayPreview = -1;
+        root.clearSettingsPreviews();
         root.settingsCategoryIndex = 0;
         root.settingsOpen = true;
         Qt.callLater(function () {
@@ -229,10 +219,7 @@ OverviewLayout {
         var restoreKeyboardFocus = root.settingsOpen && root.opened;
         root.closeFooterHideConfirmation();
         root.settingsOpen = false;
-        root.clearAnimationTimingPreview();
-        root.backgroundBlurPreview = -1;
-        root.backgroundDimPreview = -1;
-        root.hotCornerDelayPreview = -1;
+        root.clearSettingsPreviews();
         if (restoreKeyboardFocus)
             Qt.callLater(function () {
                 if (root.opened)

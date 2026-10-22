@@ -11,7 +11,7 @@ Item {
             // Must not be overview.toggle(): that makes "open" a duplicate of
             // "toggle", so calling open on an already-open overview closes it.
             // Mirrors close(), which correctly calls dismiss().
-            overview.open("{}");
+            overview.open();
             return "ok";
         }
         function close(): string {

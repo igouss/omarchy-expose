@@ -1,14 +1,8 @@
 import QtQuick
-import QtQuick.Layouts
 import Quickshell
 import Quickshell.Hyprland
-import Quickshell.Io
-import Quickshell.Wayland
-import qs.Commons as Commons
-import qs.Ui as Ui
 import "IconResolver.js" as IconResolver
 import "WindowModel.js" as WindowModel
-import "ScreenLayout.js" as ScreenLayout
 
 // Which windows the overview shows and how they are identified.
 OverviewSettingsApi {
@@ -69,7 +63,7 @@ OverviewSettingsApi {
             var sessionIndex = root.sessionToplevels.indexOf(top);
             if (sessionIndex >= 0) {
                 var ratios = root.sessionAspectRatios.slice();
-                ratios[sessionIndex] = root.liveAspectRatioFor(top);
+                ratios[sessionIndex] = WindowModel.aspectRatioFor(top);
                 root.sessionAspectRatios = ratios;
             }
         }
@@ -134,22 +128,19 @@ OverviewSettingsApi {
     }
 
     function resetSessionToplevels() {
-        var next = [];
-        for (var index = 0; index < root.allToplevels.length; index++)
-            if (WindowModel.isEligible(root.allToplevels[index]))
-                next.push(root.allToplevels[index]);
-        root.sessionToplevels = next;
-        root.captureSessionAspectRatios();
+        root.sessionToplevels = root.eligibleToplevels();
+        root.sessionAspectRatios = root.sessionToplevels.map(top => WindowModel.aspectRatioFor(top));
         root.modelRevision++;
+    }
+
+    function eligibleToplevels() {
+        return root.allToplevels.filter(top => WindowModel.isEligible(top));
     }
 
     function syncSessionToplevels() {
         if (!root.surfaceMounted && !root.openingPending)
             return false;
-        var current = [];
-        for (var currentIndex = 0; currentIndex < root.allToplevels.length; currentIndex++)
-            if (WindowModel.isEligible(root.allToplevels[currentIndex]))
-                current.push(root.allToplevels[currentIndex]);
+        var current = root.eligibleToplevels();
 
         var next = [];
         var nextRatios = [];
@@ -158,32 +149,22 @@ OverviewSettingsApi {
             if (current.indexOf(existing) === -1)
                 continue;
             next.push(existing);
-            nextRatios.push(root.sessionAspectRatios[oldIndex] || root.liveAspectRatioFor(existing));
+            nextRatios.push(root.sessionAspectRatios[oldIndex] || WindowModel.aspectRatioFor(existing));
         }
         for (var newIndex = 0; newIndex < current.length; newIndex++) {
             var candidate = current[newIndex];
             if (next.indexOf(candidate) !== -1)
                 continue;
             next.push(candidate);
-            nextRatios.push(root.liveAspectRatioFor(candidate));
+            nextRatios.push(WindowModel.aspectRatioFor(candidate));
         }
 
-        var changed = next.length !== root.sessionToplevels.length;
-        for (var compareIndex = 0; !changed && compareIndex < next.length; compareIndex++)
-            changed = next[compareIndex] !== root.sessionToplevels[compareIndex];
-        if (!changed)
+        if (root.toplevelListsEqual(next, root.sessionToplevels))
             return false;
         root.sessionToplevels = next;
         root.sessionAspectRatios = nextRatios;
         root.modelRevision++;
         return true;
-    }
-
-    function captureSessionAspectRatios() {
-        var ratios = [];
-        for (var index = 0; index < root.sessionToplevels.length; index++)
-            ratios.push(root.liveAspectRatioFor(root.sessionToplevels[index]));
-        root.sessionAspectRatios = ratios;
     }
 
     function formatWorkspaceLabel(name) {
@@ -192,10 +173,6 @@ OverviewSettingsApi {
 
     function workspaceName(top) {
         return root.formatWorkspaceLabel(WindowModel.workspaceName(top));
-    }
-
-    function workspaceLabel(top) {
-        return "Workspace " + root.workspaceName(top);
     }
 
     function monitorForScreen(screenName) {
@@ -235,10 +212,6 @@ OverviewSettingsApi {
         return WindowModel.isOnScreen(top, screenName, root.multiMonitorMode === "per-monitor");
     }
 
-    function isOnWorkspace(top, workspace) {
-        return WindowModel.isOnWorkspace(top, workspace);
-    }
-
     function toplevelsOnScreen(screenName) {
         var result = [];
         var source = root.surfaceMounted || root.openingPending ? root.sessionToplevels : root.allToplevels;
@@ -257,7 +230,7 @@ OverviewSettingsApi {
         var result = [];
         for (var index = 0; index < candidates.length; index++) {
             var top = candidates[index];
-            if (root.workspaceScope === "current" && !root.isOnWorkspace(top, currentWorkspace))
+            if (root.workspaceScope === "current" && !WindowModel.isOnWorkspace(top, currentWorkspace))
                 continue;
             var haystack = WindowModel.searchTextFor(top);
             if (!needle || haystack.indexOf(needle) !== -1)
@@ -275,17 +248,13 @@ OverviewSettingsApi {
         return true;
     }
 
-    function liveAspectRatioFor(top) {
-        return WindowModel.aspectRatioFor(top);
-    }
-
     function aspectRatioFor(top) {
         if (root.surfaceMounted) {
             var index = root.sessionToplevels.indexOf(top);
             if (index >= 0 && root.sessionAspectRatios[index] > 0)
                 return root.sessionAspectRatios[index];
         }
-        return root.liveAspectRatioFor(top);
+        return WindowModel.aspectRatioFor(top);
     }
 
     function iconFor(top) {
