@@ -18,9 +18,11 @@ check "move rejects an unknown direction" "$(E move sideways)" "expected left, r
 
 E open >/dev/null; sleep 1.5
 check "state while open" "$(field opened)" true
-# From the origin at least one of Right or Left finds a window.
+# From the origin some direction finds a window; the CRT list has only Up and Down.
 before=$(field selection)
-[[ $(E move right) != "$before" ]] || E move left >/dev/null
+for direction in right left down up; do
+  [[ $(E move "$direction") != "$before" ]] && break
+done
 check "move changes the selection" "$([[ $(field selection) != "$before" ]] && echo yes)" yes
 check "filter to nothing" "$(E filter zzzz-no-such-window)" 0
 check "empty filter restores the list" "$(( $(E filter '') >= 2 ))" 1
