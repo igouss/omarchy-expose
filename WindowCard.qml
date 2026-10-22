@@ -25,10 +25,11 @@ Ui.BorderSurface {
     readonly property bool focusedWindow: modelData === card.controller.originToplevel
     readonly property bool previewed: card.acceptsKeyboard && inLayout && modelData === card.controller.previewToplevel
     readonly property bool exitingPreview: card.acceptsKeyboard && inLayout && modelData === card.controller.previewExitToplevel
-    readonly property bool floatingFooter: card.controller.windowFooterStyle === "floating"
-    readonly property bool integratedFooter: card.controller.windowFooterStyle === "integrated"
-    readonly property bool overlayFooter: card.controller.windowFooterStyle === "overlay"
-    readonly property bool centeredFooter: card.controller.windowFooterStyle === "centered"
+    // Each footer style is one Component below, keyed by the setting's value.
+    // Only "integrated" (Rail) frames the whole card; the others are frameless.
+    readonly property string footerStyle: card.controller.windowFooterStyle
+    readonly property bool railFooter: card.footerStyle === "integrated"
+    readonly property bool overlaidFooter: card.footerStyle === "overlay"
     readonly property string windowTitle: String(modelData.title || WindowModel.appIdFor(modelData) || "Untitled window")
     readonly property string applicationName: WindowModel.appIdFor(modelData) || "Application"
     readonly property string workspaceName: card.controller.workspaceName(modelData)
@@ -72,9 +73,9 @@ Ui.BorderSurface {
     height: layoutRect.height
     z: previewed ? 11 : (exitingPreview ? 10 : (lifted ? 1 : 0))
     scale: lifted ? 1.04 : 1
-    radius: integratedFooter ? Commons.Style.cornerRadius : 0
-    color: integratedFooter ? Commons.Color.menu.background : "transparent"
-    borderSpec: integratedFooter ? outlineSpec : Commons.Border.none()
+    radius: card.railFooter ? Commons.Style.cornerRadius : 0
+    color: card.railFooter ? Commons.Color.menu.background : "transparent"
+    borderSpec: card.railFooter ? outlineSpec : Commons.Border.none()
     opacity: card.controller.previewToplevel
         ? (previewed ? 1 : 0.28)
         : (liftSelection && !selected ? 0.72 : 1)
@@ -116,7 +117,7 @@ Ui.BorderSurface {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: Commons.Style.spacing.sm
-        spacing: card.overlayFooter ? 0 : Commons.Style.spacing.sm
+        spacing: card.overlaidFooter ? 0 : Commons.Style.spacing.sm
 
         Item {
             Layout.fillWidth: true
@@ -187,7 +188,7 @@ Ui.BorderSurface {
                 Loader {
                     anchors.fill: parent
                     z: 2
-                    active: card.overlayFooter
+                    active: card.overlaidFooter
                     sourceComponent: overlayFooter
                 }
 
@@ -202,7 +203,7 @@ Ui.BorderSurface {
 
             Ui.BorderSurface {
                 anchors.fill: previewFrame
-                visible: !card.integratedFooter
+                visible: !card.railFooter
                 z: 5
                 radius: previewFrame.radius
                 color: "transparent"
@@ -239,11 +240,11 @@ Ui.BorderSurface {
         Item {
             Layout.fillWidth: true
             Layout.preferredHeight: Commons.Style.space(40)
-            visible: !card.overlayFooter
+            visible: !card.overlaidFooter
 
             Loader {
                 anchors.fill: parent
-                sourceComponent: card.floatingFooter ? floatingFooter : (card.integratedFooter ? integratedFooter : (card.centeredFooter ? centeredFooter : null))
+                sourceComponent: ({ floating: floatingFooter, integrated: integratedFooter, centered: centeredFooter })[card.footerStyle] || null
             }
 
         }
