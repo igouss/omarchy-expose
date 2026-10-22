@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Effects
 import QtQuick.Layouts
-import Quickshell.Wayland
 import "WindowModel.js" as WindowModel
 import qs.Commons as Commons
 import qs.Ui as Ui
@@ -149,7 +148,7 @@ Ui.BorderSurface {
 
             }
 
-            Rectangle {
+            WindowThumbnail {
                 id: previewFrame
 
                 readonly property real windowAspectRatio: card.controller.aspectRatioFor(card.modelData)
@@ -158,47 +157,14 @@ Ui.BorderSurface {
                 width: Math.min(parent.width, parent.height * windowAspectRatio)
                 height: Math.min(parent.height, parent.width / windowAspectRatio)
                 radius: Math.max(0, Commons.Style.cornerRadius - Commons.Style.spacing.xs)
-                color: Commons.Color.background
-                clip: true
-                layer.enabled: true
-
-                CardText {
-                    anchors.centerIn: parent
-                    text: "Live preview unavailable"
-                    opacity: 0.45
-                }
-
-                Item {
-                    anchors.centerIn: parent
-                    width: parent.width * 2
-                    height: parent.height * 2
-                    scale: 0.5
-                    layer.enabled: true
-                    layer.smooth: true
-
-                    ScreencopyView {
-                        anchors.fill: parent
-                        captureSource: WindowModel.waylandFor(card.modelData)
-                        live: card.controller.opened && card.inLayout
-                        paintCursor: false
-                    }
-
-                }
+                toplevel: card.modelData
+                live: card.controller.opened && card.inLayout
 
                 Loader {
                     anchors.fill: parent
-                    z: 2
                     active: card.overlaidFooter
                     sourceComponent: overlayFooter
                 }
-
-                layer.effect: MultiEffect {
-                    maskEnabled: true
-                    maskSource: previewMask
-                    maskThresholdMin: 0.5
-                    maskSpreadAtMin: 1
-                }
-
             }
 
             Ui.BorderSurface {
@@ -222,17 +188,6 @@ Ui.BorderSurface {
                 color: card.currentColor
                 border.color: Commons.Color.menu.background
                 border.width: Commons.Style.space(2)
-            }
-
-            Rectangle {
-                id: previewMask
-
-                anchors.fill: previewFrame
-                radius: previewFrame.radius
-                color: "black"
-                visible: false
-                layer.enabled: true
-                layer.smooth: true
             }
 
         }
