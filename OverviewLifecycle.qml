@@ -7,6 +7,11 @@ import qs.Commons as Commons
 OverviewLayout {
     id: root
 
+    // The entry layer owns the surfaces and the hot corner, and answers these.
+    signal keyboardFocusRequested()
+    signal settingsFocusRequested()
+    signal surfaceReleased()
+
     onEffectiveBackgroundBlurChanged: {
         if (!root.surfaceMounted)
             return;
@@ -37,7 +42,7 @@ OverviewLayout {
             root.opened = true;
             root.animateMotionTo(1);
             root.refreshHyprlandState();
-            Qt.callLater(root.focusKeyboardWindow);
+            Qt.callLater(root.keyboardFocusRequested);
             return;
         }
         if (root.openingPending)
@@ -132,7 +137,7 @@ OverviewLayout {
             root.openingPending = false;
             root.opened = true;
             root.animateMotionTo(1);
-            root.focusKeyboardWindow();
+            root.keyboardFocusRequested();
         });
     }
 
@@ -173,7 +178,7 @@ OverviewLayout {
         root.motionProgress = root.motionTarget;
         if (root.motionTarget > 0) {
             root.scheduleBackgroundBlurUpdate();
-            Qt.callLater(root.focusKeyboardWindow);
+            Qt.callLater(root.keyboardFocusRequested);
             return;
         }
         backgroundBlurUpdate.stop();
@@ -192,7 +197,14 @@ OverviewLayout {
         root.clearOverviewScreen();
         root.backgroundBlurReleasePhase = 0;
         root.finishDismiss();
-        root.scheduleHotCornerRearm();
+        root.surfaceReleased();
+    }
+
+    function activate(top) {
+        if (!top)
+            return;
+        root.pendingActivation = top;
+        root.dismiss();
     }
 
     function finishDismiss() {
@@ -213,7 +225,7 @@ OverviewLayout {
         root.settingsOpen = true;
         Qt.callLater(function () {
             if (root.settingsOpen)
-                root.focusSettingsCategory();
+                root.settingsFocusRequested();
         });
     }
 
@@ -225,7 +237,7 @@ OverviewLayout {
         if (restoreKeyboardFocus)
             Qt.callLater(function () {
                 if (root.opened)
-                    root.focusKeyboardWindow();
+                    root.keyboardFocusRequested();
             });
     }
 

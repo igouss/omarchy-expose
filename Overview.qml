@@ -8,6 +8,9 @@ OverviewLifecycle {
     id: root
 
     onHotCornerScreensChanged: root.scheduleHotCornerRearm()
+    onKeyboardFocusRequested: root.focusKeyboardWindow()
+    onSettingsFocusRequested: root.focusSettingsCategory()
+    onSurfaceReleased: root.scheduleHotCornerRearm()
 
     readonly property var overviewKeyboardTargets: surfaceInstances.instances.length
         ? surfaceInstances.instances[0].keyboardTargets

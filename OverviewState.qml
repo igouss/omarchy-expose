@@ -282,6 +282,57 @@ Item {
 
     readonly property alias previewExitTimer: previewExitTimerObject
 
+    function monitorForScreen(screenName) {
+        var wanted = String(screenName || "");
+        var monitors = Hyprland.monitors ? Hyprland.monitors.values : [];
+        for (let index = 0; index < monitors.length; index++) {
+            let monitor = monitors[index];
+            if (monitor && monitor.name === wanted)
+                return monitor;
+        }
+        return null;
+    }
+
+    function workspaceForScreen(screenName) {
+        if (root.multiMonitorMode === "per-monitor") {
+            let monitor = root.monitorForScreen(screenName);
+            if (monitor && monitor.activeWorkspace)
+                return monitor.activeWorkspace;
+        }
+        return Hyprland.focusedWorkspace || null;
+    }
+
+    function isOnScreen(top, screenName) {
+        return WindowModel.isOnScreen(top, screenName, root.multiMonitorMode === "per-monitor");
+    }
+
+    function toplevelsOnScreen(screenName) {
+        var result = [];
+        var source = root.surfaceMounted || root.openingPending ? root.sessionToplevels : root.allToplevels;
+        for (let index = 0; index < source.length; index++) {
+            let top = source[index];
+            if (top && root.isOnScreen(top, screenName))
+                result.push(top);
+        }
+        return result;
+    }
+
+    function toplevelsForScreen(screenName) {
+        var needle = root.filterText.toLowerCase();
+        var currentWorkspace = root.workspaceForScreen(screenName);
+        var candidates = root.toplevelsOnScreen(screenName);
+        var result = [];
+        for (let index = 0; index < candidates.length; index++) {
+            let top = candidates[index];
+            if (root.workspaceScope === "current" && !WindowModel.isOnWorkspace(top, currentWorkspace))
+                continue;
+            let haystack = WindowModel.searchTextFor(top);
+            if (!needle || haystack.indexOf(needle) !== -1)
+                result.push(top);
+        }
+        return result;
+    }
+
     function updatePluginSetting(name, value) {
         return pluginSettings.update(name, value);
     }
