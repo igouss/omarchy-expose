@@ -1,33 +1,31 @@
 import QtQuick
+import "SettingsSchema.js" as SettingsSchema
 
 // Validated setters behind the settings panel and IPC.
 OverviewState {
     id: root
 
-    function setPreviewPlacement(value) {
-        var mode = value === "centered" ? "centered" : "in-place";
-        if (mode !== root.previewPlacement)
-            root.updatePluginSetting("previewPlacement", mode);
+    // Stores a simple setting from the schema; returns the value it now has.
+    function setSetting(name, value) {
+        var next = SettingsSchema.normalize(name, value, root[name]);
+        if (next !== root[name])
+            root.updatePluginSetting(name, next);
+        return next;
     }
 
-    function setWindowFooterStyle(value) {
-        var style = root.windowFooterStyles.indexOf(value) !== -1 ? value : "floating";
-        if (style !== root.windowFooterStyle)
-            root.updatePluginSetting("windowFooterStyle", style);
+    // IPC form of setSetting: rejects unlisted options and non on/off booleans
+    // with a message, and answers with the stored value as text.
+    function setSettingFromIpc(name, text) {
+        var parsed = SettingsSchema.parseIpc(name, text);
+        if (parsed.error)
+            return parsed.error;
+        var next = name === "hotCornerEnabled" ? root.setHotCornerEnabled(parsed.value) : root.setSetting(name, parsed.value);
+        return typeof next === "boolean" ? (next ? "on" : "off") : String(next);
     }
 
-    function setSelectionStyle(value) {
-        var style = root.selectionStyles.indexOf(value) !== -1 ? value : "outline";
-        if (style !== root.selectionStyle)
-            root.updatePluginSetting("selectionStyle", style);
-    }
 
-    function setAnimationStyle(value) {
-        var style = root.animationStyles.indexOf(value) !== -1 ? value : "original";
-        if (style !== root.animationStyle)
-            root.updatePluginSetting("animationStyle", style);
-        return style;
-    }
+
+
 
     function setAnimationTiming(style, inValue, outValue, separate) {
         var mode = root.animationStyles.indexOf(style) !== -1 ? style : "original";
@@ -122,78 +120,22 @@ OverviewState {
         root.hotCornerDelayPreview = -1;
     }
 
-    function setBackgroundBlur(value) {
-        var numeric = Number(value);
-        if (!isFinite(numeric))
-            return root.backgroundBlur;
-        var next = Math.max(0, Math.min(20, Math.round(numeric)));
-        if (next !== root.backgroundBlur)
-            root.updatePluginSetting("backgroundBlur", next);
-        return next;
-    }
 
-    function setBackgroundDim(value) {
-        var numeric = Number(value);
-        if (!isFinite(numeric))
-            return root.backgroundDim;
-        var next = Math.max(0, Math.min(90, Math.round(numeric)));
-        if (next !== root.backgroundDim)
-            root.updatePluginSetting("backgroundDim", next);
-        return next;
-    }
 
     function setHotCornerEnabled(enabled) {
         var next = enabled === true;
         // The corner is also disabled while settings load; an early "off"
         // command must still be queued even though the surface is inactive.
         root.updatePluginSetting("hotCornerEnabled", next);
-    }
-
-    function setHotCornerPosition(value) {
-        var position = root.hotCornerPositions.indexOf(value) !== -1 ? value : "top-left";
-        if (position !== root.hotCornerPosition)
-            root.updatePluginSetting("hotCornerPosition", position);
-    }
-
-    function setHotCornerAllDisplays(enabled) {
-        root.updatePluginSetting("hotCornerAllDisplays", enabled === true);
-    }
-
-    function setHotCornerDelay(value) {
-        var numeric = Number(value);
-        if (!isFinite(numeric))
-            return root.hotCornerDelay;
-        var next = Math.max(0, Math.min(1000, Math.round(numeric)));
-        if (next !== root.hotCornerDelay)
-            root.updatePluginSetting("hotCornerDelay", next);
         return next;
     }
 
-    function setInitialWorkspaceScope(value) {
-        var next = String(value) === "current" ? "current" : "all";
-        if (next !== root.initialWorkspaceScope)
-            root.updatePluginSetting("initialWorkspaceScope", next);
-        return next;
-    }
 
-    function setWorkspaceLabelStyle(value) {
-        var next = String(value) === "slot" ? "slot" : "full";
-        if (next !== root.workspaceLabelStyle)
-            root.updatePluginSetting("workspaceLabelStyle", next);
-        return next;
-    }
 
-    function setMoveCursorToWindow(enabled) {
-        var next = enabled === true;
-        if (next !== root.moveCursorToWindow)
-            root.updatePluginSetting("moveCursorToWindow", next);
-    }
 
-    function setMultiMonitorMode(value) {
-        var mode = value === "per-monitor" ? "per-monitor" : "mirrored";
-        if (mode !== root.multiMonitorMode)
-            root.updatePluginSetting("multiMonitorMode", mode);
-    }
+
+
+
 
     function requestFooterHide() {
         if (!root.showFooter)
@@ -215,8 +157,4 @@ OverviewState {
     }
 
     // IPC rejection text derived from the option list it validates against.
-    function expectedOneOf(options) {
-        var head = options.slice(0, -1).join(", ");
-        return "expected " + head + (options.length > 2 ? ", or " : " or ") + options[options.length - 1];
-    }
 }

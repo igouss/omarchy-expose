@@ -1,5 +1,6 @@
 import QtQuick
 import "WindowModel.js" as WindowModel
+import "SettingsSchema.js" as SettingsSchema
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
@@ -39,23 +40,12 @@ Item {
         }
         onFileChanged: Qt.callLater(pluginSettingsFile.reload)
     }
-    readonly property string previewPlacement: root.pluginEntry && root.pluginEntry.previewPlacement === "centered" ? "centered" : "in-place"
-    readonly property var windowFooterStyles: ["floating", "integrated", "overlay", "centered"]
-    readonly property string windowFooterStyle: {
-        var style = String((root.pluginEntry && root.pluginEntry.windowFooterStyle) || "floating");
-        return root.windowFooterStyles.indexOf(style) !== -1 ? style : "floating";
-    }
+    readonly property string previewPlacement: SettingsSchema.read(root.pluginEntry, "previewPlacement")
+    readonly property string windowFooterStyle: SettingsSchema.read(root.pluginEntry, "windowFooterStyle")
     property var originToplevel: null
-    readonly property var selectionStyles: ["outline", "lift"]
-    readonly property string selectionStyle: {
-        var style = String((root.pluginEntry && root.pluginEntry.selectionStyle) || "outline");
-        return root.selectionStyles.indexOf(style) !== -1 ? style : "outline";
-    }
-    readonly property var animationStyles: ["original", "fade", "zoom", "slide"]
-    readonly property string animationStyle: {
-        var style = String((root.pluginEntry && root.pluginEntry.animationStyle) || "original");
-        return root.animationStyles.indexOf(style) !== -1 ? style : "original";
-    }
+    readonly property string selectionStyle: SettingsSchema.read(root.pluginEntry, "selectionStyle")
+    readonly property var animationStyles: SettingsSchema.values("animationStyle")
+    readonly property string animationStyle: SettingsSchema.read(root.pluginEntry, "animationStyle")
     readonly property var defaultAnimationDurations: ({ original: 190, fade: 400, zoom: 320, slide: 320 })
     readonly property var animationTimings: {
         var configuredTimings = root.pluginEntry && root.pluginEntry.animationTimings
@@ -123,25 +113,14 @@ Item {
         ? 0.11 * (1 - root.motionProgress)
         : 0
     readonly property real windowFooterHeight: root.windowFooterStyle === "overlay" ? 0 : Commons.Style.space(40)
-    readonly property int backgroundBlur: {
-        var raw = root.pluginEntry ? root.pluginEntry.backgroundBlur : undefined;
-        var value = raw === null || raw === undefined ? NaN : Number(raw);
-        return isFinite(value) ? Math.max(0, Math.min(20, Math.round(value))) : 4;
-    }
-    readonly property int backgroundDim: {
-        var raw = root.pluginEntry ? root.pluginEntry.backgroundDim : undefined;
-        var value = raw === null || raw === undefined ? NaN : Number(raw);
-        return isFinite(value) ? Math.max(0, Math.min(90, Math.round(value))) : 6;
-    }
-    readonly property bool hotCornerEnabled: pluginSettings.ready && root.pluginEntry.hotCornerEnabled !== false
-    readonly property var hotCornerPositions: ["top-left", "top-right", "bottom-left", "bottom-right"]
-    readonly property string hotCornerPosition: {
-        var position = String((root.pluginEntry && root.pluginEntry.hotCornerPosition) || "top-left");
-        return root.hotCornerPositions.indexOf(position) !== -1 ? position : "top-left";
-    }
+    readonly property int backgroundBlur: SettingsSchema.read(root.pluginEntry, "backgroundBlur")
+    readonly property int backgroundDim: SettingsSchema.read(root.pluginEntry, "backgroundDim")
+    // Off until settings load, so a saved "off" never flashes the corner on.
+    readonly property bool hotCornerEnabled: pluginSettings.ready && SettingsSchema.read(root.pluginEntry, "hotCornerEnabled")
+    readonly property string hotCornerPosition: SettingsSchema.read(root.pluginEntry, "hotCornerPosition")
     readonly property bool hotCornerOnTop: root.hotCornerPosition.indexOf("top-") === 0
     readonly property bool hotCornerOnLeft: root.hotCornerPosition.indexOf("-left") !== -1
-    readonly property bool hotCornerAllDisplays: !!root.pluginEntry && root.pluginEntry.hotCornerAllDisplays === true
+    readonly property bool hotCornerAllDisplays: SettingsSchema.read(root.pluginEntry, "hotCornerAllDisplays")
     readonly property var hotCornerScreens: root.hotCornerEnabled
         ? ScreenLayout.hotCornerScreens(Quickshell.screens,
             Hyprland.monitors ? Hyprland.monitors.values : [],
@@ -150,33 +129,21 @@ Item {
 
     // How long the pointer has to rest in the corner before it fires. Zero
     // keeps the original instant trip; longer dwells stop stray flings.
-    readonly property int hotCornerDelay: {
-        var raw = root.pluginEntry ? root.pluginEntry.hotCornerDelay : undefined;
-        var value = raw === null || raw === undefined ? NaN : Number(raw);
-        return isFinite(value) ? Math.max(0, Math.min(1000, Math.round(value))) : 0;
-    }
+    readonly property int hotCornerDelay: SettingsSchema.read(root.pluginEntry, "hotCornerDelay")
     // Which windows the overview starts with. "all" keeps every workspace, as
     // before; "current" opens on the active workspace and leaves Tab to widen.
-    readonly property string initialWorkspaceScope: {
-        var raw = root.pluginEntry ? root.pluginEntry.initialWorkspaceScope : undefined;
-        return String(raw) === "current" ? "current" : "all";
-    }
+    readonly property string initialWorkspaceScope: SettingsSchema.read(root.pluginEntry, "initialWorkspaceScope")
     // How a workspace is named on the cards and in the scope indicator. Plugins
     // such as per-monitor-workspaces name a workspace "<monitor description>:<slot>",
     // which is far wider than a card footer; "slot" prints the trailing slot only.
-    readonly property string workspaceLabelStyle: {
-        var raw = root.pluginEntry ? root.pluginEntry.workspaceLabelStyle : undefined;
-        return String(raw) === "slot" ? "slot" : "full";
-    }
+    readonly property string workspaceLabelStyle: SettingsSchema.read(root.pluginEntry, "workspaceLabelStyle")
     // Reach farther along both screen edges than into the desktop. Fast flings
     // are easier to catch without stealing a large square from the bar below.
     readonly property int hotCornerReach: Commons.Style.space(48)
     readonly property int hotCornerDepth: Commons.Style.space(6)
-    readonly property bool moveCursorToWindow: !root.pluginEntry || root.pluginEntry.moveCursorToWindow !== false
-    readonly property string multiMonitorMode: root.pluginEntry && root.pluginEntry.multiMonitorMode === "per-monitor"
-        ? "per-monitor"
-        : "mirrored"
-    readonly property bool showFooter: !root.pluginEntry || root.pluginEntry.showFooter !== false
+    readonly property bool moveCursorToWindow: SettingsSchema.read(root.pluginEntry, "moveCursorToWindow")
+    readonly property string multiMonitorMode: SettingsSchema.read(root.pluginEntry, "multiMonitorMode")
+    readonly property bool showFooter: SettingsSchema.read(root.pluginEntry, "showFooter")
     property bool opened: false
     property bool surfaceMounted: false
     property bool hotCornerArmed: true

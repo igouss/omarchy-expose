@@ -1,4 +1,5 @@
 import QtQuick
+import "SettingsSchema.js" as SettingsSchema
 import QtQuick.Layouts
 
 SettingsPage {
@@ -17,11 +18,8 @@ SettingsPage {
             view: page.view
             Layout.fillWidth: true
             value: view.controller.initialWorkspaceScope
-            options: [
-                { label: "All workspaces", value: "all" },
-                { label: "Current", value: "current" }
-            ]
-            onChosen: function (value) { view.controller.setInitialWorkspaceScope(value); }
+            options: SettingsSchema.options("initialWorkspaceScope")
+            onChosen: function (value) { view.controller.setSetting("initialWorkspaceScope", value); }
         }
     }
 
@@ -36,7 +34,7 @@ SettingsPage {
             view: page.view
             Layout.fillWidth: true
             value: view.controller.multiMonitorMode
-            onChosen: function (value) { view.controller.setMultiMonitorMode(value); }
+            onChosen: function (value) { view.controller.setSetting("multiMonitorMode", value); }
         }
     }
 }

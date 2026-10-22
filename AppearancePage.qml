@@ -1,4 +1,5 @@
 import QtQuick
+import "SettingsSchema.js" as SettingsSchema
 import QtQuick.Layouts
 
 SettingsPage {
@@ -17,14 +18,14 @@ SettingsPage {
             id: backgroundBlurSlider
             view: page.view
             Layout.fillWidth: true
-            from: 0
-            to: 20
+            from: SettingsSchema.spec("backgroundBlur").min
+            to: SettingsSchema.spec("backgroundBlur").max
             value: view.controller.effectiveBackgroundBlur
             suffix: " px"
             onEdited: function (value) { view.controller.backgroundBlurPreview = value; }
             onCommitted: function (value) {
                 view.controller.backgroundBlurPreview = Math.round(value);
-                view.controller.setBackgroundBlur(value);
+                view.controller.setSetting("backgroundBlur", value);
             }
         }
     }
@@ -38,14 +39,14 @@ SettingsPage {
             id: backgroundDimSlider
             view: page.view
             Layout.fillWidth: true
-            from: 0
-            to: 90
+            from: SettingsSchema.spec("backgroundDim").min
+            to: SettingsSchema.spec("backgroundDim").max
             value: view.controller.effectiveBackgroundDim
             suffix: "%"
             onEdited: function (value) { view.controller.backgroundDimPreview = value; }
             onCommitted: function (value) {
                 view.controller.backgroundDimPreview = Math.round(value);
-                view.controller.setBackgroundDim(value);
+                view.controller.setSetting("backgroundDim", value);
             }
         }
     }

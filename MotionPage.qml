@@ -1,4 +1,5 @@
 import QtQuick
+import "SettingsSchema.js" as SettingsSchema
 import QtQuick.Layouts
 
 SettingsPage {
@@ -25,15 +26,10 @@ SettingsPage {
             view: page.view
             Layout.fillWidth: true
             value: view.controller.animationStyle
-            options: [
-                { label: "Original", value: "original" },
-                { label: "Fade", value: "fade" },
-                { label: "Zoom", value: "zoom" },
-                { label: "Slide", value: "slide" }
-            ]
+            options: SettingsSchema.options("animationStyle")
             onChosen: function (value) {
                 view.controller.clearAnimationTimingPreview();
-                view.controller.setAnimationStyle(value);
+                view.controller.setSetting("animationStyle", value);
             }
         }
     }

@@ -1,4 +1,5 @@
 import QtQuick
+import "SettingsSchema.js" as SettingsSchema
 import QtQuick.Layouts
 import qs.Commons as Commons
 
@@ -19,13 +20,8 @@ SettingsPage {
             Layout.fillWidth: true
             value: view.controller.windowFooterStyle
             spacing: Commons.Style.spacing.md
-            options: [
-                { label: "Floating", value: "floating" },
-                { label: "Rail", value: "integrated" },
-                { label: "Overlay", value: "overlay" },
-                { label: "Centered", value: "centered" }
-            ]
-            onChosen: function (value) { view.controller.setWindowFooterStyle(value); }
+            options: SettingsSchema.options("windowFooterStyle")
+            onChosen: function (value) { view.controller.setSetting("windowFooterStyle", value); }
         }
     }
 
@@ -39,11 +35,8 @@ SettingsPage {
             view: page.view
             Layout.fillWidth: true
             value: view.controller.workspaceLabelStyle
-            options: [
-                { label: "Full", value: "full" },
-                { label: "Slot only", value: "slot" }
-            ]
-            onChosen: function (value) { view.controller.setWorkspaceLabelStyle(value); }
+            options: SettingsSchema.options("workspaceLabelStyle")
+            onChosen: function (value) { view.controller.setSetting("workspaceLabelStyle", value); }
         }
     }
 }

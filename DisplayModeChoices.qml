@@ -1,4 +1,5 @@
 import QtQuick
+import "SettingsSchema.js" as SettingsSchema
 import QtQuick.Layouts
 import qs.Commons as Commons
 
@@ -8,18 +9,7 @@ RowLayout {
     Layout.fillWidth: true
     property string value: "mirrored"
     signal chosen(string nextValue)
-    readonly property var options: [
-        {
-            label: "All displays",
-            description: "Windows from every display",
-            value: "mirrored"
-        },
-        {
-            label: "This display",
-            description: "Only windows on this display",
-            value: "per-monitor"
-        }
-    ]
+    readonly property var options: SettingsSchema.options("multiMonitorMode")
     spacing: 0
     activeFocusOnTab: true
 

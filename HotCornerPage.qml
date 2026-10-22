@@ -1,4 +1,5 @@
 import QtQuick
+import "SettingsSchema.js" as SettingsSchema
 import QtQuick.Layouts
 
 SettingsPage {
@@ -33,13 +34,8 @@ SettingsPage {
             view: page.view
             Layout.fillWidth: true
             value: view.controller.hotCornerPosition
-            options: [
-                { label: "Top left", value: "top-left" },
-                { label: "Top right", value: "top-right" },
-                { label: "Bottom left", value: "bottom-left" },
-                { label: "Bottom right", value: "bottom-right" }
-            ]
-            onChosen: function (value) { view.controller.setHotCornerPosition(value); }
+            options: SettingsSchema.options("hotCornerPosition")
+            onChosen: function (value) { view.controller.setSetting("hotCornerPosition", value); }
         }
     }
 
@@ -55,7 +51,7 @@ SettingsPage {
             id: hotCornerAllDisplaysToggle
             view: page.view
             checked: view.controller.hotCornerAllDisplays
-            onToggled: function (checked) { view.controller.setHotCornerAllDisplays(checked); }
+            onToggled: function (checked) { view.controller.setSetting("hotCornerAllDisplays", checked); }
         }
     }
 
@@ -69,14 +65,14 @@ SettingsPage {
             id: hotCornerDelaySlider
             view: page.view
             Layout.fillWidth: true
-            from: 0
-            to: 1000
+            from: SettingsSchema.spec("hotCornerDelay").min
+            to: SettingsSchema.spec("hotCornerDelay").max
             stepSize: 25
             value: view.controller.effectiveHotCornerDelay
             suffix: " ms"
             onEdited: function (value) { view.controller.hotCornerDelayPreview = value; }
             onCommitted: function (value) {
-                view.controller.hotCornerDelayPreview = view.controller.setHotCornerDelay(value);
+                view.controller.hotCornerDelayPreview = view.controller.setSetting("hotCornerDelay", value);
             }
         }
     }

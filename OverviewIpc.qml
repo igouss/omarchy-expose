@@ -1,9 +1,20 @@
 import QtQuick
 import Quickshell.Io
+import "SettingsSchema.js" as SettingsSchema
 
 // IpcHandler publishes its own properties, so the overview reference lives on this wrapper.
+// Each command is declared so it can be discovered; simple settings validate
+// through the schema, so their rejection text names the real options.
 Item {
     property var overview: null
+
+    function animationStyleError(style) {
+        return SettingsSchema.parseIpc("animationStyle", style).error;
+    }
+
+    function slideDirectionError(direction) {
+        return overview.isSlideDirection(direction) ? "" : SettingsSchema.expectedOneOf(overview.slideDirections);
+    }
 
     IpcHandler {
         target: "expose"
@@ -22,65 +33,6 @@ Item {
             overview.toggle();
             return "ok";
         }
-        function previewPlacement(mode: string): string {
-            if (mode !== "in-place" && mode !== "centered")
-                return "expected in-place or centered";
-            overview.setPreviewPlacement(mode);
-            return mode;
-        }
-        function windowFooterStyle(style: string): string {
-            if (overview.windowFooterStyles.indexOf(style) === -1)
-                return overview.expectedOneOf(overview.windowFooterStyles);
-            overview.setWindowFooterStyle(style);
-            return style;
-        }
-        function selectionStyle(style: string): string {
-            if (overview.selectionStyles.indexOf(style) === -1)
-                return overview.expectedOneOf(overview.selectionStyles);
-            overview.setSelectionStyle(style);
-            return style;
-        }
-        function animationStyle(style: string): string {
-            if (overview.animationStyles.indexOf(style) === -1)
-                return overview.expectedOneOf(overview.animationStyles);
-            return overview.setAnimationStyle(style);
-        }
-        function animationDuration(style: string, value: real): string {
-            if (overview.animationStyles.indexOf(style) === -1)
-                return overview.expectedOneOf(overview.animationStyles);
-            return String(overview.setAnimationDuration(style, value));
-        }
-        function animationDurationIn(style: string, value: real): string {
-            if (overview.animationStyles.indexOf(style) === -1)
-                return overview.expectedOneOf(overview.animationStyles);
-            return String(overview.setAnimationDurationIn(style, value));
-        }
-        function animationDurationOut(style: string, value: real): string {
-            if (overview.animationStyles.indexOf(style) === -1)
-                return overview.expectedOneOf(overview.animationStyles);
-            return String(overview.setAnimationDurationOut(style, value));
-        }
-        function slideDirection(direction: string): string {
-            if (!overview.isSlideDirection(direction))
-                return overview.expectedOneOf(overview.slideDirections);
-            return overview.setSlideDirection(direction);
-        }
-        function slideDirectionIn(direction: string): string {
-            if (!overview.isSlideDirection(direction))
-                return overview.expectedOneOf(overview.slideDirections);
-            return overview.setSlideDirectionIn(direction);
-        }
-        function slideDirectionOut(direction: string): string {
-            if (!overview.isSlideDirection(direction))
-                return overview.expectedOneOf(overview.slideDirections);
-            return overview.setSlideDirectionOut(direction);
-        }
-        function backgroundBlur(value: real): string {
-            return String(overview.setBackgroundBlur(value));
-        }
-        function backgroundDim(value: real): string {
-            return String(overview.setBackgroundDim(value));
-        }
         function settings(mode: string): string {
             if (mode === "open")
                 overview.openSettings();
@@ -92,38 +44,37 @@ Item {
                 return "expected open, close, or toggle";
             return mode;
         }
-        function hotCorner(mode: string): string {
-            if (mode !== "on" && mode !== "off")
-                return "expected on or off";
-            overview.setHotCornerEnabled(mode === "on");
-            return mode;
+        function previewPlacement(mode: string): string { return overview.setSettingFromIpc("previewPlacement", mode); }
+        function windowFooterStyle(style: string): string { return overview.setSettingFromIpc("windowFooterStyle", style); }
+        function selectionStyle(style: string): string { return overview.setSettingFromIpc("selectionStyle", style); }
+        function animationStyle(style: string): string { return overview.setSettingFromIpc("animationStyle", style); }
+        function backgroundBlur(value: real): string { return overview.setSettingFromIpc("backgroundBlur", value); }
+        function backgroundDim(value: real): string { return overview.setSettingFromIpc("backgroundDim", value); }
+        function hotCorner(mode: string): string { return overview.setSettingFromIpc("hotCornerEnabled", mode); }
+        function hotCornerPosition(position: string): string { return overview.setSettingFromIpc("hotCornerPosition", position); }
+        function hotCornerDelay(value: real): string { return overview.setSettingFromIpc("hotCornerDelay", value); }
+        function hotCornerAllDisplays(mode: string): string { return overview.setSettingFromIpc("hotCornerAllDisplays", mode); }
+        function moveCursorToWindow(mode: string): string { return overview.setSettingFromIpc("moveCursorToWindow", mode); }
+        function multiMonitorMode(mode: string): string { return overview.setSettingFromIpc("multiMonitorMode", mode); }
+        function initialWorkspaceScope(scope: string): string { return overview.setSettingFromIpc("initialWorkspaceScope", scope); }
+        function workspaceLabelStyle(style: string): string { return overview.setSettingFromIpc("workspaceLabelStyle", style); }
+        function animationDuration(style: string, value: real): string {
+            return animationStyleError(style) || String(overview.setAnimationDuration(style, value));
         }
-        function hotCornerPosition(position: string): string {
-            if (overview.hotCornerPositions.indexOf(position) === -1)
-                return overview.expectedOneOf(overview.hotCornerPositions);
-            overview.setHotCornerPosition(position);
-            return position;
+        function animationDurationIn(style: string, value: real): string {
+            return animationStyleError(style) || String(overview.setAnimationDurationIn(style, value));
         }
-        function hotCornerDelay(value: real): string {
-            return String(overview.setHotCornerDelay(value));
+        function animationDurationOut(style: string, value: real): string {
+            return animationStyleError(style) || String(overview.setAnimationDurationOut(style, value));
         }
-        function hotCornerAllDisplays(mode: string): string {
-            if (mode !== "on" && mode !== "off")
-                return "expected on or off";
-            overview.setHotCornerAllDisplays(mode === "on");
-            return mode;
+        function slideDirection(direction: string): string {
+            return slideDirectionError(direction) || overview.setSlideDirection(direction);
         }
-        function moveCursorToWindow(mode: string): string {
-            if (mode !== "on" && mode !== "off")
-                return "expected on or off";
-            overview.setMoveCursorToWindow(mode === "on");
-            return mode;
+        function slideDirectionIn(direction: string): string {
+            return slideDirectionError(direction) || overview.setSlideDirectionIn(direction);
         }
-        function multiMonitorMode(mode: string): string {
-            if (mode !== "mirrored" && mode !== "per-monitor")
-                return "expected mirrored or per-monitor";
-            overview.setMultiMonitorMode(mode);
-            return mode;
+        function slideDirectionOut(direction: string): string {
+            return slideDirectionError(direction) || overview.setSlideDirectionOut(direction);
         }
     }
 }
