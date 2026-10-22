@@ -6,7 +6,7 @@
 // with only `fallback` a boolean. Composite settings (animation timing, slide
 // direction) keep their own handling in the controller.
 // Settings pages in order; number keys 1..N jump to them.
-var categories = ["Look", "Appearance", "Windows", "Window labels", "Workspaces", "Hot corner", "Motion"];
+var categories = ["Look", "Appearance", "Windows", "Window labels", "Workspaces", "Hot corner", "Motion", "Juice"];
 
 var specs = {
     look: {
@@ -84,8 +84,17 @@ var specs = {
     hotCornerEnabled: { fallback: true },
     hotCornerAllDisplays: { fallback: false },
     moveCursorToWindow: { fallback: true },
-    showFooter: { fallback: true }
+    showFooter: { fallback: true },
+    juiceSpring: { fallback: true }
 };
+
+// Juice effects, each its own boolean setting named "juice" + Effect. IPC and
+// the Juice page name them by effect.
+var juiceEffects = ["spring"];
+
+function juiceSetting(effect) {
+    return juiceEffects.indexOf(effect) !== -1 ? "juice" + effect.charAt(0).toUpperCase() + effect.slice(1) : "";
+}
 
 function spec(name) {
     var found = specs[name];

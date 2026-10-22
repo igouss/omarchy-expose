@@ -22,8 +22,15 @@ Look {
 
     Behavior on position {
         enabled: look.springing
-        SpringAnimation { spring: 2.6; damping: 0.3; epsilon: 0.001 }
+        SpringAnimation {
+            spring: look.overview.juiceSpring ? 2.4 : 3.2
+            damping: look.overview.juiceSpring ? 0.16 : 0.55
+            epsilon: 0.001
+        }
     }
+
+    // How far the arc lags its target; springy motion stretches cards along travel by it.
+    readonly property real stretch: overview.juiceSpring ? Math.min(0.12, Math.abs(position - centreIndex) * 0.1) : 0
 
     windowLayout: {
         var revision = overview.modelRevision;
@@ -88,6 +95,7 @@ Look {
             screenToplevels: look.toplevels
             acceptsKeyboard: look.screenWindow.acceptsKeyboard
             position: look.position
+            stretch: look.stretch
             areaWidth: look.width
             areaHeight: look.height
         }

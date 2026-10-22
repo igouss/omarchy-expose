@@ -59,6 +59,18 @@ TestCase {
         compare(Schema.parseIpc("hotCornerPosition", "top-right").value, "top-right");
     }
 
+    function test_juiceEffectsAreOnUnlessTurnedOff() {
+        compare(Schema.read({}, "juiceSpring"), true);
+        compare(Schema.read({ juiceSpring: false }, "juiceSpring"), false);
+        compare(Schema.parseIpc("juiceSpring", "off").value, false);
+    }
+
+    function test_juiceEffectNamesItsSetting() {
+        compare(Schema.juiceSetting("spring"), "juiceSpring");
+        compare(Schema.juiceSetting("Spring"), "");
+        compare(Schema.juiceSetting(""), "");
+    }
+
     function test_unknownSettingThrowsNamingIt() {
         let message = "";
         try { Schema.read(null, "nope"); } catch (error) { message = String(error.message); }

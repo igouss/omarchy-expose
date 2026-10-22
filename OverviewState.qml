@@ -45,6 +45,7 @@ Item {
     readonly property string windowFooterStyle: SettingsSchema.read(root.pluginEntry, "windowFooterStyle")
     property var originToplevel: null
     readonly property string selectionStyle: SettingsSchema.read(root.pluginEntry, "selectionStyle")
+    readonly property bool juiceSpring: SettingsSchema.read(root.pluginEntry, "juiceSpring")
     readonly property var animationStyles: SettingsSchema.values("animationStyle")
     readonly property string animationStyle: SettingsSchema.read(root.pluginEntry, "animationStyle")
     readonly property var defaultAnimationDurations: ({ original: 190, fade: 400, zoom: 320, slide: 320 })

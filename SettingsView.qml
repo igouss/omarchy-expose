@@ -49,7 +49,8 @@ Item {
             windowLabelsPage.focusControls,
             workspacesPage.focusControls,
             hotCornerPage.focusControls,
-            motionPage.focusControls
+            motionPage.focusControls,
+            juicePage.focusControls
         ];
         return settingsView.availableFocusItems([categoryButton].concat(controls[settingsView.controller.settingsCategoryIndex] || []));
     }
@@ -274,6 +275,12 @@ Item {
 
                     MotionPage {
                         id: motionPage
+                        view: settingsView
+                        dialog: settingsDialog
+                    }
+
+                    JuicePage {
+                        id: juicePage
                         view: settingsView
                         dialog: settingsDialog
                     }

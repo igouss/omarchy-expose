@@ -59,6 +59,10 @@ Item {
         function multiMonitorMode(mode: string): string { return overview.setSettingFromIpc("multiMonitorMode", mode); }
         function initialWorkspaceScope(scope: string): string { return overview.setSettingFromIpc("initialWorkspaceScope", scope); }
         function workspaceLabelStyle(style: string): string { return overview.setSettingFromIpc("workspaceLabelStyle", style); }
+        function juice(effect: string, mode: string): string {
+            var name = SettingsSchema.juiceSetting(effect);
+            return name ? overview.setSettingFromIpc(name, mode) : SettingsSchema.expectedOneOf(SettingsSchema.juiceEffects);
+        }
         function animationDuration(style: string, value: real): string {
             return animationStyleError(style) || String(overview.setAnimationDuration(style, value));
         }

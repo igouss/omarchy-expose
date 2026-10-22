@@ -426,12 +426,14 @@ Ui.BorderSurface {
 
     }
 
+    // Springy motion pops the lift past its size and lets it settle.
     Behavior on scale {
         enabled: card.controller.motionSettled
 
         NumberAnimation {
-            duration: card.controller.previewFadeDuration
-            easing.type: Easing.OutCubic
+            duration: card.controller.juiceSpring ? 320 : card.controller.previewFadeDuration
+            easing.type: card.controller.juiceSpring ? Easing.OutBack : Easing.OutCubic
+            easing.overshoot: 3
         }
 
     }

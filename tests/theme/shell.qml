@@ -30,6 +30,7 @@ ShellRoot {
         property string previewPlacement: "in-place"
         property string windowFooterStyle: "floating"
         property string selectionStyle: "outline"
+        property bool juiceSpring: true
         property string look: "grid"
         property var originToplevel: null
         function setSetting(name, value) { controller[name] = value; return value; }
@@ -105,19 +106,19 @@ ShellRoot {
         for (var i = 0; i < item.children.length; i++) checkBorderless(item.children[i]);
     }
     function prepareSettingsPage(index) {
-        controller.settingsCategoryIndex = index % 7;
+        controller.settingsCategoryIndex = index % 8;
         controller.hotCornerEnabled = true;
         controller.animationStyle = "slide";
         controller.separateTiming = true;
-        window.width = index < 7 ? 1240 : (index < 14 ? 680 : 480);
-        window.height = index < 7 ? 1040 : 760;
+        window.width = index < 8 ? 1240 : (index < 16 ? 680 : 480);
+        window.height = index < 8 ? 1040 : 760;
         samples.visible = false;
         card.visible = false;
     }
     function checkSettingsPage(index) {
         var items = settings.settingsFocusItems();
-        var expectedCounts = [2, 4, 4, 3, 3, 5, 8];
-        require(items.length === expectedCounts[index % 7], "focusable controls on page " + index);
+        var expectedCounts = [2, 4, 4, 3, 3, 5, 8, 2];
+        require(items.length === expectedCounts[index % 8], "focusable controls on page " + index);
         settings.focusSettingsCategory();
         require(items[0].activeFocus, "category focus on page " + index);
         for (var i = 1; i < items.length; i++) {
@@ -134,12 +135,12 @@ ShellRoot {
         require(items[0].activeFocus, "Tab wraps to the category on page " + index);
         settings.moveSettingsFocus(false, true);
         require(items[items.length - 1].activeFocus, "Backtab wraps to the last control on page " + index);
-        if (index % 7 === 5) {
+        if (index % 8 === 5) {
             controller.hotCornerEnabled = false;
             require(settings.settingsFocusItems().length === 2, "disabled hot corner controls are skipped");
             controller.hotCornerEnabled = true;
         }
-        if (index % 7 === 6) {
+        if (index % 8 === 6) {
             controller.separateTiming = false;
             require(settings.settingsFocusItems().length === 6, "linked Slide hides separate controls");
             controller.animationStyle = "original";
@@ -219,7 +220,7 @@ ShellRoot {
             } else if (test.phase === 4) {
                 prepareSettingsPage(0);
                 test.phase++;
-            } else if (test.phase >= 5 && test.phase <= 25) {
+            } else if (test.phase >= 5 && test.phase <= 28) {
                 var index = test.phase - 5;
                 checkSettingsPage(index);
                 if (Quickshell.env("EXPOSE_THEME_OUTPUT_DIR")) {
@@ -227,14 +228,14 @@ ShellRoot {
                     testTimer.stop();
                     canvas.grabToImage(function(result) {
                         result.saveToFile(path);
-                        if (index < 20) prepareSettingsPage(index + 1);
+                        if (index < 23) prepareSettingsPage(index + 1);
                         testTimer.start();
                     });
-                } else if (index < 20) {
+                } else if (index < 23) {
                     prepareSettingsPage(index + 1);
                 }
                 test.phase++;
-            } else if (test.phase === 26) {
+            } else if (test.phase === 29) {
                 finish();
             }
         }

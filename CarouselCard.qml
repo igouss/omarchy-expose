@@ -16,6 +16,8 @@ Item {
     required property bool acceptsKeyboard
     // The carousel's animated centre, as a (fractional) index into screenToplevels.
     required property real position
+    // Horizontal stretch while the arc travels; height gives up half of it.
+    required property real stretch
     required property real areaWidth
     required property real areaHeight
 
@@ -51,8 +53,8 @@ Item {
         Scale {
             origin.x: card.width / 2
             origin.y: card.height / 2
-            xScale: card.blend(card.placed.scale, 1)
-            yScale: xScale
+            xScale: card.blend(card.placed.scale, 1) * (1 + card.stretch)
+            yScale: card.blend(card.placed.scale, 1) * (1 - card.stretch / 2)
         },
         Rotation {
             origin.x: card.width / 2
