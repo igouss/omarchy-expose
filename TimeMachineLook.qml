@@ -4,9 +4,9 @@ import "WindowModel.js" as WindowModel
 import qs.Commons as Commons
 
 // The Time Machine look: windows recede down a tunnel by when they were last
-// used, the most recent in front. The camera travels through time on a
-// spring; stars drift past as it moves, and a ruler on the right marks every
-// step back.
+// used, the most recent in front. Each open starts on the selection; from
+// there the camera travels through time on a spring, stars drift past as it
+// moves, and a ruler on the right marks every step back.
 Look {
     id: look
 
@@ -50,20 +50,20 @@ Look {
 
     windowLayout: TimeLayout.navRects(timeline.ranks)
 
-    // Each open starts the camera a few steps back in time and flies it home.
-    function flyIn() {
+    // Each open puts the camera on the selection at once; the spring is only
+    // for travel within a session.
+    function snapHome() {
         look.springing = false;
-        look.position = look.selectedRank + 3;
-        look.springing = true;
         look.position = Qt.binding(() => look.selectedRank);
+        look.springing = true;
     }
 
-    Component.onCompleted: look.flyIn()
+    Component.onCompleted: look.snapHome()
     Connections {
         target: look.overview
         function onOpenedChanged() {
             if (look.overview.opened)
-                look.flyIn();
+                look.snapHome();
         }
         function onEdgeBumped(dx, dy) {
             lurch.lean = (dy !== 0 ? -dy : dx) * 0.35;
